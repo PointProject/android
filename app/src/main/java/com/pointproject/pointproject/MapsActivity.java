@@ -16,10 +16,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -68,8 +70,12 @@ public class MapsActivity extends FragmentActivity
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 // Logic to handle location object
-                                mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),
-                                        location.getLongitude())));
+                                MarkerOptions currentLocation =new MarkerOptions().position(new LatLng(location.getLatitude(),
+                                        location.getLongitude()));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation.getPosition(), 15));
+                                mMap.addMarker(currentLocation);
+                                mMap.setMinZoomPreference(12.0f);
+                                mMap.setMaxZoomPreference(20.0f);
                             }
                             else Toast.makeText(MapsActivity.this, "null location", Toast.LENGTH_SHORT).show();
                         }
