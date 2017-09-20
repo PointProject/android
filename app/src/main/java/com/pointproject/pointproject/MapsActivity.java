@@ -1,9 +1,12 @@
 package com.pointproject.pointproject;
 
 import android.Manifest;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -21,7 +24,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -33,6 +35,9 @@ public class MapsActivity extends FragmentActivity
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    private LocationManager locationManager;
+
+    private Location currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +49,27 @@ public class MapsActivity extends FragmentActivity
         mapFragment.getMapAsync(this);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        setMarkerOnCurrentGeo();
+        mMap.setMinZoomPreference(12.0f);
+        mMap.setMaxZoomPreference(20.0f);
+
+        getCurrentGeo();
     }
 
-    private void setMarkerOnCurrentGeo(){
+    private void setMarkerOnCurrentGeo() {
+        MarkerOptions currentMarkerLocation = new MarkerOptions().position(new LatLng(currentLocation.getLatitude(),
+                currentLocation.getLongitude()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentMarkerLocation.getPosition(), 15));
+        mMap.addMarker(currentMarkerLocation);
+    }
+
+    private void getCurrentGeo() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -70,21 +86,20 @@ public class MapsActivity extends FragmentActivity
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 // Logic to handle location object
-                                MarkerOptions currentLocation =new MarkerOptions().position(new LatLng(location.getLatitude(),
-                                        location.getLongitude()));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation.getPosition(), 15));
-                                mMap.addMarker(currentLocation);
-                                mMap.setMinZoomPreference(12.0f);
-                                mMap.setMaxZoomPreference(20.0f);
-                            }
-                            else Toast.makeText(MapsActivity.this, getText(R.string.null_location), Toast.LENGTH_SHORT).show();
+                                currentLocation = location;
+
+                                setMarkerOnCurrentGeo();
+
+                                addProximityAlert(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            } else
+                                Toast.makeText(MapsActivity.this, getText(R.string.null_location), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
     }
 
     public void showNoGeoPermissionSnackbar() {
-        Snackbar.make(MapsActivity.this.findViewById(R.id.map), getText(R.string.no_gps_permission) , Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(MapsActivity.this.findViewById(R.id.map), getText(R.string.no_gps_permission), Snackbar.LENGTH_INDEFINITE)
                 .setAction(getText(R.string.settings), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -107,8 +122,8 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case PERMISSION_COARSE_FINE_LOCATION:{
+        switch (requestCode) {
+            case PERMISSION_COARSE_FINE_LOCATION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -124,4 +139,23 @@ public class MapsActivity extends FragmentActivity
             }
         }
     }
+
+    private void addProximityAlert(double latitude, double longitude) {
+        Intent intent = new Intent(this, ProximityIntentReceiver.class);
+        PendingIntent proximityIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.addProximityAlert(
+                latitude, // the latitude of the central point of the alert region
+                longitude, // the longitude of the central point of the alert region
+                getResources().getInteger(R.integer.point_radius), // the radius of the central point of the alert region, in meters
+                60_000, // time for this proximity alert, in milliseconds, or -1 to indicate no expiration
+                proximityIntent // will be used to generate an Intent to fire when entry to or exit from the alert region is detected
+        );
+
+    }
 }
+
+
