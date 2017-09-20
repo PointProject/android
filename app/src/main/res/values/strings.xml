@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">PointProject</string>
     <string name="title_activity_maps">Map</string>
+    <string name="null_location">Sorry, can\'t get your location</string>
+    <string name="no_gps_permission">Gps permission isn\'t granted</string>
+    <string name="settings">Settings</string>
+    <string name="grant_geo_permission">Open Permissions and grant the Geo permission</string>
 </resources>

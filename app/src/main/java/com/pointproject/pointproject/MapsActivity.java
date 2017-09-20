@@ -77,21 +77,21 @@ public class MapsActivity extends FragmentActivity
                                 mMap.setMinZoomPreference(12.0f);
                                 mMap.setMaxZoomPreference(20.0f);
                             }
-                            else Toast.makeText(MapsActivity.this, "null location", Toast.LENGTH_SHORT).show();
+                            else Toast.makeText(MapsActivity.this, getText(R.string.null_location), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
     }
 
     public void showNoGeoPermissionSnackbar() {
-        Snackbar.make(MapsActivity.this.findViewById(R.id.map), "Storage permission isn't granted" , Snackbar.LENGTH_INDEFINITE)
-                .setAction("SETTINGS", new View.OnClickListener() {
+        Snackbar.make(MapsActivity.this.findViewById(R.id.map), getText(R.string.no_gps_permission) , Snackbar.LENGTH_INDEFINITE)
+                .setAction(getText(R.string.settings), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         openApplicationSettings();
 
                         Toast.makeText(getApplicationContext(),
-                                "Open Permissions and grant the Geo permission",
+                                getText(R.string.grant_geo_permission),
                                 Toast.LENGTH_SHORT)
                                 .show();
                     }
