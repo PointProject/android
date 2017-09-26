@@ -25,10 +25,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapsActivity extends FragmentActivity
-        implements OnMapReadyCallback {
+        implements OnMapReadyCallback, GoogleMap.OnPolygonClickListener {
 
     private static final int PERMISSION_COARSE_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_CODE = 2;
@@ -38,6 +43,8 @@ public class MapsActivity extends FragmentActivity
     private LocationManager locationManager;
 
     private Location currentLocation;
+
+    private Map<Polygon, String> polygons = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +63,15 @@ public class MapsActivity extends FragmentActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMinZoomPreference(12.0f);
+        mMap.setMinZoomPreference(10.0f);
         mMap.setMaxZoomPreference(20.0f);
 
         getCurrentGeo();
+
+        mMap.setOnPolygonClickListener(this);
+        for(PolygonOptions key : Values.areas.keySet()){
+            polygons.put(mMap.addPolygon(key.clickable(true)), Values.areas.get(key));
+        }
     }
 
     private void setMarkerOnCurrentGeo() {
@@ -155,6 +167,12 @@ public class MapsActivity extends FragmentActivity
                 proximityIntent // will be used to generate an Intent to fire when entry to or exit from the alert region is detected
         );
 
+    }
+
+    @Override
+    public void onPolygonClick(Polygon polygon) {
+        String name = polygons.get(polygon);
+        Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
     }
 }
 
