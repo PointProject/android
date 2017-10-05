@@ -1,9 +1,12 @@
 package com.pointproject.pointproject.geofence;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
@@ -31,7 +34,7 @@ public class GeofenceController implements OnCompleteListener<Void> {
 
     /**
      * Initialize GeofencingClient with context*/
-    public GeofenceController(Context context){
+    public GeofenceController(Context context) {
         this.context = context;
 
         // Initially set the PendingIntent to null
@@ -41,12 +44,12 @@ public class GeofenceController implements OnCompleteListener<Void> {
 
         Log.d(TAG, "Initialized GeofenceController");
     }
+
     /**
      * Adds all geofences to Geofence client and start listenting for updates
      *
      * @param geofences map with key as geofence id and value as geofence coordinates
      */
-    @SuppressWarnings("MissingPermission")
     public void addGeofences(Map<String, LatLng> geofences) {
         ArrayList<Geofence> mGeofenceList = new ArrayList<>();
 
@@ -69,7 +72,7 @@ public class GeofenceController implements OnCompleteListener<Void> {
 
                     // Set the transition types of interest. Alerts are only generated for these
                     // transition
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                             Geofence.GEOFENCE_TRANSITION_EXIT)
 
                     // Create the geofence.
@@ -87,6 +90,10 @@ public class GeofenceController implements OnCompleteListener<Void> {
         requestBuilder.addGeofences(mGeofenceList);
         //Add Pending Intent to geofences, which will be triggered on events. Set on Listener,
 //        which will catch results on adding and removing geofences
+        if (ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         mGeofencingClient.addGeofences(requestBuilder.build(), getGeofencePendingIntent())
                 .addOnCompleteListener(this);
     }
@@ -94,7 +101,6 @@ public class GeofenceController implements OnCompleteListener<Void> {
     /**
      * Removes all available geofences
      */
-    @SuppressWarnings("MissingPermission")
     public void removeAllGeofences() {
         mGeofencingClient.removeGeofences(getGeofencePendingIntent()).addOnCompleteListener(this);
     }
@@ -104,7 +110,6 @@ public class GeofenceController implements OnCompleteListener<Void> {
      *
      * @param geofencesRequestIds List with geofence ids, which should be removed
      */
-    @SuppressWarnings("MissiongPermission")
     public void removeGeofences(List<String> geofencesRequestIds){
         mGeofencingClient.removeGeofences(geofencesRequestIds);
     }
