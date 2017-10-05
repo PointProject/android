@@ -1,7 +1,6 @@
 package com.pointproject.pointproject;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +36,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pointproject.pointproject.geofence.GeofenceController;
+
+import java.util.HashMap;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback ,
@@ -50,14 +53,13 @@ public class MapsActivity extends AppCompatActivity
     private static final int PERMISSION_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_CODE = 2;
 
-    private long UPDATE_INTERVAL = 2 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
-
     private GoogleMap mMap;
 
     GoogleApiClient mGoogleApiClient;
     LocationRequest locationRequest;
     LocationManager locationManager;
+
+    Marker mCurrentLocationMarker;
 
     private Location currentBestLocation = null;
 
@@ -72,12 +74,13 @@ public class MapsActivity extends AppCompatActivity
 
         isGooglePlayServicesAvailable();
 
-        if (!isLocationEnabled())
+        if (!isLocationEnabled()) {
             showAlert();
+        }
 
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+        locationRequest.setInterval(getResources().getInteger(R.integer.location_request_update_interval));
+        locationRequest.setFastestInterval(getResources().getInteger(R.integer.location_request_fastest_interval));
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -119,8 +122,6 @@ public class MapsActivity extends AppCompatActivity
                     break;
             }
         });
-
-        startLocationUpdate();
     }
 
     private void startLocationUpdate(){
@@ -150,6 +151,18 @@ public class MapsActivity extends AppCompatActivity
 
         mMap.setMinZoomPreference(12.0f);
         mMap.setMaxZoomPreference(20.0f);
+
+        startLocationUpdate();
+
+        GeofenceController geofences = new GeofenceController(this);
+
+        //test hardcode geofence
+        /* */
+        HashMap<String, LatLng> dummyData = new HashMap<>();
+        dummyData.put("Dummy Geofence", new LatLng(46.58105673, 30.53738352));
+        /* */
+
+        geofences.addGeofences(dummyData);
     }
 
     public void showNoGeoPermissionSnackbar() {
@@ -193,23 +206,6 @@ public class MapsActivity extends AppCompatActivity
             }
     }
 
-    private void addProximityAlert(double latitude, double longitude) {
-        Intent intent = new Intent(this, ProximityIntentReceiver.class);
-        PendingIntent proximityIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        locationManager.addProximityAlert(
-                latitude, // the latitude of the central point of the alert region
-                longitude, // the longitude of the central point of the alert region
-                getResources().getInteger(R.integer.point_radius), // the radius of the central point of the alert region, in meters
-                60_000, // time for this proximity alert, in milliseconds, or -1 to indicate no expiration
-                proximityIntent // will be used to generate an Intent to fire when entry to or exit from the alert region is detected
-        );
-
-    }
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -243,12 +239,17 @@ public class MapsActivity extends AppCompatActivity
 
     private void updateUI(Location loc) {
         Log.d(TAG, "updateUI");
-        Toast.makeText(this, "Accuracy:" + loc.getAccuracy() + " Provider: " + loc.getProvider(), Toast.LENGTH_SHORT).show();
-        MarkerOptions currentMarkerLocation = new MarkerOptions().position(new LatLng(loc.getLatitude(),
+        Log.d(TAG, "Latitude: " + loc.getLatitude() + " Longitude: " + loc.getLongitude() +
+                "\nAccuracy: " + loc.getAccuracy() +
+                "\nProvider: " + loc.getProvider());
+
+        if(mCurrentLocationMarker != null)
+            mCurrentLocationMarker.remove();
+        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(loc.getLatitude(),
                 loc.getLongitude()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentMarkerLocation.getPosition(), 15));
-        mMap.clear();
-        mMap.addMarker(currentMarkerLocation);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 15));
+
+        mCurrentLocationMarker = mMap.addMarker(markerOptions);
     }
 
     private boolean isLocationEnabled() {
@@ -289,7 +290,7 @@ public class MapsActivity extends AppCompatActivity
         dialog.show();
     }
 
-    //Determines whether one Location reading is better than the current Location fix
+    /**Determines whether one Location reading is better than the current Location fix*/
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
             // A new location is always better than no location
@@ -343,7 +344,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-                if (location != null) {
+        if (location != null) {
             if(isBetterLocation(location, currentBestLocation)){
                 currentBestLocation = location;
                 updateUI(location);
