@@ -38,13 +38,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.pointproject.pointproject.geofence.GeofenceController;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback ,
         LocationListener,
+        GoogleMap.OnPolygonClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -62,6 +66,8 @@ public class MapsActivity extends AppCompatActivity
     Marker mCurrentLocationMarker;
 
     private Location currentBestLocation = null;
+
+    private Map<Polygon, String> polygons = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,10 +155,15 @@ public class MapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMinZoomPreference(12.0f);
+        mMap.setMinZoomPreference(10.0f);
         mMap.setMaxZoomPreference(20.0f);
 
         startLocationUpdate();
+
+        mMap.setOnPolygonClickListener(this);
+        for(PolygonOptions key : Values.areas.keySet()){
+            polygons.put(mMap.addPolygon(key.clickable(true)), Values.areas.get(key));
+        }
 
         GeofenceController geofences = new GeofenceController(this);
 
@@ -163,6 +174,11 @@ public class MapsActivity extends AppCompatActivity
         /* */
 
         geofences.addGeofences(dummyData);
+    }
+
+    public void onPolygonClick(Polygon polygon) {
+        String name = polygons.get(polygon);
+        Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
     }
 
     public void showNoGeoPermissionSnackbar() {
@@ -222,9 +238,6 @@ public class MapsActivity extends AppCompatActivity
 
         currentBestLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         Log.d(TAG, "LastLocation: " + (currentBestLocation == null ? "NO LastLocation" : currentBestLocation.toString()));
-
-//        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
-
     }
 
     @Override
@@ -366,7 +379,6 @@ public class MapsActivity extends AppCompatActivity
     public void onProviderDisabled(String provider) {
 
     }
-
 }
 
 
