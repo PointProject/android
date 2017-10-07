@@ -1,4 +1,4 @@
-package com.pointproject.pointproject;
+package com.pointproject.pointproject.data;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -6,9 +6,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by aengus on 26.09.2017.
- */
+
 
 public class Values {
     private Values(){}
