@@ -237,6 +237,7 @@ public class MapsActivity extends AppCompatActivity
         Log.d(TAG, "onConnected");
 
         currentBestLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        updateUI(currentBestLocation);
         Log.d(TAG, "LastLocation: " + (currentBestLocation == null ? "NO LastLocation" : currentBestLocation.toString()));
     }
 
