@@ -2,7 +2,6 @@ package com.pointproject.pointproject;
 
 import android.Manifest;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -16,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -65,9 +63,9 @@ public class MapsActivity extends AppCompatActivity
 
     Marker mCurrentLocationMarker;
 
-    private Location currentBestLocation = null;
+    private Location currentBestLocation;
 
-    private Map<Polygon, String> polygons = new HashMap<>();
+    private Map<Polygon, String> polygons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,15 +78,6 @@ public class MapsActivity extends AppCompatActivity
 
         isGooglePlayServicesAvailable();
 
-        if (!isLocationEnabled()) {
-            showAlert();
-        }
-
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(getResources().getInteger(R.integer.location_request_update_interval));
-        locationRequest.setFastestInterval(getResources().getInteger(R.integer.location_request_fastest_interval));
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -96,6 +85,15 @@ public class MapsActivity extends AppCompatActivity
                 .build();
 
         locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
+
+        checkGPSTurnedOn();
+    }
+
+    private void checkGPSTurnedOn(){
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(getResources().getInteger(R.integer.location_request_update_interval));
+        locationRequest.setFastestInterval(getResources().getInteger(R.integer.location_request_fastest_interval));
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
@@ -130,15 +128,6 @@ public class MapsActivity extends AppCompatActivity
         });
     }
 
-    private void startLocationUpdate(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 4000, 0, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 0, this);
-    }
-
     @Override
     public void onStart() {
         mGoogleApiClient.connect();
@@ -148,6 +137,8 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onStop() {
         mGoogleApiClient.disconnect();
+        locationManager.removeUpdates(this);
+
         super.onStop();
     }
 
@@ -160,20 +151,42 @@ public class MapsActivity extends AppCompatActivity
 
         startLocationUpdate();
 
-        mMap.setOnPolygonClickListener(this);
-        for(PolygonOptions key : Values.areas.keySet()){
-            polygons.put(mMap.addPolygon(key.clickable(true)), Values.areas.get(key));
-        }
+        putPolygons();
 
-        GeofenceController geofences = new GeofenceController(this);
-
-        //test hardcode geofence
+        //test hardcoded geofence
         /* */
         HashMap<String, LatLng> dummyData = new HashMap<>();
         dummyData.put("Dummy Geofence", new LatLng(46.58105673, 30.53738352));
         /* */
 
-        geofences.addGeofences(dummyData);
+        putGeofences(dummyData);
+    }
+
+    private void putGeofences(HashMap<String, LatLng> geofData){
+        GeofenceController gc = new GeofenceController(this);
+        gc.addGeofences(geofData);
+
+        for(Map.Entry<String, LatLng> entry: geofData.entrySet())
+            mMap.addMarker(new MarkerOptions().position(entry.getValue()));
+    }
+
+    private void putPolygons(){
+        polygons = new HashMap<>();
+        mMap.setOnPolygonClickListener(this);
+        for(PolygonOptions key : Values.areas.keySet()){
+            polygons.put(mMap.addPolygon(key.clickable(true)), Values.areas.get(key));
+        }
+    }
+
+    private void startLocationUpdate(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, getResources().getInteger(R.integer.network_provider_location_updates), 0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, getResources().getInteger(R.integer.gps_provider_location_updates), 0, this);
     }
 
     public void onPolygonClick(Polygon polygon) {
@@ -182,12 +195,12 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public void showNoGeoPermissionSnackbar() {
-        Snackbar.make(MapsActivity.this.findViewById(R.id.map), getText(R.string.no_gps_permission), Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(MapsActivity.this.findViewById(R.id.map), getText(R.string.no_location_permission), Snackbar.LENGTH_INDEFINITE)
                 .setAction(getText(R.string.settings), v -> {
                     openApplicationSettings();
 
                     Toast.makeText(getApplicationContext(),
-                            getText(R.string.grant_geo_permission),
+                            getText(R.string.grant_location_permission),
                             Toast.LENGTH_SHORT)
                             .show();
                 })
@@ -206,15 +219,15 @@ public class MapsActivity extends AppCompatActivity
                 case PERMISSION_FINE_LOCATION: {
                     // If request is cancelled, the result arrays are empty.
                     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(MapsActivity.this, "Permission was granted!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MapsActivity.this, getString(R.string.permission_granted), Toast.LENGTH_LONG).show();
 
                         try{
                             startLocationUpdate();
                         } catch (SecurityException e) {
-                            Toast.makeText(MapsActivity.this, "SecurityException:\n" + e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(MapsActivity.this, getString(R.string.security_exception) + e.toString(), Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(MapsActivity.this, "Permission denied!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MapsActivity.this, getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
                         showNoGeoPermissionSnackbar();
                     }
                     return;
@@ -234,7 +247,7 @@ public class MapsActivity extends AppCompatActivity
 
             return;
         }
-        Log.d(TAG, "onConnected");
+        Log.d(TAG, "Connected to GoogleApiClient");
 
         currentBestLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         updateUI(currentBestLocation);
@@ -246,9 +259,9 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(MapsActivity.this, "onConnectionFailed: \n" + connectionResult.toString(),
+        Toast.makeText(MapsActivity.this, getString(R.string.google_api_client_connection_failed) + connectionResult.toString(),
                 Toast.LENGTH_LONG).show();
-        Log.d(TAG, "On connection failed: " + connectionResult.toString());
+        Log.d(TAG, "GoogleApiClient On connection failed: " + connectionResult.toString());
     }
 
     private void updateUI(Location loc) {
@@ -266,12 +279,6 @@ public class MapsActivity extends AppCompatActivity
         mCurrentLocationMarker = mMap.addMarker(markerOptions);
     }
 
-    private boolean isLocationEnabled() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-
     private boolean isGooglePlayServicesAvailable() {
         final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
@@ -281,31 +288,17 @@ public class MapsActivity extends AppCompatActivity
                 apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
             } else {
-                Log.d(TAG, "This device is not supported.");
+                Log.d(TAG, "Google Play Services. This device is not supported.");
                 finish();
             }
             return false;
         }
-        Log.d(TAG, "This device is supported.");
+        Log.d(TAG, "Google Play Services. This device is supported.");
         return true;
     }
 
-    private void showAlert() {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Enable Location")
-                .setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " +
-                        "use this app")
-                .setPositiveButton("Location Settings", (paramDialogInterface, paramInt) -> {
-
-                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(myIntent);
-                })
-                .setNegativeButton("Cancel", (paramDialogInterface, paramInt) -> {});
-        dialog.show();
-    }
-
     /**Determines whether one Location reading is better than the current Location fix*/
-    protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+    private boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
             // A new location is always better than no location
             return true;
