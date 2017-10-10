@@ -1,6 +1,7 @@
 package com.pointproject.pointproject;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -54,6 +56,10 @@ public class MapsActivity extends AppCompatActivity
 
     private static final int PERMISSION_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_CODE = 2;
+
+    private static final LatLngBounds ODESSA_LIMITS =  new LatLngBounds(
+                new LatLng(46.34692761, 30.6010437),
+                new LatLng(46.55319428, 30.80978394));
 
     private GoogleMap mMap;
 
@@ -148,6 +154,11 @@ public class MapsActivity extends AppCompatActivity
 
         mMap.setMinZoomPreference(10.0f);
         mMap.setMaxZoomPreference(20.0f);
+
+        mMap.setLatLngBoundsForCameraTarget(ODESSA_LIMITS);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(ODESSA_LIMITS.getCenter()));
+
 
         startLocationUpdate();
 
@@ -265,19 +276,46 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void updateUI(Location loc) {
+        double lat = loc.getLatitude();
+        double lng = loc.getLongitude();
+
         Log.d(TAG, "updateUI");
-        Log.d(TAG, "Latitude: " + loc.getLatitude() + " Longitude: " + loc.getLongitude() +
+        Log.d(TAG, "Latitude: " + lat + " Longitude: " + lng +
                 "\nAccuracy: " + loc.getAccuracy() +
                 "\nProvider: " + loc.getProvider());
 
-        if(mCurrentLocationMarker != null)
-            mCurrentLocationMarker.remove();
-        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(loc.getLatitude(),
-                loc.getLongitude()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 15));
+        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(lat, lng));
+        if(mCurrentLocationMarker == null){
+            mCurrentLocationMarker = mMap.addMarker(markerOptions);
+            return;
+        }
+//            mCurrentLocationMarker.remove();
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 15));
 
-        mCurrentLocationMarker = mMap.addMarker(markerOptions);
+//        mCurrentLocationMarker = mMap.addMarker(markerOptions);
+        changeMarkerPositionSmoothly(mCurrentLocationMarker, new LatLng(lat, lng));
+
     }
+
+    private void changeMarkerPositionSmoothly(Marker marker, LatLng newPosition){
+        if(marker == null){
+            return;
+        }
+        ValueAnimator animation = ValueAnimator.ofFloat(0f, 100f);
+        final float[] previousStep = {0f};
+        double deltaLatitude = newPosition.latitude - marker.getPosition().latitude;
+        double deltaLongitude = newPosition.longitude - marker.getPosition().longitude;
+        animation.setDuration(1500);
+        animation.addUpdateListener(animation1 -> {
+            double deltaStep = animation1.getAnimatedFraction() - previousStep[0];
+            previousStep[0] = animation1.getAnimatedFraction();
+            marker.setPosition(new LatLng(marker.getPosition().latitude + deltaLatitude * deltaStep * 1/100,
+                    marker.getPosition().longitude + deltaStep * deltaLongitude * 1/100));
+        });
+        animation.start();
+    }
+
+
 
     private boolean isGooglePlayServicesAvailable() {
         final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
