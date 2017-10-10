@@ -34,6 +34,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -261,6 +262,9 @@ public class MapsActivity extends AppCompatActivity
         Log.d(TAG, "Connected to GoogleApiClient");
 
         currentBestLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        moveCameraSmoothly(currentBestLocation);
+
         updateUI(currentBestLocation);
         Log.d(TAG, "LastLocation: " + (currentBestLocation == null ? "NO LastLocation" : currentBestLocation.toString()));
     }
@@ -289,12 +293,20 @@ public class MapsActivity extends AppCompatActivity
             mCurrentLocationMarker = mMap.addMarker(markerOptions);
             return;
         }
-//            mCurrentLocationMarker.remove();
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.getPosition(), 15));
-
-//        mCurrentLocationMarker = mMap.addMarker(markerOptions);
+        
         changeMarkerPositionSmoothly(mCurrentLocationMarker, new LatLng(lat, lng));
 
+    }
+
+    private void moveCameraSmoothly(Location location){
+        CameraPosition googlePlex = CameraPosition.builder()
+                .target(new LatLng(location.getLatitude(),location.getLongitude()))
+                .zoom(15)
+                .bearing(0)
+                .tilt(45)
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null);
     }
 
     private void changeMarkerPositionSmoothly(Marker marker, LatLng newPosition){
