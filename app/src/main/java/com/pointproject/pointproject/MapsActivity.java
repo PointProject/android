@@ -34,6 +34,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -100,10 +101,10 @@ public class MapsActivity extends AppCompatActivity
 
         locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
 
-        checkGPSTurnedOn();
+        requestTurnOnGPS();
     }
 
-    private void checkGPSTurnedOn(){
+    private void requestTurnOnGPS(){
         locationRequest = new LocationRequest();
         locationRequest.setInterval(getResources().getInteger(R.integer.location_request_update_interval));
         locationRequest.setFastestInterval(getResources().getInteger(R.integer.location_request_fastest_interval));
@@ -169,19 +170,6 @@ public class MapsActivity extends AppCompatActivity
 
 
         startLocationUpdate();
-
-        putPolygons();
-
-        //test hardcoded geofence
-        /* */
-        HashMap<String, LatLng> dummyData = new HashMap<>();
-        dummyData.put("Dummy Geofence1", new LatLng(46.579273, 30.538784));
-        dummyData.put("Dummy Geofence2", new LatLng(46.578253, 30.540070));
-        dummyData.put("Dummy Geofence3", new LatLng(46.579715, 30.542432));
-        dummyData.put("Dummy Geofence4", new LatLng(46.581957, 30.537754));
-        /* */
-
-        putGeofences(dummyData);
     }
 
     private void putGeofences(HashMap<String, LatLng> geofData){
@@ -294,22 +282,16 @@ public class MapsActivity extends AppCompatActivity
         Log.d(TAG, "updateUI");
         Log.d(TAG, "Latitude: " + lat + " Longitude: " + lng +
                 "\nAccuracy: " + loc.getAccuracy() +
-                "\nProvider: " + loc.getProvider() +
-                "\nTime: " + loc.getTime() +
-                "\nSpeed: " + loc.getSpeed());
+                "\nProvider: " + loc.getProvider());
 
-        /*TEMPORARY*/
-        Toast.makeText(this, "Latitude: " + lat + " Longitude: " + lng +
-                "\nAccuracy: " + loc.getAccuracy() +
-                "\nProvider: " + loc.getProvider() +
-                "\nTime: " + loc.getTime() +
-                "\nSpeed: " + loc.getSpeed(),Toast.LENGTH_SHORT).show();
-        /*TEMPORARY*/
 
         MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(lat, lng));
         if(mCurrentLocationMarker == null){
             mCurrentLocationMarker = mMap.addMarker(markerOptions);
-            moveCameraSmoothly(currentBestLocation);
+            mMap.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(loc.getLatitude(), loc.getLongitude()),
+                            15));
             return;
         }
 
@@ -336,6 +318,9 @@ public class MapsActivity extends AppCompatActivity
         final long duration = 500;
 
         final Interpolator interpolator = new LinearInterpolator();
+
+        Log.d(TAG, "Marker position updated");
+        Toast.makeText(this, "marker position updated", Toast.LENGTH_SHORT).show();
 
         handler.post(new Runnable() {
             @Override
