@@ -53,6 +53,9 @@ public class GeofenceController implements OnCompleteListener<Void> {
     public void addGeofences(Map<String, LatLng> geofences) {
         ArrayList<Geofence> mGeofenceList = new ArrayList<>();
 
+        if(geofences.isEmpty())
+            return;
+
         for (Map.Entry<String, LatLng> entry : geofences.entrySet()) {
 
             mGeofenceList.add(new Geofence.Builder()
