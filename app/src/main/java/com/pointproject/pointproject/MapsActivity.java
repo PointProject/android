@@ -34,7 +34,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -145,8 +144,9 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onStart() {
-        mGoogleApiClient.connect();
         super.onStart();
+        mGoogleApiClient.connect();
+        startLocationUpdate();
     }
 
     @Override
@@ -170,6 +170,8 @@ public class MapsActivity extends AppCompatActivity
 
 
         startLocationUpdate();
+
+        putPolygons();
     }
 
     private void putGeofences(HashMap<String, LatLng> geofData){
@@ -320,7 +322,6 @@ public class MapsActivity extends AppCompatActivity
         final Interpolator interpolator = new LinearInterpolator();
 
         Log.d(TAG, "Marker position updated");
-        Toast.makeText(this, "marker position updated", Toast.LENGTH_SHORT).show();
 
         handler.post(new Runnable() {
             @Override
