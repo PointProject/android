@@ -9,7 +9,7 @@ public class Constants {
     public static final String LOG_TAG = "LOG";
 
     //server info
-    public static final String SERVER_HOST = "";
+    public static final String SERVER_HOST = "localhost:8080";
 
 
 

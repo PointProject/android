@@ -1,11 +1,21 @@
 package com.pointproject.pointproject.network;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.provider.SyncStateContract;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.pointproject.pointproject.data.Constants;
+import com.pointproject.pointproject.model.User;
+import com.pointproject.pointproject.network.Event.ErrorEvent;
+import com.pointproject.pointproject.network.Event.UserEvent;
+import com.pointproject.pointproject.network.Response.UserResponse;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +24,9 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -77,5 +90,88 @@ public class ApiClient {
     }
 
 
+
+    private void successResponse(ApiName apiName, Response response) {
+        switch (apiName) {
+            case USER_LOGIN:
+                getUserAccessToken((UserResponse) response.body());
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void getUserAccessToken(UserResponse body) {
+        UserEvent event = new UserEvent(body);
+        EventBus.getDefault().postSticky(event);
+    }
+
+
+    private void onFail(ApiName apiName) {
+        switch (apiName) {
+            case USER_LOGIN:
+                break;
+            default:
+                break;
+        }
+    }
+
+
+
+    private void errorResponse(ApiName apiName, Response response) {
+/*        if (apiName == ApiName.SEARCH_PRODUCTS) {
+            SearchProductsError error = new SearchProductsError();
+            error.code = response.code();
+            EventBus.getDefault().postSticky(error);
+        } else {
+            JsonParser parser = new JsonParser();
+            JsonElement mJson = null;
+            try {
+                mJson = parser.parse(response.errorBody().string());
+                Gson gson = new Gson();
+                ErrorEvent errorResponse = gson.fromJson(mJson, ErrorEvent.class);
+                EventBus.getDefault().postSticky(errorResponse);
+            } catch (IOException ex) {
+                ex.printStackTrace();}
+
+
+        }*/
+    }
+
+    private class RequestCalls extends AsyncTask<Call, Void, Void> {
+
+        private ApiName apiName;
+
+        public void setApiName(ApiName apiName) {
+            this.apiName = apiName;
+        }
+
+        @Override
+        protected Void doInBackground(Call... baseRequests) {
+
+            baseRequests[0].enqueue(new Callback() {
+                @Override
+                public void onResponse(Call call, Response response) {
+                    if (response.code() == 200) {
+                        successResponse(apiName, response);
+                        Log.d(LOG_TAG, String.valueOf(apiName));
+                    } else {
+                        errorResponse(apiName, response);
+                        Log.d(LOG_TAG, String.valueOf(apiName) + " = error");
+                    }
+                    //doRetry();
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    ErrorEvent errorEvent = new ErrorEvent();
+                    errorEvent.setMessage(t.getMessage());
+                    EventBus.getDefault().postSticky(errorEvent);
+                    onFail(apiName);
+                }
+            });
+            return null;
+        }
+    }
 
 }
