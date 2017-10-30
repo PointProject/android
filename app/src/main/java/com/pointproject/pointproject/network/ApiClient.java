@@ -56,7 +56,7 @@ public class ApiClient {
                 Request.Builder requestBuilder = original.newBuilder()
                         .header("Accept", "application/json")
                         .header("Content-Type", "application/json")
-                        //.header("Authorization", token)
+                        .header("authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjoidXNlciIsImlhdCI6MTUwOTM5Njg2Nn0.djgRg7nkdWYCPf8K2FhGUA5eoeYLCV572HB6l1ftjDM")
                         .method(original.method(), original.body());
 
                 Request request = requestBuilder.build();
@@ -66,6 +66,7 @@ public class ApiClient {
 
         httpClient.addInterceptor(logging);
         Gson gson = new GsonBuilder()
+                .setLenient()
                 .create();
         retrofit = new Retrofit.Builder()
                 .client(httpClient.build())
@@ -90,15 +91,36 @@ public class ApiClient {
     }
 
 
+    public void userAuthorisation(User user){
+        Call call = requestsLinks.login(user);
+        RequestCalls requestCalls = new RequestCalls();
+        requestCalls.setApiName(ApiName.USER_LOGIN);
+        requestCalls.execute(call);
+    }
 
+    public void updateUserData(User user){
+        Call call = requestsLinks.updateUser(user);
+        RequestCalls requestCalls = new RequestCalls();
+        requestCalls.setApiName(ApiName.USER_UPDATE);
+        requestCalls.execute(call);
+    }
+
+
+    //Успешный ответ
     private void successResponse(ApiName apiName, Response response) {
         switch (apiName) {
             case USER_LOGIN:
                 getUserAccessToken((UserResponse) response.body());
                 break;
+            case USER_UPDATE:
+                getTempResponse((UserResponse) response.body());
             default:
                 break;
         }
+    }
+
+    private void getTempResponse(UserResponse body) {
+        UserEvent event = new UserEvent(body);
     }
 
     private void getUserAccessToken(UserResponse body) {
@@ -107,6 +129,7 @@ public class ApiClient {
     }
 
 
+    //Действия в случаях провала
     private void onFail(ApiName apiName) {
         switch (apiName) {
             case USER_LOGIN:
@@ -117,7 +140,7 @@ public class ApiClient {
     }
 
 
-
+    //Ошибочный ответ
     private void errorResponse(ApiName apiName, Response response) {
 /*        if (apiName == ApiName.SEARCH_PRODUCTS) {
             SearchProductsError error = new SearchProductsError();
@@ -152,6 +175,7 @@ public class ApiClient {
             baseRequests[0].enqueue(new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) {
+                    response.body();
                     if (response.code() == 200) {
                         successResponse(apiName, response);
                         Log.d(LOG_TAG, String.valueOf(apiName));

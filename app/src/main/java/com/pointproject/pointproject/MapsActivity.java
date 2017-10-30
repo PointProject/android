@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -42,9 +43,15 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.pointproject.pointproject.geofence.GeofenceController;
 import com.pointproject.pointproject.data.Values;
+import com.pointproject.pointproject.model.User;
+import com.pointproject.pointproject.network.ApiClient;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback ,
@@ -59,6 +66,9 @@ public class MapsActivity extends AppCompatActivity
     private static final int PERMISSION_REQUEST_CODE = 2;
 
     private GoogleMap mMap;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     GoogleApiClient mGoogleApiClient;
     LocationRequest locationRequest;
@@ -78,6 +88,8 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ButterKnife.bind(this);
 
         isGooglePlayServicesAvailable();
 
@@ -129,6 +141,14 @@ public class MapsActivity extends AppCompatActivity
                     break;
             }
         });
+    }
+
+    @OnClick(R.id.fab)
+    public void fabClicking(){
+        User user = new User();
+        user.setAge(44);
+
+        ApiClient.getInstance(this).updateUserData(user);
     }
 
     private void startLocationUpdate(){

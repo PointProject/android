@@ -9,7 +9,9 @@ public class Constants {
     public static final String LOG_TAG = "LOG";
 
     //server info
-    public static final String SERVER_HOST = "localhost:8080";
+
+    //олег суда пхай IPv4 локальный с вифи(P.S. win+R, cmd, ipconfig)
+    public static final String SERVER_HOST = "http://192.168.0.103:8080";
 
 
 

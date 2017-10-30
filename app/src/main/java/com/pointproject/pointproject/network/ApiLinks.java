@@ -16,5 +16,9 @@ public interface ApiLinks {
     @POST("/user/login")
     Call<UserResponse> login(@Body User user);
 
+    @Headers("Cache-Control: no-cache")
+    @POST("/secure/user/update")
+    Call<UserResponse> updateUser(@Body User user);
+
 
 }
