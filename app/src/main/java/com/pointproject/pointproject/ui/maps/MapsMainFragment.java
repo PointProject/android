@@ -93,7 +93,7 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     private Map<Polygon, String> polygons;
 
 
-
+    //тот самый getInstance
     public static MapsMainFragment getInstance(Context context) {
         MapsMainFragment fragmentInstance = new MapsMainFragment();
 
