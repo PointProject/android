@@ -10,7 +10,6 @@ import android.view.View;
 
 public abstract class AbstractFragment extends Fragment {
 
-
     private String title;
 
     protected Context context;

@@ -2,6 +2,7 @@ package com.pointproject.pointproject.data;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.pointproject.pointproject.R;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,14 @@ public class Values {
     private Values(){}
 
     public static Map<PolygonOptions, String> areas = new HashMap<>();
+
+    public static String participants;
+    public static String revard;
+    public static String area;
+    public static String timeAlive;
+    public static String start;
+
+    public static int toolvarImageId;
 
     static{
         areas.put(new PolygonOptions().add(
@@ -97,5 +106,14 @@ public class Values {
                 new LatLng(46.558086, 30.798969)
                 ).fillColor(0x3FEF8601).strokeColor(0x7FEF8601),
                 "area10");
+
+         participants = "Participants: 100 people";
+         revard = "Revard: 100 uah";
+         area = "Area: 100 metres";
+        timeAlive = "Point time: 2 hours";
+        start = "Start time: 12:00:00";
+
+        toolvarImageId = R.drawable.ic_action_name;
+
     }
 }

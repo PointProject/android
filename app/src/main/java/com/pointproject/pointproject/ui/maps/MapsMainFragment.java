@@ -53,6 +53,7 @@ import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.data.Values;
 import com.pointproject.pointproject.geofence.GeofenceController;
+import com.pointproject.pointproject.ui.maps.areaDetails.AreaDetailsFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -237,9 +238,14 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, getResources().getInteger(R.integer.gps_provider_location_updates), 0, this);
     }
 
+    @Override
     public void onPolygonClick(Polygon polygon) {
         String name = polygons.get(polygon);
-        Toast.makeText(context, name, Toast.LENGTH_SHORT).show();
+        AreaDetailsFragment fragment = AreaDetailsFragment.getInstance(getActivity(), name);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_container, fragment,"areDetails")
+//                .addToBackStack(null)
+                .commit();
     }
 
     public void showNoGeoPermissionSnackbar() {
