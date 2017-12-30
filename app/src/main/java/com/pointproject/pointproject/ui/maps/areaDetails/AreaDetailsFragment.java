@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -45,7 +47,6 @@ public class AreaDetailsFragment extends AbstractFragment {
 
     String polygonName;
 
-
     public AreaDetailsFragment() {
         // Required empty public constructor
     }
@@ -61,14 +62,13 @@ public class AreaDetailsFragment extends AbstractFragment {
         return fragmentInstance;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_area_details, container, false);
         ButterKnife.bind(this, view);
-        setToolbar();
+//        setToolbar();
         populateMockData();
         // Inflate the layout for this fragment
         return view;
@@ -91,9 +91,10 @@ public class AreaDetailsFragment extends AbstractFragment {
         super.onDetach();
     }
 
+
     private void setToolbar()
     {
-        collapsingToolbar.setContentScrimColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        collapsingToolbar.setContentScrimColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         collapsingToolbar.setTitle(polygonName);
         collapsingToolbar.setTitleEnabled(true);
 
@@ -105,6 +106,7 @@ public class AreaDetailsFragment extends AbstractFragment {
             if (actionBar != null)
             {
 //                actionBar.setDisplayHomeAsUpEnabled(true);
+
             }
         } else
         {

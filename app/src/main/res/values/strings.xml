@@ -24,6 +24,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Sign in</string>
+    <string-array name="entries">
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+    <string-array name="entry_values">
+        <item>eng</item>
+        <item>ру</item>
+    </string-array>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Login</string>
@@ -38,4 +46,6 @@
         completions."
     </string>
     <string name="toolbar_crystals">Кристалы</string>
+
+
 </resources>

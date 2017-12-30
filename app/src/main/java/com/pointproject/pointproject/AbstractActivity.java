@@ -1,5 +1,7 @@
 package com.pointproject.pointproject;
 
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +17,8 @@ import android.view.MenuItem;
 
 import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
+import com.pointproject.pointproject.ui.settings.SettingsActivity;
+import com.pointproject.pointproject.ui.settings.SettingsFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,6 +113,19 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
             int itemId = item.getItemId();
             if (itemId == R.id.menu_play)
                 startActivity(new Intent(this, MapsActivity.class));
+            else if(itemId == R.id.menu_settings){
+                startActivity(new Intent(this, SettingsActivity.class));
+            }
+//                SettingsFragment fragment = SettingsFragment.getInstance();
+//                getFragmentManager()
+//                        .beginTransaction()
+//                        // It's almost always a good idea to use .replace instead of .add so that
+//                        // you never accidentally layer multiple Fragments on top of each other
+//                        // unless of course that's your intention
+//                        .replace(R.id.content_container, fragment)
+//                        .addToBackStack(fragment.TAG)
+//                        .commit();
+//            }
 //            else if (itemId == R.id.menu_leaders) {
 //                startActivity(new Intent(this, LeadersActivity.class));
 //            }

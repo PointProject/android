@@ -241,11 +241,12 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     @Override
     public void onPolygonClick(Polygon polygon) {
         String name = polygons.get(polygon);
-        AreaDetailsFragment fragment = AreaDetailsFragment.getInstance(getActivity(), name);
+        AreaDetailsFragment fragment = AreaDetailsFragment.getInstance(context, name);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_container, fragment,"areDetails")
+                .replace(R.id.content_container, fragment,"areaDetails")
 //                .addToBackStack(null)
                 .commit();
+
     }
 
     public void showNoGeoPermissionSnackbar() {
