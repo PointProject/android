@@ -1,20 +1,23 @@
-package com.pointproject.pointproject.ui.crystals;
+package com.pointproject.pointproject.ui.leaders;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 
 import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
-import com.pointproject.pointproject.ui.maps.MapsMainFragment;
+
+import butterknife.BindView;
 
 /**
  * Created by xdewnik on 30.12.2017.
  */
 
-public class CrystalsActivity extends AbstractActivity {
+public class LeadersActivity extends AbstractActivity {
 
-    private final static String CRYSTALS_FRAGMENT_TAG = "CrystalsMainFragment";
-    private static final int NAV_ITEM = R.id.menu_play;
+    private static final int NAV_ITEM = R.id.menu_leaders;
+    private static final String TAG = LeadersActivity.class.getSimpleName();
+    private final static String LEADERS_MAIN_FRAGMENT = "LeadersMainFragment";
 
 
     @Override
@@ -23,19 +26,20 @@ public class CrystalsActivity extends AbstractActivity {
         if (savedInstanceState == null) {
             // The Activity is NOT being re-created so we can instantiate a new Fragment
             // and add it to the Activity
-            CrystalsMainFragment fragment = CrystalsMainFragment.getInstance(this);
+            LeadersMainFragment fragment = LeadersMainFragment.getInstance(this);
             getSupportFragmentManager()
                     .beginTransaction()
                     // It's almost always a good idea to use .replace instead of .add so that
                     // you never accidentally layer multiple Fragments on top of each other
                     // unless of course that's your intention
-                    .replace(R.id.content_container, fragment, CRYSTALS_FRAGMENT_TAG)
+                    .replace(R.id.content_container, fragment, LEADERS_MAIN_FRAGMENT)
                     .commit();
         } else {
             // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
             // but if we need a reference to it, we can use the tag we passed to .replace
-            getSupportFragmentManager().findFragmentByTag(CRYSTALS_FRAGMENT_TAG);
+            getSupportFragmentManager().findFragmentByTag(LEADERS_MAIN_FRAGMENT);
         }
+
     }
 
     @Override
@@ -45,6 +49,6 @@ public class CrystalsActivity extends AbstractActivity {
 
     @Override
     protected int getNavigationMenuItemId() {
-        return 0;
+        return NAV_ITEM;
     }
 }

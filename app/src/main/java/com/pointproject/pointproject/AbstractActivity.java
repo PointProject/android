@@ -14,7 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
+import com.pointproject.pointproject.ui.leaders.LeadersActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
+import com.pointproject.pointproject.ui.rules.RulesActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,7 +95,7 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
         switch (item.getItemId()) {
             case R.id.toolbar_crystals:
                 startActivity(new Intent(this, CrystalsActivity.class));
-                return true;
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -109,12 +111,12 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
             int itemId = item.getItemId();
             if (itemId == R.id.menu_play)
                 startActivity(new Intent(this, MapsActivity.class));
-//            else if (itemId == R.id.menu_leaders) {
-//                startActivity(new Intent(this, LeadersActivity.class));
-//            }
-//            else if (itemId == R.id.navigation_notifications) {
-//                startActivity(new Intent(this, NotificationsActivity.class));
-//            }
+            else if (itemId == R.id.menu_leaders) {
+                startActivity(new Intent(this, LeadersActivity.class));
+            }
+            else if (itemId == R.id.menu_rules) {
+                startActivity(new Intent(this, RulesActivity.class));
+            }
             finish();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);

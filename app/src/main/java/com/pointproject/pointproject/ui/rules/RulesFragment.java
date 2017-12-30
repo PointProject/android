@@ -1,4 +1,4 @@
-package com.pointproject.pointproject.ui.crystals;
+package com.pointproject.pointproject.ui.rules;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,17 +10,18 @@ import android.view.ViewGroup;
 
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.ui.leaders.LeadersMainFragment;
 
 /**
  * Created by xdewnik on 30.12.2017.
  */
 
-public class CrystalsMainFragment extends AbstractFragment {
+public class RulesFragment extends AbstractFragment {
 
-    private final static int LAYOUT = R.layout.crystals_fragment;
+    private final static int LAYOUT = R.layout.rules_fragment;
 
-    public static CrystalsMainFragment getInstance(Context context) {
-        CrystalsMainFragment fragmentInstance = new CrystalsMainFragment();
+    public static RulesFragment getInstance(Context context) {
+        RulesFragment fragmentInstance = new RulesFragment();
 
         Bundle args = new Bundle();
         fragmentInstance.setArguments(args);
@@ -31,8 +32,8 @@ public class CrystalsMainFragment extends AbstractFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(LAYOUT, container,false);
-
+        view = inflater.inflate(LAYOUT,container,false);
         return view;
     }
+
 }

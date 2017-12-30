@@ -5,5 +5,5 @@
         android:id="@+id/toolbar_crystals"
         android:title="@string/toolbar_crystals"
         android:icon="@drawable/crystals_icon"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always|withText" />
 </menu>
