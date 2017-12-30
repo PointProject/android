@@ -14,4 +14,10 @@
     <string name="security_exception">SecurityException:\n</string>
     <string name="permission_denied">Permission denied!</string>
     <string name="google_api_client_connection_failed">Connection to GoogleApiClient failed:\n</string>
+    <string name="menu_play">Играть!</string>
+    <string name="menu_invite">Пригласить друга!</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_rules">Правила</string>
+    <string name="menu_leaders">Лидеры</string>
+    <string name="menu_exit">Выход</string>
 </resources>

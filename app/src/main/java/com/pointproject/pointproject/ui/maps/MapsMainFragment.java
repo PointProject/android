@@ -1,7 +1,8 @@
-package com.pointproject.pointproject;
+package com.pointproject.pointproject.ui.maps;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -18,8 +19,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
@@ -46,29 +49,38 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.pointproject.pointproject.geofence.GeofenceController;
+import com.pointproject.pointproject.AbstractFragment;
+import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.data.Values;
+import com.pointproject.pointproject.geofence.GeofenceController;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapsActivity extends AppCompatActivity
-        implements OnMapReadyCallback ,
+/**
+ * Created by xdewnik on 30.12.2017.
+ */
+
+public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCallback ,
         LocationListener,
         GoogleMap.OnPolygonClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = MapsActivity.class.getSimpleName();
+    private static final int LAYOUT = R.layout.maps_fragment;
+
+    private static final String TAG = MapsMainFragment.class.getSimpleName();
 
     private static final int PERMISSION_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_CODE = 2;
 
     private static final LatLngBounds ODESSA_LIMITS =  new LatLngBounds(
-                new LatLng(46.295105, 30.517616),
-                new LatLng(46.652603, 30.917244));
+            new LatLng(46.295105, 30.517616),
+            new LatLng(46.652603, 30.917244));
 
     private GoogleMap mMap;
+
+    private SupportMapFragment mapFragment;
 
     GoogleApiClient mGoogleApiClient;
     LocationRequest locationRequest;
@@ -80,18 +92,41 @@ public class MapsActivity extends AppCompatActivity
 
     private Map<Polygon, String> polygons;
 
+
+
+    public static MapsMainFragment getInstance(Context context) {
+        MapsMainFragment fragmentInstance = new MapsMainFragment();
+
+        Bundle args = new Bundle();
+        fragmentInstance.setArguments(args);
+        fragmentInstance.setContext(context);
+        return fragmentInstance;
+    }
+
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(LAYOUT, container,false);
+
+        //работа с картой через ребенка
+        mapFragment = (SupportMapFragment)this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        mapFragment.getMapAsync( this);
 
         isGooglePlayServicesAvailable();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -99,7 +134,7 @@ public class MapsActivity extends AppCompatActivity
 
         mGoogleApiClient.connect();
 
-        locationManager = (LocationManager) getSystemService(Service.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Service.LOCATION_SERVICE);
 
         requestTurnOnGPS();
     }
@@ -130,7 +165,7 @@ public class MapsActivity extends AppCompatActivity
                     try {
                         // Show the dialog by calling startResolutionForResult()
                         status.startResolutionForResult(
-                                this, 1000);
+                                (MapsActivity)getActivity(), 1000);
                     } catch (IntentSender.SendIntentException e) {
                         // Ignore the error.
                     }
@@ -176,7 +211,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void putGeofences(HashMap<String, LatLng> geofData){
-        GeofenceController gc = new GeofenceController(this);
+        GeofenceController gc = new GeofenceController(context);
         gc.addGeofences(geofData);
 
         for(Map.Entry<String, LatLng> entry: geofData.entrySet())
@@ -192,9 +227,9 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void startLocationUpdate(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) !=
                         PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -204,15 +239,15 @@ public class MapsActivity extends AppCompatActivity
 
     public void onPolygonClick(Polygon polygon) {
         String name = polygons.get(polygon);
-        Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, name, Toast.LENGTH_SHORT).show();
     }
 
     public void showNoGeoPermissionSnackbar() {
-        Snackbar.make(MapsActivity.this.findViewById(R.id.map), getText(R.string.no_location_permission), Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(view.findViewById(R.id.map), getText(R.string.no_location_permission), Snackbar.LENGTH_INDEFINITE)
                 .setAction(getText(R.string.settings), v -> {
                     openApplicationSettings();
 
-                    Toast.makeText(getApplicationContext(),
+                    Toast.makeText(context,
                             getText(R.string.grant_location_permission),
                             Toast.LENGTH_SHORT)
                             .show();
@@ -222,39 +257,39 @@ public class MapsActivity extends AppCompatActivity
 
     public void openApplicationSettings() {
         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:" + getPackageName()));
+                Uri.parse("package:" + context.getPackageName()));
         startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            switch (requestCode) {
-                case PERMISSION_FINE_LOCATION: {
-                    // If request is cancelled, the result arrays are empty.
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(MapsActivity.this, getString(R.string.permission_granted), Toast.LENGTH_LONG).show();
+        switch (requestCode) {
+            case PERMISSION_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(context, getString(R.string.permission_granted), Toast.LENGTH_LONG).show();
 
-                        try{
-                            startLocationUpdate();
-                        } catch (SecurityException e) {
-                            Toast.makeText(MapsActivity.this, getString(R.string.security_exception) + e.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(MapsActivity.this, getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
-                        showNoGeoPermissionSnackbar();
+                    try{
+                        startLocationUpdate();
+                    } catch (SecurityException e) {
+                        Toast.makeText(context, getString(R.string.security_exception) + e.toString(), Toast.LENGTH_LONG).show();
                     }
-                    return;
+                } else {
+                    Toast.makeText(context, getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
+                    showNoGeoPermissionSnackbar();
                 }
+                return;
             }
+        }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MapsActivity.this,
+            ActivityCompat.requestPermissions((MapsActivity)getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_FINE_LOCATION);
 
@@ -273,7 +308,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(MapsActivity.this, getString(R.string.google_api_client_connection_failed) + connectionResult.toString(),
+        Toast.makeText(context, getString(R.string.google_api_client_connection_failed) + connectionResult.toString(),
                 Toast.LENGTH_LONG).show();
         Log.d(TAG, "GoogleApiClient On connection failed: " + connectionResult.toString());
     }
@@ -347,14 +382,14 @@ public class MapsActivity extends AppCompatActivity
     private boolean isGooglePlayServicesAvailable() {
         final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
             } else {
                 Log.d(TAG, "Google Play Services. This device is not supported.");
-                finish();
+                getActivity().finish();
             }
             return false;
         }
@@ -439,5 +474,3 @@ public class MapsActivity extends AppCompatActivity
 
     }
 }
-
-
