@@ -50,6 +50,8 @@
             </intent-filter>
 
         </activity>
+
+        <activity android:name=".ui.crystals.CrystalsActivity"/>
     </application>
 
 </manifest>

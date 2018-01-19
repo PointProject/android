@@ -3,22 +3,26 @@ package com.pointproject.pointproject;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.ui.settings.SettingsActivity;
 
@@ -42,6 +46,8 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     @BindView(R.id.counter_application) TextView counterApplication;
     @BindView(R.id.counter_race) TextView counterRace;
 
+    private TextView badgeCrystalItem;
+
     private ActionBarDrawerToggle mDrawerToggle;
 
     private long timer = 10_800_000;
@@ -54,6 +60,9 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
+
+        badgeCrystalItem = (TextView) navigationView.getMenu().
+                findItem(R.id.menu_crystals).getActionView();
 
 //      display burger icon on toolbar and set title
         if(getSupportActionBar() != null){
@@ -114,11 +123,12 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         navigationView.postDelayed(() -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.menu_play)
-                startActivity(new Intent(this, MapsActivity.class));
-            else if(itemId == R.id.menu_settings){
+//            if (itemId == R.id.menu_play)
+//                startActivity(new Intent(this, MapsActivity.class));
+            if(itemId == R.id.menu_settings)
                 startActivity(new Intent(this, SettingsActivity.class));
-            }
+            if(itemId == R.id.menu_crystals)
+                startActivity(new Intent(this, CrystalsActivity.class));
             finish();
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
@@ -161,6 +171,13 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(mDrawerToggle);
+
+//        add badges to drawer items
+        //Gravity property aligns the text
+        badgeCrystalItem.setGravity(Gravity.CENTER_VERTICAL);
+        badgeCrystalItem.setTypeface(null, Typeface.BOLD);
+        badgeCrystalItem.setTextColor(getResources().getColor(R.color.colorAccent));
+        badgeCrystalItem.setText("69");
     }
 
     private void updateNavigationBarState(){
@@ -180,6 +197,7 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
 
 //                provides hour difference between counters
                 long millisUntilFinishedSecondTimer = millisUntilFinished + 3_600_000;
+
                 String  hmsRace =  (TimeUnit.MILLISECONDS.toHours(millisUntilFinishedSecondTimer))+":"+
                         (TimeUnit.MILLISECONDS.toMinutes(millisUntilFinishedSecondTimer) -
                                 TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinishedSecondTimer)))+":"+
@@ -190,7 +208,6 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
                 counterRace.setText(hmsRace);
 
                 timer = millisUntilFinished;
-
             }
 
             @Override

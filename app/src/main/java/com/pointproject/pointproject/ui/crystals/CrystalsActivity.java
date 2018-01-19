@@ -14,7 +14,7 @@ import com.pointproject.pointproject.ui.maps.MapsMainFragment;
 public class CrystalsActivity extends AbstractActivity {
 
     private final static String MAPS_FRAGMENT_TAG = "CrystalsMainFragment";
-    private static final int NAV_ITEM = -1;
+    private static final int NAV_ITEM = R.id.menu_crystals;
 
 
     @Override
