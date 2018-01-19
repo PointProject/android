@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">PointProject</string>
     <string name="title_activity_maps">Map</string>
+    <string name="pay_point">payPoint</string>
 
     <!--Strings related to maps-->
     <string name="null_location">Sorry, can\'t get your location</string>
@@ -24,6 +25,7 @@
     <string name="menu_rules">Правила</string>
     <string name="menu_leaders">Лидеры</string>
     <string name="menu_exit">Выход</string>
+    <string name="menu_crystals">Кристалы</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
@@ -51,7 +53,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="toolbar_crystals">Кристалы</string>
 
 
 </resources>

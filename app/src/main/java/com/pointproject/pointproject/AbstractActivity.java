@@ -4,6 +4,7 @@ package com.pointproject.pointproject;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -16,10 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.ui.settings.SettingsActivity;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +39,12 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
 
+    @BindView(R.id.counter_application) TextView counterApplication;
+    @BindView(R.id.counter_race) TextView counterRace;
+
     private ActionBarDrawerToggle mDrawerToggle;
+
+    private long timer = 10_800_000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,13 +55,17 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
 
-//      display burger icon on toolbar
+//      display burger icon on toolbar and set title
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
+
+            getSupportActionBar().setTitle(R.string.pay_point);
         }
 
         setupDrawer();
+
+        startFakeCounter();
     }
 
 
@@ -88,23 +100,14 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar,menu);
-        return true;
+        return  true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 //        check if burger was clicked
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
-        switch (item.getItemId()) {
-            case R.id.toolbar_crystals:
-                startActivity(new Intent(this, CrystalsActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -116,22 +119,6 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
             else if(itemId == R.id.menu_settings){
                 startActivity(new Intent(this, SettingsActivity.class));
             }
-//                SettingsFragment fragment = SettingsFragment.getInstance();
-//                getFragmentManager()
-//                        .beginTransaction()
-//                        // It's almost always a good idea to use .replace instead of .add so that
-//                        // you never accidentally layer multiple Fragments on top of each other
-//                        // unless of course that's your intention
-//                        .replace(R.id.content_container, fragment)
-//                        .addToBackStack(fragment.TAG)
-//                        .commit();
-//            }
-//            else if (itemId == R.id.menu_leaders) {
-//                startActivity(new Intent(this, LeadersActivity.class));
-//            }
-//            else if (itemId == R.id.navigation_notifications) {
-//                startActivity(new Intent(this, NotificationsActivity.class));
-//            }
             finish();
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
@@ -179,5 +166,37 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     private void updateNavigationBarState(){
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
+    }
+
+    private void startFakeCounter(){
+        new CountDownTimer(timer, 1_000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String  hmsApplication =  (TimeUnit.MILLISECONDS.toHours(millisUntilFinished))+":"+
+                        (TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)))+":"+
+                        (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
+
+//                provides hour difference between counters
+                long millisUntilFinishedSecondTimer = millisUntilFinished + 3_600_000;
+                String  hmsRace =  (TimeUnit.MILLISECONDS.toHours(millisUntilFinishedSecondTimer))+":"+
+                        (TimeUnit.MILLISECONDS.toMinutes(millisUntilFinishedSecondTimer) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinishedSecondTimer)))+":"+
+                        (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinishedSecondTimer) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinishedSecondTimer)));
+
+                counterApplication.setText(hmsApplication);
+                counterRace.setText(hmsRace);
+
+                timer = millisUntilFinished;
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
     }
 }
