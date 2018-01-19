@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">PointProject</string>
     <string name="title_activity_maps">Map</string>
+
+    <!--Strings related to maps-->
     <string name="null_location">Sorry, can\'t get your location</string>
     <string name="no_location_permission">Location permission isn\'t granted</string>
     <string name="settings">Settings</string>
@@ -14,12 +16,16 @@
     <string name="security_exception">SecurityException:\n</string>
     <string name="permission_denied">Permission denied!</string>
     <string name="google_api_client_connection_failed">Connection to GoogleApiClient failed:\n</string>
+
+    <!--Drawer menu strings-->
     <string name="menu_play">Играть!</string>
     <string name="menu_invite">Пригласить друга!</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_rules">Правила</string>
     <string name="menu_leaders">Лидеры</string>
     <string name="menu_exit">Выход</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
