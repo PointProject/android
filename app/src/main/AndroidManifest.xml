@@ -51,6 +51,7 @@
         </activity>
 
         <activity android:name=".ui.crystals.CrystalsActivity"/>
+        <activity android:name=".ui.settings.SettingsActivity"/>
     </application>
 
 </manifest>

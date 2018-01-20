@@ -1,35 +1,19 @@
 package com.pointproject.pointproject.ui.settings;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
+import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
 
-/**
- * Created by aengus on 30.12.2017.
- */
 
-public class SettingsActivity extends AppCompatActivity{
-    private final static int LAYOUT = R.layout.settings_activity;
+public class SettingsActivity extends AbstractActivity{
+
     private final static String SETTINGS_FRAGMENT_TAG = "SettingsFragment";
-
-
-    // UI references.
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //animation
-//        overridePendingTransition(R.anim.left_in, R.anim.right_out);
-    }
-
+    private static final int NAV_ITEM = R.id.menu_settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(LAYOUT);
-        // Set up the login form.
 
         if (savedInstanceState == null) {
             // The Activity is NOT being re-created so we can instantiate a new Fragment
@@ -47,5 +31,15 @@ public class SettingsActivity extends AppCompatActivity{
             // but if we need a reference to it, we can use the tag we passed to .replace
             getSupportFragmentManager().findFragmentByTag(SETTINGS_FRAGMENT_TAG);
         }
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return LAYOUT;
+    }
+
+    @Override
+    protected int getNavigationMenuItemId() {
+        return NAV_ITEM;
     }
 }

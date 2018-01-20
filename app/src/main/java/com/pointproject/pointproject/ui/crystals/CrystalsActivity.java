@@ -5,11 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
-import com.pointproject.pointproject.ui.maps.MapsMainFragment;
-
-/**
- * Created by xdewnik on 30.12.2017.
- */
 
 public class CrystalsActivity extends AbstractActivity {
 

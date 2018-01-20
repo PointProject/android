@@ -4,10 +4,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-/**
- * Created by xdewnik on 30.12.2017.
- */
-
 public abstract class AbstractFragment extends Fragment {
 
     private String title;
