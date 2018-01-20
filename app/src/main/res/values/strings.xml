@@ -20,7 +20,8 @@
 
     <!--Drawer menu strings-->
     <string name="menu_play">Играть!</string>
-    <string name="menu_invite">Пригласить друга!</string>
+    <string name="menu_cash_withdraw">Вывести средства</string>
+    <string name="menu_social">Мы в соцсети</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_rules">Правила</string>
     <string name="menu_leaders">Лидеры</string>

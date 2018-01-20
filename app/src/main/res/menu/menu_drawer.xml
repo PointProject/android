@@ -2,7 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:checkableBehavior="single">
+    <!--different group ids for view separator between groups-->
+    <group android:checkableBehavior="single"
+        android:id="@+id/main">
         <item android:id="@+id/menu_play"
             android:title="@string/menu_play"
             />
@@ -13,14 +15,17 @@
               android:title="@string/menu_crystals"
               app:actionViewClass="android.widget.TextView"
               />
+        <item android:id="@+id/menu_cash"
+              android:title="@string/menu_cash_withdraw"
+              />
         <item android:id="@+id/menu_rules"
             android:title="@string/menu_rules"
             />
         <item android:id="@+id/menu_settings"
             android:title="@string/menu_settings"
             />
-        <item android:id="@+id/menu_invite"
-            android:title="@string/menu_invite"
+        <item android:id="@+id/menu_social_network"
+            android:title="@string/menu_social"
             />
         <item android:id="@+id/menu_exit"
             android:title="@string/menu_exit"
@@ -28,7 +33,8 @@
     </group>
 
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/test">
         <item android:id="@+id/menu_mock_notification"
             android:title="Тест счётчика на иконке"
         />
