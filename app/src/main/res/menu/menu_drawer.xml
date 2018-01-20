@@ -25,7 +25,12 @@
         <item android:id="@+id/menu_exit"
             android:title="@string/menu_exit"
             />
+    </group>
 
 
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/menu_mock_notification"
+            android:title="Тест счётчика на иконке"
+        />
     </group>
 </menu>

@@ -1,16 +1,21 @@
 package com.pointproject.pointproject;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 public abstract class AbstractActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,7 +56,10 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
 
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private long timer = 10_800_000;
+    private long mockTimer = 10_800_000;
+    private static int mockBadgeCounter = 1;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,6 +102,14 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     }
 
     @Override
+    protected void onStop() {
+//        Remove fake badge
+        ShortcutBadger.removeCount(AbstractActivity.this);
+
+        super.onStop();
+    }
+
+    @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 //        sync drawer state with burger icon state
@@ -123,13 +140,18 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         navigationView.postDelayed(() -> {
             int itemId = item.getItemId();
-//            if (itemId == R.id.menu_play)
-//                startActivity(new Intent(this, MapsActivity.class));
+            if (itemId == R.id.menu_play)
+                startActivity(new Intent(this, MapsActivity.class));
             if(itemId == R.id.menu_settings)
                 startActivity(new Intent(this, SettingsActivity.class));
             if(itemId == R.id.menu_crystals)
                 startActivity(new Intent(this, CrystalsActivity.class));
-            finish();
+
+            if(itemId == R.id.menu_mock_notification)
+                mockNotification();
+
+//            TODO Commented only for menu mock notification presentation. Uncomment finish() line
+//            finish();
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         }, 300);
@@ -186,7 +208,7 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     }
 
     private void startFakeCounter(){
-        new CountDownTimer(timer, 1_000) {
+        new CountDownTimer(mockTimer, 1_000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 String  hmsApplication =  (TimeUnit.MILLISECONDS.toHours(millisUntilFinished))+":"+
@@ -207,7 +229,7 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
                 counterApplication.setText(hmsApplication);
                 counterRace.setText(hmsRace);
 
-                timer = millisUntilFinished;
+                mockTimer = millisUntilFinished;
             }
 
             @Override
@@ -215,5 +237,29 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
 
             }
         }.start();
+    }
+
+/**   mock notification for presentation purpose only; show counter on app launcher */
+    private void mockNotification(){
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification.Builder builder = new Notification.Builder(getApplicationContext())
+                .setContentTitle("")
+                .setContentText("")
+                .setSmallIcon(R.mipmap.ic_launcher_round);
+
+        //Vibration
+        builder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+        //LED
+        builder.setLights(Color.YELLOW, 3000, 3000);
+        //Sound
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(alarmSound);
+
+        Notification notification = builder.build();
+        ShortcutBadger.applyCount(AbstractActivity.this, mockBadgeCounter);
+        ShortcutBadger.applyNotification(getApplicationContext(), notification, mockBadgeCounter);
+        mockBadgeCounter++;
+        assert mNotificationManager != null;
+        mNotificationManager.notify(0, notification);
     }
 }
