@@ -56,6 +56,7 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
 
     private ActionBarDrawerToggle mDrawerToggle;
 
+//    TODO Delete this afterwards
     private long mockTimer = 10_800_000;
     private static int mockBadgeCounter = 1;
 

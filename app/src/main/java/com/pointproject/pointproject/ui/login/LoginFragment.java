@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,6 @@ import com.pointproject.pointproject.ui.maps.MapsActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/**
- * Created by xdewnik on 30.12.2017.
- */
 
 public class LoginFragment extends AbstractFragment {
 
@@ -52,6 +49,14 @@ public class LoginFragment extends AbstractFragment {
         fragmentInstance.setArguments(args);
         fragmentInstance.setContext(context);
         return fragmentInstance;
+    }
+
+//    Context is lost on screen rotation. Resetting it onAttach solve rotation crach problem
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        setContext(context);
     }
 
     @Nullable

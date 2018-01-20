@@ -58,9 +58,6 @@ import com.pointproject.pointproject.ui.maps.areaDetails.AreaDetailsFragment;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by xdewnik on 30.12.2017.
- */
 
 public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCallback ,
         LocationListener,
@@ -104,6 +101,12 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
         return fragmentInstance;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        setContext(context);
+    }
 
     @Nullable
     @Override
