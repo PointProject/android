@@ -1,15 +1,7 @@
 <android.support.design.widget.AppBarLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimaryDark"
-        app:layout_scrollFlags="enterAlways|scroll" />
+                                            android:layout_height="wrap_content"
+                                            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                                            xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +9,16 @@
         android:orientation="horizontal"
         android:background="?attr/colorPrimary">
 
-
+        <ImageButton
+            android:id="@+id/button_menu_burger"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_menu_burger"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            />
         <TextView
             android:id="@+id/counter_application"
             android:layout_width="0dp"
@@ -38,7 +39,6 @@
             android:layout_marginTop="16dp"
             android:textSize="18sp"
             android:text=""/>
-
 
     </LinearLayout>
 
