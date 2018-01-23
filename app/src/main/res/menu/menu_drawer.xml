@@ -8,9 +8,9 @@
         <item android:id="@+id/menu_play"
             android:title="@string/menu_play"
             />
-        <!--<item android:id="@+id/menu_leaders"-->
-            <!--android:title="@string/menu_leaders"-->
-            <!--/>-->
+        <item android:id="@+id/menu_leaders"
+            android:title="@string/menu_leaders"
+            />
         <item android:id="@+id/menu_crystals"
               android:title="@string/menu_crystals"
               app:actionViewClass="android.widget.TextView"

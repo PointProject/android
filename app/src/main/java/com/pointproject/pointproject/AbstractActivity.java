@@ -211,8 +211,8 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     private void mockNotification(){
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder builder = new Notification.Builder(getApplicationContext())
-                .setContentTitle("")
-                .setContentText("")
+                .setContentTitle("Test app launcher counter")
+                .setContentText("Minimize app and look at app launcher")
                 .setSmallIcon(R.mipmap.ic_launcher_round);
 
         //Vibration
