@@ -8,6 +8,7 @@ import com.pointproject.pointproject.R;
 
 public class SettingsActivity extends AbstractActivity{
 
+    private static final int LAYOUT = R.layout.activity_settings;
     private final static String SETTINGS_FRAGMENT_TAG = "SettingsFragment";
     private static final int NAV_ITEM = R.id.menu_settings;
 

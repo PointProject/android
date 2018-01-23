@@ -55,7 +55,7 @@ public class AreaDetailsFragment extends AbstractFragment {
     public void onDetach() {
         super.onDetach();
     }
-    
+
     private void populateMockData() {
         participants.setText(Values.participants);
         revard.setText(Values.revard);
