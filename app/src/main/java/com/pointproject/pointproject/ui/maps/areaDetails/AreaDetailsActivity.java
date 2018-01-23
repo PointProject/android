@@ -80,7 +80,6 @@ public class AreaDetailsActivity extends AbstractActivity {
 
         }
 
-//        collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
         collapsingToolbar.setTitle(name);
         collapsingToolbar.setTitleEnabled(true);
 

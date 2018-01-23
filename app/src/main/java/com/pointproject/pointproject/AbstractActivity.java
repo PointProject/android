@@ -27,7 +27,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
+import com.pointproject.pointproject.ui.leaders.LeadersActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
+import com.pointproject.pointproject.ui.rules.RulesActivity;
 import com.pointproject.pointproject.ui.settings.SettingsActivity;
 
 import butterknife.BindView;
@@ -136,6 +138,14 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
                 startActivity(new Intent(this, SettingsActivity.class));
             if(itemId == R.id.menu_crystals)
                 startActivity(new Intent(this, CrystalsActivity.class));
+            if (itemId == R.id.menu_leaders) {
+                startActivity(new Intent(this, LeadersActivity.class));
+            }
+            if (itemId == R.id.menu_rules) {
+                startActivity(new Intent(this, RulesActivity.class));
+
+            }
+
 
             if(itemId == R.id.menu_mock_notification)
                 mockNotification();
