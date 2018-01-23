@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -53,7 +54,9 @@ import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.data.Values;
 import com.pointproject.pointproject.geofence.GeofenceController;
+import com.pointproject.pointproject.ui.maps.areaDetails.AreaDetailsActivity;
 import com.pointproject.pointproject.ui.maps.areaDetails.AreaDetailsFragment;
+import com.pointproject.pointproject.ui.settings.SettingsActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -244,12 +247,9 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     @Override
     public void onPolygonClick(Polygon polygon) {
         String name = polygons.get(polygon);
-        AreaDetailsFragment fragment = AreaDetailsFragment.getInstance(context, name);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_container, fragment,"areaDetails")
-//                .addToBackStack(null)
-                .commit();
 
+        Intent intent = AreaDetailsActivity.getIntent(context, name);
+        startActivity(intent);
     }
 
     public void showNoGeoPermissionSnackbar() {

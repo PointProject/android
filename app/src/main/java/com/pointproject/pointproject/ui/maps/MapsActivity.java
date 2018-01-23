@@ -10,14 +10,12 @@ import com.pointproject.pointproject.R;
 
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+
 public class MapsActivity extends AbstractActivity  {
 
-//    Toolbar toolbarM;
-//    CoordinatorLayout coordinatorLayout;
-//    AppBarLayout appComm;
-//    AppBarLayout appCount;
-    TextView counterApplication;
-    TextView counterRace;
+    @BindView(R.id.counter_application) TextView counterApplication;
+    @BindView(R.id.counter_race) TextView counterRace;
 
     private static final int LAYOUT = R.layout.activity_main_map;
     private static final int NAV_ITEM = R.id.menu_play;
@@ -30,23 +28,6 @@ public class MapsActivity extends AbstractActivity  {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        coordinatorLayout = findViewById(R.id.overview_coordinator_layout);
-//        appComm = coordinatorLayout.findViewById(R.id.appbar_common);
-//        appCount = drawer.findViewById(R.id.appbar_timers);
-
-//        coordinatorLayout.removeView(appComm);
-//        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View v = vi.inflate(R.layout.appbar_main_map, null);
-//        coordinatorLayout.addView(v);
-
-//        toolbarM = findViewById(R.id.toolbar_main_map);
-//        appComm = findViewById(R.id.appbar_common);
-//        appCount = findViewById(R.id.appbar_timers);
-        counterApplication = findViewById(R.id.counter_application);
-        counterRace = findViewById(R.id.counter_race);
-
-//        setSupportActionBar(toolbarM);
 
         startFakeCounter();
 
