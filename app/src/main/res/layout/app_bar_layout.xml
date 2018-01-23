@@ -1,45 +1,15 @@
 <android.support.design.widget.AppBarLayout android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
+                                            android:id="@+id/appbar_common"
                                             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
                                             xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:orientation="horizontal"
-        android:background="?attr/colorPrimary">
-
-        <ImageButton
-            android:id="@+id/button_menu_burger"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_menu_burger"
-            android:background="@android:color/transparent"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            />
-        <TextView
-            android:id="@+id/counter_application"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="18sp"
-            android:text=""/>
-
-        <TextView
-            android:id="@+id/counter_race"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorDrawerIcon"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="18sp"
-            android:text=""/>
-
-    </LinearLayout>
+        android:background="?attr/colorPrimaryDark"
+        app:layout_scrollFlags="enterAlways|scroll" />
 
 </android.support.design.widget.AppBarLayout>

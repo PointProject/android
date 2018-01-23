@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.RingtoneManager;
@@ -16,8 +17,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,22 +40,21 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 
 public abstract class AbstractActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
     protected static final int LAYOUT = R.layout.activity_maps;
 
     //TODO сделать ебалу с demins для hdpi,mdpi etc
 
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
-    @BindView(R.id.counter_application) TextView counterApplication;
-    @BindView(R.id.counter_race) TextView counterRace;
+
+
+    private ActionBarDrawerToggle mDrawerToggle;
 
     private TextView badgeCrystalItem;
 
 //    TODO Delete this afterwards
-    private long mockTimer = 10_800_000;
     private static int mockBadgeCounter = 1;
 
 
@@ -63,16 +65,23 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
         setContentView(getContentViewId());
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
 
         badgeCrystalItem = (TextView) navigationView.getMenu().
                 findItem(R.id.menu_crystals).getActionView();
 
+
+//      display burger icon on toolbar and set title
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+
+            getSupportActionBar().setTitle(R.string.pay_point);
+        }
+
         setupDrawer();
-
-        startFakeCounter();
     }
-
 
     @Override
     protected void onStart() {
@@ -85,7 +94,7 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     public void onPause() {
         super.onPause();
         //animation
-     //   overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        //   overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     @Override
@@ -94,6 +103,40 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
         ShortcutBadger.removeCount(AbstractActivity.this);
 
         super.onStop();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        //sync drawer state with burger icon state
+        mDrawerToggle.syncState();
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        setSupportActionBar(null);
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    //        sync state when configuration changed(landscape mode, etc)
+    mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar,menu);
+        return  true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //check if burger was clicked
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -112,14 +155,11 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
 
 //            TODO Commented only for menu mock notification presentation. Uncomment finish() line
 //            finish();
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
             drawerLayout.closeDrawer(GravityCompat.START);
         }, 300);
         return true;
-    }
-
-    @OnClick(R.id.button_menu_burger)
-    public void burgerClicked(View view){
-        drawerLayout.openDrawer(GravityCompat.START);
     }
 
     void selectBottomNavigationBarItem(int itemId) {
@@ -139,6 +179,24 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     protected abstract int getNavigationMenuItemId();
 
     private void setupDrawer() {
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+        R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(mDrawerToggle);
 //        add badges to drawer items
         //Gravity property aligns the text
         badgeCrystalItem.setGravity(Gravity.CENTER_VERTICAL);
@@ -150,38 +208,6 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     private void updateNavigationBarState(){
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
-    }
-
-    private void startFakeCounter(){
-        new CountDownTimer(mockTimer, 1_000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                String  hmsApplication =  (TimeUnit.MILLISECONDS.toHours(millisUntilFinished))+":"+
-                        (TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) -
-                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)))+":"+
-                        (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
-
-//                provides hour difference between counters
-                long millisUntilFinishedSecondTimer = millisUntilFinished + 3_600_000;
-
-                String  hmsRace =  (TimeUnit.MILLISECONDS.toHours(millisUntilFinishedSecondTimer))+":"+
-                        (TimeUnit.MILLISECONDS.toMinutes(millisUntilFinishedSecondTimer) -
-                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinishedSecondTimer)))+":"+
-                        (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinishedSecondTimer) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinishedSecondTimer)));
-
-                counterApplication.setText(hmsApplication);
-                counterRace.setText(hmsRace);
-
-                mockTimer = millisUntilFinished;
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }.start();
     }
 
 /**   mock notification for presentation purpose only; show counter on app launcher */
