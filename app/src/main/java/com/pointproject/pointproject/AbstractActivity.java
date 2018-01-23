@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -31,11 +30,8 @@ import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.ui.settings.SettingsActivity;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 public abstract class AbstractActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,12 +68,10 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
                 findItem(R.id.menu_crystals).getActionView();
 
 
-//      display burger icon on toolbar and set title
+//      display burger icon on toolbar
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
-
-            getSupportActionBar().setTitle(R.string.pay_point);
         }
 
         setupDrawer();
@@ -111,13 +105,6 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
         //sync drawer state with burger icon state
         mDrawerToggle.syncState();
 
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        setSupportActionBar(null);
-        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -166,9 +153,13 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
         Menu menu = navigationView.getMenu();
         for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item = menu.getItem(i);
+
             boolean shouldBeChecked = item.getItemId() == itemId;
             if (shouldBeChecked) {
                 item.setChecked(true);
+
+                setToolbarTitle(item.getTitle());
+
                 break;
             }
         }
@@ -177,6 +168,12 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     protected abstract int getContentViewId();
 
     protected abstract int getNavigationMenuItemId();
+
+    private void setToolbarTitle(CharSequence title) {
+        assert getSupportActionBar()!=null;
+        getSupportActionBar().setTitle(title);
+
+    }
 
     private void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
