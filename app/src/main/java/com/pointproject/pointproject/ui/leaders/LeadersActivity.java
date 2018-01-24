@@ -11,7 +11,6 @@ import butterknife.BindView;
 
 public class LeadersActivity extends AbstractActivity {
 
-    private static final int LAYOUT = R.layout.activity_settings;
     private static final int NAV_ITEM = R.id.menu_leaders;
     private static final String TAG = LeadersActivity.class.getSimpleName();
     private final static String LEADERS_MAIN_FRAGMENT = "LeadersMainFragment";

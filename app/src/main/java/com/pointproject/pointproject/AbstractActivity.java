@@ -132,29 +132,32 @@ public abstract class AbstractActivity extends AppCompatActivity implements Navi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         navigationView.postDelayed(() -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.menu_play)
-                startActivity(new Intent(this, MapsActivity.class));
-            if(itemId == R.id.menu_settings)
-                startActivity(new Intent(this, SettingsActivity.class));
-            if(itemId == R.id.menu_crystals)
-                startActivity(new Intent(this, CrystalsActivity.class));
-            if (itemId == R.id.menu_leaders) {
-                startActivity(new Intent(this, LeadersActivity.class));
-            }
-            if (itemId == R.id.menu_rules) {
-                startActivity(new Intent(this, RulesActivity.class));
-
-            }
-
-
-            if(itemId == R.id.menu_mock_notification)
-                mockNotification();
-
+            switch(itemId){
+                case R.id.menu_play:
+                    startActivity(new Intent(this, MapsActivity.class));
+                    break;
+                case R.id.menu_settings:
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    break;
+                case R.id.menu_crystals:
+                    startActivity(new Intent(this, CrystalsActivity.class));
+                    break;
+                case R.id.menu_leaders:
+                    startActivity(new Intent(this, LeadersActivity.class));
+                    break;
+                case R.id.menu_rules:
+                    startActivity(new Intent(this, RulesActivity.class));
+                    break;
+                case R.id.menu_mock_notification:
+                    mockNotification();
+                    break;
+                default:
 //            TODO Commented only for menu mock notification presentation. Uncomment finish() line
-//            finish();
-            DrawerLayout drawer = findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            drawerLayout.closeDrawer(GravityCompat.START);
+//                  finish();
+                    DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+            }
         }, 300);
         return true;
     }

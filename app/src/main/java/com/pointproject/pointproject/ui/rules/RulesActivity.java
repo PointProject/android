@@ -7,8 +7,7 @@ import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
 
 public class RulesActivity extends AbstractActivity {
-    
-    private final static int LAYOUT = R.layout.activity_settings;
+
     private final static int NAV_MENU = R.id.menu_rules;
     private final static String RULES_MAIN_FRAGMENT = "RulesFragment";
 
