@@ -1,4 +1,4 @@
-package com.pointproject.pointproject.ui.maps.areaDetails;
+package com.pointproject.pointproject.ui.areaDetails;
 
 import android.content.Context;
 import android.os.Bundle;

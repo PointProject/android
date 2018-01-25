@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
+        android:name=".PointProjectApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -55,7 +56,7 @@
         <activity android:name=".ui.settings.SettingsActivity"/>
         <activity android:name=".ui.leaders.LeadersActivity"/>
         <activity android:name=".ui.rules.RulesActivity"/>
-        <activity android:name=".ui.maps.areaDetails.AreaDetailsActivity"/>
+        <activity android:name=".ui.areaDetails.AreaDetailsActivity"/>
     </application>
 
 </manifest>

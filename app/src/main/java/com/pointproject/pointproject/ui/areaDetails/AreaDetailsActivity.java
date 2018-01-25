@@ -1,11 +1,10 @@
-package com.pointproject.pointproject.ui.maps.areaDetails;
+package com.pointproject.pointproject.ui.areaDetails;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 import com.pointproject.pointproject.AbstractActivity;

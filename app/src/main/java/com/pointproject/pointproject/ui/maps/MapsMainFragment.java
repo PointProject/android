@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -54,9 +53,7 @@ import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.data.Values;
 import com.pointproject.pointproject.geofence.GeofenceController;
-import com.pointproject.pointproject.ui.maps.areaDetails.AreaDetailsActivity;
-import com.pointproject.pointproject.ui.maps.areaDetails.AreaDetailsFragment;
-import com.pointproject.pointproject.ui.settings.SettingsActivity;
+import com.pointproject.pointproject.ui.areaDetails.AreaDetailsActivity;
 
 import java.util.HashMap;
 import java.util.Map;
