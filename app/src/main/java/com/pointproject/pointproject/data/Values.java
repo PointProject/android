@@ -3,6 +3,7 @@ package com.pointproject.pointproject.data;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.model.RaceModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,13 +15,9 @@ public class Values {
 
     public static Map<PolygonOptions, String> areas = new HashMap<>();
 
-    public static String participants;
-    public static String revard;
-    public static String area;
-    public static String timeAlive;
-    public static String start;
+    public static RaceModel mockRaceModel;
 
-    public static int toolvarImageId;
+    public static int toolbarImageId;
 
     static{
         areas.put(new PolygonOptions().add(
@@ -107,13 +104,9 @@ public class Values {
                 ).fillColor(0x3FEF8601).strokeColor(0x7FEF8601),
                 "area10");
 
-         participants = "Participants: 100 people";
-         revard = "Revard: 100 uah";
-         area = "Area: 100 metres";
-        timeAlive = "Point time: 2 hours";
-        start = "Start time: 12:00:00";
+        mockRaceModel = new RaceModel(100, 100.0, 100.0, 2.0, 12.0);
 
-        toolvarImageId = R.drawable.ic_action_name;
+        toolbarImageId = R.drawable.ic_action_name;
 
     }
 }

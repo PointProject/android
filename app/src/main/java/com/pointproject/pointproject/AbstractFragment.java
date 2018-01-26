@@ -1,10 +1,12 @@
 package com.pointproject.pointproject;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
-public abstract class AbstractFragment extends Fragment {
+import dagger.android.support.DaggerFragment;
+
+
+public abstract class AbstractFragment extends DaggerFragment {
 
     private String title;
 

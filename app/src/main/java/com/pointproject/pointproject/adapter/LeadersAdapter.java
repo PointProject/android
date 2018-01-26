@@ -18,10 +18,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by xdewnik on 30.12.2017.
- */
-
 public class LeadersAdapter extends RecyclerView.Adapter<LeadersAdapter.LeadersViewHolder> {
 
     private View view;

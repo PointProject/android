@@ -17,7 +17,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -34,11 +33,13 @@ import com.pointproject.pointproject.ui.settings.SettingsActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
-public abstract class AbstractActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class AbstractActivity extends DaggerAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     protected static final int LAYOUT = R.layout.activity_maps;
+    protected static final int ID_CONTENT_CONTAINER = R.id.content_container;
 
     //TODO сделать ебалу с demins для hdpi,mdpi etc
 

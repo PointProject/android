@@ -7,8 +7,11 @@ import android.widget.TextView;
 
 import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.util.ActivityUtils;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
@@ -22,6 +25,9 @@ public class MapsActivity extends AbstractActivity  {
     private static final String TAG = MapsActivity.class.getSimpleName();
     private final static String MAPS_FRAGMENT_TAG = "MapsMainFragment";
 
+    @Inject
+    MapsMainFragment mFragment;
+
 //    TODO Delete
     private long mockTimer = 10_800_000;
 
@@ -31,21 +37,15 @@ public class MapsActivity extends AbstractActivity  {
 
         startFakeCounter();
 
-        if (savedInstanceState == null) {
-            // The Activity is NOT being re-created so we can instantiate a new Fragment
-            // and add it to the Activity
-            MapsMainFragment fragment = MapsMainFragment.getInstance(this);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    // It's almost always a good idea to use .replace instead of .add so that
-                    // you never accidentally layer multiple Fragments on top of each other
-                    // unless of course that's your intention
-                    .replace(R.id.content_container, fragment, MAPS_FRAGMENT_TAG)
-                    .commit();
-        } else {
-            // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
-            // but if we need a reference to it, we can use the tag we passed to .replace
-            getSupportFragmentManager().findFragmentByTag(MAPS_FRAGMENT_TAG);
+        MapsMainFragment mainFragment = (MapsMainFragment) getSupportFragmentManager()
+                .findFragmentById(ID_CONTENT_CONTAINER);
+
+        if(mainFragment == null){
+            mainFragment = mFragment;
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    mainFragment,
+                    ID_CONTENT_CONTAINER,
+                    MAPS_FRAGMENT_TAG);
         }
     }
 

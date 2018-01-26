@@ -10,13 +10,14 @@ import android.widget.ImageView;
 import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.data.Values;
+import com.pointproject.pointproject.util.ActivityUtils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
 
 public class AreaDetailsActivity extends AbstractActivity {
-
-
 
     private static final int LAYOUT = R.layout.activity_area_details;
     private static final int NAV_ITEM = -1;
@@ -24,6 +25,8 @@ public class AreaDetailsActivity extends AbstractActivity {
     private static final String MAPS_FRAGMENT_TAG = "AreaDetailsFragment";
 
     private static final String EXTRA_AREA_NAME = "areaName";
+
+    @Inject AreaDetailsFragment mFragment;
 
     @BindView(R.id.toolbar_image) ImageView areaImage;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
@@ -40,22 +43,15 @@ public class AreaDetailsActivity extends AbstractActivity {
 
         setupCollapsingToolbar();
 
-        if (savedInstanceState == null) {
-            // The Activity is NOT being re-created so we can instantiate a new Fragment
-            // and add it to the Activity
+        AreaDetailsFragment areaDetailsFragment =
+                (AreaDetailsFragment) getSupportFragmentManager().
+                        findFragmentById(ID_CONTENT_CONTAINER);
 
-            AreaDetailsFragment fragment = AreaDetailsFragment.getInstance(this);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    // It's almost always a good idea to use .replace instead of .add so that
-                    // you never accidentally layer multiple Fragments on top of each other
-                    // unless of course that's your intention
-                    .replace(R.id.content_container, fragment, MAPS_FRAGMENT_TAG)
-                    .commit();
-        } else {
-            // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
-            // but if we need a reference to it, we can use the tag we passed to .replace
-            getSupportFragmentManager().findFragmentByTag(MAPS_FRAGMENT_TAG);
+        if (areaDetailsFragment == null) {
+            areaDetailsFragment = mFragment;
+
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+                    areaDetailsFragment, ID_CONTENT_CONTAINER, MAPS_FRAGMENT_TAG);
         }
 
     }
@@ -82,6 +78,6 @@ public class AreaDetailsActivity extends AbstractActivity {
         collapsingToolbar.setTitle(name);
         collapsingToolbar.setTitleEnabled(true);
 
-        areaImage.setImageResource(Values.toolvarImageId);
+        areaImage.setImageResource(Values.toolbarImageId);
     }
 }

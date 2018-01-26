@@ -17,6 +17,7 @@
     <string name="security_exception">SecurityException:\n</string>
     <string name="permission_denied">Permission denied!</string>
     <string name="google_api_client_connection_failed">Connection to GoogleApiClient failed:\n</string>
+    <string name="mock_location_detected">Cheater no cheating! Disable \'Allow Mock Location\' in device settings</string>
 
     <!--Drawer menu strings-->
     <string name="menu_play">Играть!</string>
@@ -55,5 +56,11 @@
         completions."
     </string>
 
+    <!--Strings related to AreaDetails and race details-->
+    <string name="raceParticipantsNumber">Number op participants: %d</string>
+    <string name="raceReward">Reward in uah: %f</string>
+    <string name="raceArea">Area in meters: %f</string>
+    <string name="pointLifetime">Point life time: %f</string>
+    <string name="startTime">Start time: %f</string>
 
 </resources>

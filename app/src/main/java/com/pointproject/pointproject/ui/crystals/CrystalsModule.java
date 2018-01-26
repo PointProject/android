@@ -1,4 +1,4 @@
-package com.pointproject.pointproject.ui.areaDetails;
+package com.pointproject.pointproject.ui.crystals;
 
 import com.pointproject.pointproject.di.ActivityScope;
 import com.pointproject.pointproject.di.FragmentScope;
@@ -8,12 +8,13 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
 @Module
-public abstract class AreaDetailsModule {
+public abstract class CrystalsModule {
+
     @FragmentScope
     @ContributesAndroidInjector
-    abstract AreaDetailsFragment areaDetailsFragment();
+    abstract CrystalsMainFragment crystalsMainFragment();
 
     @Binds
     @ActivityScope
-    abstract AreaDetailsContract.Presenter areaDetailsPresenter(AreaDetailsPresenter presenter);
+    abstract CrystalsContract.Presenter crystalsPresenter(CrystalsPresenter presenter);
 }

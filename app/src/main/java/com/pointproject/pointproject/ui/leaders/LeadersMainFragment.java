@@ -1,6 +1,5 @@
 package com.pointproject.pointproject.ui.leaders;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,35 +13,47 @@ import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.adapter.LeadersAdapter;
 import com.pointproject.pointproject.model.LeadersModel;
+import com.pointproject.pointproject.ui.crystals.CrystalsContract;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by xdewnik on 30.12.2017.
- */
-
-public class LeadersMainFragment extends AbstractFragment {
+public class LeadersMainFragment extends AbstractFragment implements LeadersContract.View{
 
     private final static int LAYOUT = R.layout.leaders_fragment;
 
+    @Inject LeadersContract.Presenter presenter;
 
     private LeadersAdapter adapter;
 
     @BindView(R.id.leadersRecycleView)
     RecyclerView recyclerView;
 
+    @Inject
+    public LeadersMainFragment(){
 
-    public static LeadersMainFragment getInstance(Context context) {
-        LeadersMainFragment fragmentInstance = new LeadersMainFragment();
+    }
 
-        Bundle args = new Bundle();
-        fragmentInstance.setArguments(args);
-        fragmentInstance.setContext(context);
-        return fragmentInstance;
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.takeView(this);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(llm);
+        adapter = new LeadersAdapter(context, populateList());
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onPause() {
+        presenter.dropView();
+        super.onPause();
     }
 
     @Nullable
@@ -56,11 +67,6 @@ public class LeadersMainFragment extends AbstractFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LinearLayoutManager llm = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(llm);
-        adapter = new LeadersAdapter(context, populateList());
-        recyclerView.setAdapter(adapter);
-
     }
 
     private List<LeadersModel> populateList() {
