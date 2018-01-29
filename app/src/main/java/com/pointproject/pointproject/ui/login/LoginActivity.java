@@ -1,7 +1,6 @@
 package com.pointproject.pointproject.ui.login;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.util.ActivityUtils;
@@ -27,7 +26,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
                 findFragmentById(R.id.content_container);
         if(loginFragment == null){
             loginFragment = mFragment;
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addSupportFragmentToActivity(getSupportFragmentManager(),
                     loginFragment,
                     R.id.content_container,
                     LOGIN_FRAGMENT_TAG);

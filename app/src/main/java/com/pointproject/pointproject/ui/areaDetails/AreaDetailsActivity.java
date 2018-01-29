@@ -50,7 +50,7 @@ public class AreaDetailsActivity extends AbstractActivity {
         if (areaDetailsFragment == null) {
             areaDetailsFragment = mFragment;
 
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addSupportFragmentToActivity(getSupportFragmentManager(),
                     areaDetailsFragment, ID_CONTENT_CONTAINER, MAPS_FRAGMENT_TAG);
         }
 

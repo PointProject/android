@@ -42,7 +42,7 @@ public class MapsActivity extends AbstractActivity  {
 
         if(mainFragment == null){
             mainFragment = mFragment;
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addSupportFragmentToActivity(getSupportFragmentManager(),
                     mainFragment,
                     ID_CONTENT_CONTAINER,
                     MAPS_FRAGMENT_TAG);

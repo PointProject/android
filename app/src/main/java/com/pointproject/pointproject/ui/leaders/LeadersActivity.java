@@ -2,15 +2,12 @@ package com.pointproject.pointproject.ui.leaders;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 
 import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;
-
-import butterknife.BindView;
 
 public class LeadersActivity extends AbstractActivity {
 
@@ -31,7 +28,7 @@ public class LeadersActivity extends AbstractActivity {
         if(leadersMainFragment == null){
             leadersMainFragment = mFragment;
 
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addSupportFragmentToActivity(getSupportFragmentManager(),
                     leadersMainFragment,
                     ID_CONTENT_CONTAINER,
                     LEADERS_MAIN_FRAGMENT);

@@ -25,7 +25,7 @@ public class RulesActivity extends AbstractActivity {
         if(rulesFragment == null){
             rulesFragment = mFragment;
 
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addSupportFragmentToActivity(getSupportFragmentManager(),
                     rulesFragment,
                     ID_CONTENT_CONTAINER,
                     RULES_MAIN_FRAGMENT);

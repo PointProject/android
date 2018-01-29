@@ -12,6 +12,8 @@ import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.ui.maps.MapsModule;
 import com.pointproject.pointproject.ui.rules.RulesActivity;
 import com.pointproject.pointproject.ui.rules.RulesModule;
+import com.pointproject.pointproject.ui.settings.SettingsActivity;
+import com.pointproject.pointproject.ui.settings.SettingsModule;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -42,4 +44,8 @@ public abstract class ActivityBuilder {
     @ActivityScope
     @ContributesAndroidInjector(modules = RulesModule.class)
     abstract RulesActivity rulesActivity();
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = SettingsModule.class)
+    abstract SettingsActivity settingsActivity();
 }

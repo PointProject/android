@@ -26,7 +26,7 @@ public class CrystalsActivity extends AbstractActivity {
         if(crystalsMainFragment == null){
             crystalsMainFragment = mainFragment;
 
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addSupportFragmentToActivity(getSupportFragmentManager(),
                     crystalsMainFragment,
                     ID_CONTENT_CONTAINER,
                     MAPS_FRAGMENT_TAG);
