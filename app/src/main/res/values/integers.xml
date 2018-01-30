@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="point_radius">100</integer><!--proximity alert radius in meters-->
-    <integer name="location_request_update_interval">10000</integer><!--10 seconds, interval between updates-->
-    <integer name="location_request_fastest_interval">2000</integer><!--2 seconds, fastest update interval-->
-    <integer name="geofences_radius_in_meters">100</integer><!--geofence radius-->
+    <integer name="location_request_update_interval">5000</integer><!--in milliseconds, interval between updates-->
+    <integer name="location_request_fastest_interval">2000</integer><!--in milliseconds, fastest update interval-->
+    <integer name="geofences_radius_in_meters">10</integer><!--in meters, geofence radius-->
+    <integer name="network_provider_location_updates">2000</integer><!--in milliseconds, min time-->
+    <integer name="gps_provider_location_updates">2000</integer><!--in milliseconds, min time-->
 </resources>

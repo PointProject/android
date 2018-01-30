@@ -1,8 +1,7 @@
 package com.pointproject.pointproject.data;
 
-/**
- * Created by xdewnik on 07.10.2017.
- */
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 public class Constants {
 
@@ -14,6 +13,8 @@ public class Constants {
     public static final String SERVER_HOST = "http://192.168.0.103:8080";
 
 
-
+    public static final LatLngBounds ODESSA_LIMITS =  new LatLngBounds(
+            new LatLng(46.295105, 30.517616),
+            new LatLng(46.652603, 30.917244));
 
 }

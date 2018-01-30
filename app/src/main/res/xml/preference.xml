@@ -1,0 +1,20 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="notification"
+        android:summaryOff="Off"
+        android:summaryOn="On"
+        android:title="Notifications">
+    </CheckBoxPreference>
+    <ListPreference
+        android:entries="@array/entries"
+        android:entryValues="@array/entry_values"
+        android:key="list1"
+        android:title="Language">
+    </ListPreference>
+    <Preference
+        android:key="address1"
+        android:title="Like on Facebook">
+    </Preference>
+</PreferenceScreen>

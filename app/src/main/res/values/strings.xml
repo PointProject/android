@@ -1,13 +1,66 @@
 <resources>
     <string name="app_name">PointProject</string>
     <string name="title_activity_maps">Map</string>
+    <string name="pay_point">payPoint</string>
+
+    <!--Strings related to maps-->
     <string name="null_location">Sorry, can\'t get your location</string>
-    <string name="no_gps_permission">Gps permission isn\'t granted</string>
+    <string name="no_location_permission">Location permission isn\'t granted</string>
     <string name="settings">Settings</string>
-    <string name="grant_geo_permission">Open Permissions and grant the Geo permission</string>
+    <string name="grant_location_permission">Open Permissions and grant the location permission</string>
     <string name="notification_text">You\'re moving in the zone</string>
     <string name="geofence_notification_text">Notification text</string>
     <string name="geofence_transition_entered">Entered geofence</string>
     <string name="geofence_transition_exited">Exited geofence</string>
     <string name="geofence_transition_dwell">Dwelling geofence</string>
+    <string name="permission_granted">Permission was granted!</string>
+    <string name="security_exception">SecurityException:\n</string>
+    <string name="permission_denied">Permission denied!</string>
+    <string name="google_api_client_connection_failed">Connection to GoogleApiClient failed:\n</string>
+    <string name="mock_location_detected">Cheater no cheating! Disable \'Allow Mock Location\' in device settings</string>
+
+    <!--Drawer menu strings-->
+    <string name="menu_play">Играть!</string>
+    <string name="menu_cash_withdraw">Вывести средства</string>
+    <string name="menu_social">Мы в соцсети</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_rules">Правила</string>
+    <string name="menu_leaders">Лидеры</string>
+    <string name="menu_exit">Выход</string>
+    <string name="menu_crystals">Кристалы</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">Sign in</string>
+    <string-array name="entries">
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+    <string-array name="entry_values">
+        <item>eng</item>
+        <item>ру</item>
+    </string-array>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Login</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_login">This login is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <!--Strings related to AreaDetails and race details-->
+    <string name="raceParticipantsNumber">Number op participants: %d</string>
+    <string name="raceReward">Reward in uah: %f</string>
+    <string name="raceArea">Area in meters: %f</string>
+    <string name="pointLifetime">Point life time: %f</string>
+    <string name="startTime">Start time: %f</string>
+
 </resources>

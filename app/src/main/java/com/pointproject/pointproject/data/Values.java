@@ -2,6 +2,8 @@ package com.pointproject.pointproject.data;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.model.RaceModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,10 @@ public class Values {
     private Values(){}
 
     public static Map<PolygonOptions, String> areas = new HashMap<>();
+
+    public static RaceModel mockRaceModel;
+
+    public static int toolbarImageId;
 
     static{
         areas.put(new PolygonOptions().add(
@@ -97,5 +103,10 @@ public class Values {
                 new LatLng(46.558086, 30.798969)
                 ).fillColor(0x3FEF8601).strokeColor(0x7FEF8601),
                 "area10");
+
+        mockRaceModel = new RaceModel(100, 100.0, 100.0, 2.0, 12.0);
+
+        toolbarImageId = R.drawable.ic_action_name;
+
     }
 }

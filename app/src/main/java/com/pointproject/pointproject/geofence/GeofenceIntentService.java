@@ -8,14 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
-import com.pointproject.pointproject.MapsActivity;
+import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.R;
 
 import java.util.ArrayList;
@@ -125,6 +126,7 @@ public class GeofenceIntentService extends IntentService {
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                         R.mipmap.ic_launcher))
                 .setColor(Color.GREEN)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentTitle(notificationDetails)
                 .setContentText(getString(R.string.geofence_notification_text))
@@ -138,6 +140,7 @@ public class GeofenceIntentService extends IntentService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Issue the notification
+        assert mNotificationManager != null;
         mNotificationManager.notify(0, builder.build());
     }
 
