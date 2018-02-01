@@ -46,6 +46,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Login</string>
     <string name="prompt_password">Password</string>
+    <string name="action_register">Register</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_login">This login is invalid</string>
@@ -62,5 +63,7 @@
     <string name="raceArea">Area in meters: %f</string>
     <string name="pointLifetime">Point life time: %f</string>
     <string name="startTime">Start time: %f</string>
+    <string name="msg_no_internet">No internet connection</string>
+    <string name="msg_default_login_error">Sorry, server error occurred.</string>
 
 </resources>

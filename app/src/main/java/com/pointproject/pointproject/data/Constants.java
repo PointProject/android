@@ -7,10 +7,11 @@ public class Constants {
 
     public static final String LOG_TAG = "LOG";
 
-    //server info
+    public static final String NAME_SHARED_PREFERENCES = "com.point.project";
+    public static final String KEY_TOKEN = "com.point.project.token";
 
-    //олег суда пхай IPv4 локальный с вифи(P.S. win+R, cmd, ipconfig)
-    public static final String SERVER_HOST = "http://192.168.0.103:8080";
+    //server info
+    public static final String SERVER_HOST = "http://18.220.89.28:8080";
 
 
     public static final LatLngBounds ODESSA_LIMITS =  new LatLngBounds(

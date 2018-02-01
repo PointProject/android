@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
@@ -32,6 +33,9 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @BindView(R.id.sign_in_login)
     Button loginBtn;
+
+    @BindView(R.id.register_login)
+    Button regBtn;
 
     @BindView(R.id.password_login)
     EditText passwordField;
@@ -92,9 +96,13 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
         });
         loginBtn.setOnClickListener(view1 -> {
             getCredentials();
-            presenter.checkAccount(login, password);;
+            presenter.checkAccount(login, password);
         });
 
+        regBtn.setOnClickListener(view1 -> {
+            getCredentials();
+            presenter.register(login, password);
+        });
     }
 
     @Override
@@ -119,6 +127,16 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     public void showInvalidLoginError() {
         loginField.setError(getString(R.string.error_invalid_login));
         loginField.requestFocus();
+    }
+
+    @Override
+    public void showNoInternetError() {
+        Toast.makeText(getContext(), R.string.msg_no_internet, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showServerError() {
+        Toast.makeText(getContext(), R.string.msg_default_login_error, Toast.LENGTH_SHORT).show();
     }
 
     @Override

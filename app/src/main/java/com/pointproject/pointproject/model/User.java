@@ -2,10 +2,6 @@ package com.pointproject.pointproject.model;
 
 import java.util.Set;
 
-/**
- * Created by xdewnik on 30.10.2017.
- */
-
 public class User {
 
     private int id;
@@ -141,5 +137,22 @@ public class User {
 
     public void setExpNum(int expNum) {
         this.expNum = expNum;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", money=" + money +
+                ", phone=" + phone +
+                ", age=" + age +
+                ", city=" + city +
+                ", level=" + level +
+                ", expNum=" + expNum +
+                '}';
     }
 }

@@ -8,6 +8,8 @@ public interface LoginContract {
 
         void checkAccount(String login, String password);
 
+        void register(String login, String password);
+
     }
 
     interface View extends BaseView<Presenter> {
@@ -18,6 +20,10 @@ public interface LoginContract {
         void showEmptyLoginError();
 
         void showInvalidLoginError();
+
+        void showNoInternetError();
+
+        void showServerError();
 
         void loginIn();
     }

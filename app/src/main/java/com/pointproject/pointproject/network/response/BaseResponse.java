@@ -1,8 +1,5 @@
-package com.pointproject.pointproject.network.Response;
+package com.pointproject.pointproject.network.response;
 
-/**
- * Created by xdewnik on 30.10.2017.
- */
 
 public class BaseResponse {
     private String message;
