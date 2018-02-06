@@ -18,8 +18,6 @@ import javax.inject.Inject;
 import static com.pointproject.pointproject.data.Constants.KEY_TOKEN;
 import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
 import static com.pointproject.pointproject.network.response.NetworkError.NETWORK_ERROR_MESSAGE;
-import static com.pointproject.pointproject.network.response.NetworkError.WRONG_LOGIN_MESSAGE;
-import static com.pointproject.pointproject.network.response.NetworkError.WRONG_PASSWORD_MESSAGE;
 
 public class LoginPresenter implements LoginContract.Presenter {
 
@@ -119,15 +117,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     return;
                 }
 
-                switch (error.getMessage()){
-                    case(WRONG_LOGIN_MESSAGE):
-                    case(WRONG_PASSWORD_MESSAGE):
-                        loginView.showInvalidLoginError();
-                        return;
-                    default:
-                        loginView.showServerError();
-
-                }
+                loginView.showInvalidLoginError();
             }
         });
     }

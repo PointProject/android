@@ -16,10 +16,6 @@ import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 public class NetworkError extends Throwable{
     public static final String DEFAULT_ERROR_MESSAGE = "Something went wrong! Please try again.";
     public static final String NETWORK_ERROR_MESSAGE = "No Internet Connection!";
-    public static final String WRONG_LOGIN_MESSAGE = "User login not found.";
-    public static final String WRONG_PASSWORD_MESSAGE =
-            "Invalid login. Please check your login and password.";
-
     private static final String ERROR_MESSAGE_HEADER = "Error-Message";
     private final Throwable error;
 
