@@ -1,9 +1,5 @@
 package com.pointproject.pointproject.model;
 
-/**
- * Created by xdewnik on 30.10.2017.
- */
-
 public class Point {
     private int id;
 
@@ -14,5 +10,31 @@ public class Point {
     private double longitude;
 
     public Point() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "id=" + id +
+                ", zone=" + zone +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }

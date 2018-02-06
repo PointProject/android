@@ -27,5 +27,7 @@ public interface MapsContract {
         void putAreas(Map<PolygonOptions, String> areas);
 
         void putPoints(HashMap<String, LatLng> points);
+
+        void showBadInternetConnection();
     }
 }

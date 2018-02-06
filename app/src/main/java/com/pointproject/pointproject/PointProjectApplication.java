@@ -11,7 +11,8 @@ import dagger.android.DaggerApplication;
 public class PointProjectApplication extends DaggerApplication {
 
     @Inject
-    PointProjectApplication(){
+    public PointProjectApplication(){
+
     }
 
     @Override

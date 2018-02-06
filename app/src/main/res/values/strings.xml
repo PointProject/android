@@ -65,5 +65,11 @@
     <string name="startTime">Start time: %f</string>
     <string name="msg_no_internet">No internet connection</string>
     <string name="msg_default_login_error">Sorry, server error occurred.</string>
+    <string name="user_login">Login: %s</string>
+    <string name="user_name">Name: %s</string>
+    <string name="user_last_name">Last name: %s</string>
+    <string name="user_age">Age: %d</string>
+    <string name="user_phone_number">Phone number: %d</string>
+    <string name="bad_internet_connection">Bad internet connection</string>
 
 </resources>

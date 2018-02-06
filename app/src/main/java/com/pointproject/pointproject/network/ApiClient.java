@@ -2,12 +2,13 @@ package com.pointproject.pointproject.network;
 
 import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.model.User;
+import com.pointproject.pointproject.model.Zone;
 import com.pointproject.pointproject.network.callback.RegisterCallback;
 import com.pointproject.pointproject.network.callback.UserCallback;
-import com.pointproject.pointproject.network.response.BaseResponse;
+import com.pointproject.pointproject.network.callback.GetZoneCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
-import com.pointproject.pointproject.network.response.TokenResponse;
-import com.pointproject.pointproject.network.response.UserResponse;
+
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,6 +68,33 @@ public class ApiClient {
                     @Override
                     public void onNext(User userResponse) {
                         callback.onSuccess(userResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(new NetworkError(e));
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void getZone(GetZoneCallback callback){
+        requestsLinks.getZones()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Zone>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Zone> zones) {
+                        callback.onSuccess(zones);
                     }
 
                     @Override

@@ -3,11 +3,13 @@ package com.pointproject.pointproject.network;
 
 import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.model.User;
-import com.pointproject.pointproject.network.response.TokenResponse;
-import com.pointproject.pointproject.network.response.UserResponse;
+import com.pointproject.pointproject.model.Zone;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
@@ -23,7 +25,9 @@ public interface ApiLinks {
 
     @Headers("Cache-Control: no-cache")
     @POST("/secure/user/update")
-    Observable<UserResponse> updateUser(@Body User user);
+    Observable<User> updateUser(@Body User user);
 
+    @GET("/secure/zone/list")
+    Observable<List<Zone>> getZones();
 
 }

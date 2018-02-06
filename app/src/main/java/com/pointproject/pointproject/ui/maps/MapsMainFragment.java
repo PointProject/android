@@ -294,6 +294,11 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
         changeMarkerPositionSmoothly(mCurrentLocationMarker, new LatLng(lat, lng));
     }
 
+    @Override
+    public void showBadInternetConnection() {
+        Toast.makeText(context, R.string.bad_internet_connection, Toast.LENGTH_SHORT).show();
+    }
+
     private void moveCameraSmoothly(Location location) {
         CameraPosition cameraPosition = CameraPosition.builder()
                 .target(new LatLng(location.getLatitude(), location.getLongitude()))

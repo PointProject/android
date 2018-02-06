@@ -45,8 +45,8 @@ public class LeadersMainFragment extends AbstractFragment implements LeadersCont
         presenter.takeView(this);
         LinearLayoutManager llm = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(llm);
-        adapter = new LeadersAdapter(getContext(), populateList());
-        recyclerView.setAdapter(adapter);
+//        adapter = new LeadersAdapter(getContext(), populateList());
+//        recyclerView.setAdapter(adapter);
 
     }
 

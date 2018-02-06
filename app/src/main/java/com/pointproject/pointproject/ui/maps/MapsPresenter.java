@@ -3,25 +3,46 @@ package com.pointproject.pointproject.ui.maps;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.ArraySet;
+import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.pointproject.pointproject.PointProjectApplication;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.data.Values;
+import com.pointproject.pointproject.model.Point;
+import com.pointproject.pointproject.model.Zone;
+import com.pointproject.pointproject.network.ApiClient;
+import com.pointproject.pointproject.network.callback.GetZoneCallback;
+import com.pointproject.pointproject.network.response.NetworkError;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
+
+import static com.pointproject.pointproject.data.Constants.KEY_TOKEN;
+import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
 
 public class MapsPresenter implements MapsContract.Presenter,
         LocationListener {
 
     @Inject LocationManager locationManager;
+
+    @Inject ApiClient apiClient;
 
     private MapsContract.View mapsView;
 
@@ -101,8 +122,36 @@ public class MapsPresenter implements MapsContract.Presenter,
 
     @Override
     public void getAreas() {
-        Map<PolygonOptions, String> areas = Values.areas;
-        mapsView.putAreas(areas);
+        Map<PolygonOptions, String> areas = new HashMap<>();
+
+        apiClient.getZone(new GetZoneCallback() {
+            @Override
+            public void onSuccess(List<Zone> zones) {
+                for(Zone zone : zones){
+                    PolygonOptions po = new PolygonOptions();
+                    List<LatLng> latLngs = new ArrayList<>();
+                    if(zone.getPoints().isEmpty())
+                        continue;
+                    for(Point point: zone.getPoints()){
+                        double lat = point.getLatitude();
+                        double lon = point.getLongitude();
+                        latLngs.add(new LatLng(lat, lon));
+                    }
+                    po.addAll(latLngs);
+                    po.fillColor(Color.parseColor(zone.getFillColor()));
+                    po.strokeColor(Color.parseColor(zone.getStrokeColor()));
+
+                    areas.put(po, zone.getTitle());
+                }
+
+                mapsView.putAreas(areas);
+            }
+
+            @Override
+            public void onError(NetworkError error) {
+                mapsView.showBadInternetConnection();
+            }
+        });
     }
 
     /**Determines whether one Location reading is better than the current Location fix*/

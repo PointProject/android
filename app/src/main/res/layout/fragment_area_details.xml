@@ -5,58 +5,23 @@
 
         <TextView
             android:id="@+id/participants_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-light"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            style="@style/TextViewStyle"/>
 
         <TextView
             android:id="@+id/reward_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-light"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            style="@style/TextViewStyle"/>
 
         <TextView
             android:id="@+id/area_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-light"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            style="@style/TextViewStyle"/>
 
         <TextView
             android:id="@+id/time_alive_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-light"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            style="@style/TextViewStyle"/>
 
         <TextView
             android:id="@+id/start_time_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-light"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            style="@style/TextViewStyle"/>
     </LinearLayout>
 
 

@@ -1,8 +1,5 @@
 package com.pointproject.pointproject.model;
 
-/**
- * Created by xdewnik on 30.10.2017.
- */
 
 public class MoneyPoint {
     private int id;
@@ -23,5 +20,19 @@ public class MoneyPoint {
     private Race race;
 
     public MoneyPoint() {
+    }
+
+    @Override
+    public String toString() {
+        return "MoneyPoint{" +
+                "id=" + id +
+                ", gameUser=" + gameUser +
+                ", value=" + value +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", isActivated=" + isActivated +
+                ", zone=" + zone +
+                ", race=" + race +
+                '}';
     }
 }

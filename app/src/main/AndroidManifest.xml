@@ -57,6 +57,7 @@
         <activity android:name=".ui.leaders.LeadersActivity"/>
         <activity android:name=".ui.rules.RulesActivity"/>
         <activity android:name=".ui.areaDetails.AreaDetailsActivity"/>
+        <activity android:name=".ui.userInfo.UserInfoActivity"/>
     </application>
 
 </manifest>

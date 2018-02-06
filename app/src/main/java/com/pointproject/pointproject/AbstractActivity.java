@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.UserHandle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -23,16 +24,22 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
 import com.pointproject.pointproject.ui.leaders.LeadersActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.ui.rules.RulesActivity;
 import com.pointproject.pointproject.ui.settings.SettingsActivity;
+import com.pointproject.pointproject.ui.userInfo.UserInfoActivity;
+import com.pointproject.pointproject.util.UserHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
@@ -47,7 +54,8 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-
+    private TextView navHeaderName;
+    private ImageView navHeaderImage;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -64,12 +72,18 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         setContentView(getContentViewId());
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
 
         badgeCrystalItem = (TextView) navigationView.getMenu().
                 findItem(R.id.menu_crystals).getActionView();
 
+        navHeaderName = navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_header_name);
+
+        navHeaderImage = navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_header_image_view);
 
 //      display burger icon on toolbar
         if(getSupportActionBar() != null){
@@ -112,9 +126,9 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
+        super.onConfigurationChanged(newConfig);
     //        sync state when configuration changed(landscape mode, etc)
-    mDrawerToggle.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -214,6 +228,14 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         badgeCrystalItem.setTypeface(null, Typeface.BOLD);
         badgeCrystalItem.setTextColor(getResources().getColor(R.color.colorAccent));
         badgeCrystalItem.setText("69");
+
+        User currentUser = UserHandler.getUser();
+        navHeaderName.setText(currentUser.getLogin());
+
+        navHeaderImage.setOnClickListener(v -> {
+            Intent intent = UserInfoActivity.getIntent(this);
+            startActivity(intent);
+        });
     }
 
     private void updateNavigationBarState(){

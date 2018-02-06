@@ -1,10 +1,13 @@
 package com.pointproject.pointproject.network.callback;
 
-import com.pointproject.pointproject.model.Token;
+
+import com.pointproject.pointproject.model.Zone;
 import com.pointproject.pointproject.network.response.NetworkError;
 
-public interface UserCallback{
-    void onSuccess(Token token);
+import java.util.List;
+
+public interface GetZoneCallback {
+    void onSuccess(List<Zone> zones);
 
     void onError(NetworkError error);
 }

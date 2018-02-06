@@ -25,8 +25,8 @@ class AreaDetailsPresenter implements AreaDetailsContract.Presenter {
 
     @Override
     public void loadAreaDetails() {
-        RaceModel raceModel = Values.mockRaceModel;
-
-        areaDetailsView.populateAreaDetails(raceModel);
+//        RaceModel raceModel = Values.mockRaceModel;
+//
+//        areaDetailsView.populateAreaDetails(raceModel);
     }
 }

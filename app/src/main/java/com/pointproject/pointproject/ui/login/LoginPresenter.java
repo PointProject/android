@@ -4,7 +4,6 @@ package com.pointproject.pointproject.ui.login;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.model.User;
@@ -12,8 +11,7 @@ import com.pointproject.pointproject.network.ApiClient;
 import com.pointproject.pointproject.network.callback.RegisterCallback;
 import com.pointproject.pointproject.network.callback.UserCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
-import com.pointproject.pointproject.network.response.TokenResponse;
-import com.pointproject.pointproject.network.response.UserResponse;
+import com.pointproject.pointproject.util.UserHandler;
 
 import javax.inject.Inject;
 
@@ -102,13 +100,14 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     private void login(User userN) {
-        Log.d("ts", userN.toString());
         apiClient.login(userN, new UserCallback() {
             @Override
             public void onSuccess(Token token) {
                 SharedPreferences prefs = activity.getSharedPreferences(NAME_SHARED_PREFERENCES,
                         Context.MODE_PRIVATE);
                 prefs.edit().putString(KEY_TOKEN, token.getToken()).apply();
+
+                UserHandler.setUser(userN);
 
                 loginView.loginIn();
             }
@@ -129,9 +128,6 @@ public class LoginPresenter implements LoginContract.Presenter {
                         loginView.showServerError();
 
                 }
-
-                Log.d("ta", error.toString());
-
             }
         });
     }
