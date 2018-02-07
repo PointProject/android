@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.util.ArraySet;
 import android.util.Log;
 
@@ -148,8 +149,14 @@ public class MapsPresenter implements MapsContract.Presenter,
                         latLngs.add(new LatLng(lat, lon));
                     }
                     po.addAll(latLngs);
-                    po.fillColor(Color.parseColor(zone.getFillColor()));
-                    po.strokeColor(Color.parseColor(zone.getStrokeColor()));
+
+                    int fillColor = Color.parseColor(zone.getFillColor());
+                    fillColor = ColorUtils.setAlphaComponent(fillColor, 100);
+                    po.fillColor(fillColor);
+
+                    int strokeColor = Color.parseColor(zone.getStrokeColor());
+                    strokeColor = ColorUtils.setAlphaComponent(strokeColor, 100);
+                    po.strokeColor(strokeColor);
 
                     areas.put(po, zone.getTitle());
                 }
