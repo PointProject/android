@@ -74,6 +74,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             @Override
             public void onError(NetworkError error) {
                 if(error.getAppErrorMessage().equals(NETWORK_ERROR_MESSAGE)){
+                    loginView.hideProgressBar();
                     loginView.showNoInternetError();
                 }
             }
@@ -98,6 +99,8 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     private void login(User userN) {
+        loginView.showProgressBar();
+
         apiClient.login(userN, new UserCallback() {
             @Override
             public void onSuccess(Token token) {
@@ -113,10 +116,12 @@ public class LoginPresenter implements LoginContract.Presenter {
             @Override
             public void onError(NetworkError error) {
                 if(error.getAppErrorMessage().equals(NETWORK_ERROR_MESSAGE)){
+                    loginView.hideProgressBar();
                     loginView.showNoInternetError();
                     return;
                 }
 
+                loginView.hideProgressBar();
                 loginView.showInvalidLoginError();
             }
         });

@@ -23,8 +23,10 @@ public interface LoginContract {
 
         void showNoInternetError();
 
-        void showServerError();
-
         void loginIn();
+
+        void showProgressBar();
+
+        void hideProgressBar();
     }
 }

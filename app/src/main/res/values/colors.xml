@@ -7,4 +7,6 @@
     <color name="colorDrawerIcon">#097B65</color>
 
     <color name="colorToolbarIcon">#000</color>
+
+    <color name="colorTextProgressDialog">#FFFFFF</color>
 </resources>

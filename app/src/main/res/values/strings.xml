@@ -71,5 +71,6 @@
     <string name="user_age">Age: %d</string>
     <string name="user_phone_number">Phone number: %d</string>
     <string name="bad_internet_connection">Bad internet connection</string>
+    <string name="authentication_progress">Authenticating...</string>
 
 </resources>

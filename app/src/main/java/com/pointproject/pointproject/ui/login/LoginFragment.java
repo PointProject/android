@@ -1,5 +1,6 @@
 package com.pointproject.pointproject.ui.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.pointproject.pointproject.AbstractFragment;
@@ -26,10 +26,6 @@ import butterknife.ButterKnife;
 public class LoginFragment extends AbstractFragment implements LoginContract.View{
 
     private final static int LAYOUT = R.layout.login_fragment;
-
-
-    @BindView(R.id.login_progress)
-    ProgressBar progressBar;
 
     @BindView(R.id.sign_in_login)
     Button loginBtn;
@@ -46,6 +42,8 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     @Inject LoginContract.Presenter presenter;
 
     private String login, password;
+
+    private ProgressDialog progressDialog;
 
 
     @Inject
@@ -135,13 +133,24 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     }
 
     @Override
-    public void showServerError() {
-        Toast.makeText(getContext(), R.string.msg_default_login_error, Toast.LENGTH_SHORT).show();
+    public void loginIn() {
+        hideProgressBar();
+        startActivity(new Intent(context, MapsActivity.class));
     }
 
     @Override
-    public void loginIn() {
-        startActivity(new Intent(context, MapsActivity.class));
+    public void showProgressBar() {
+
+        progressDialog = new ProgressDialog(context,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage(getString(R.string.authentication_progress));
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressDialog.dismiss();
     }
 
     private void getCredentials(){
