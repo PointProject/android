@@ -9,6 +9,8 @@ public class Point {
 
     private double longitude;
 
+    private int numberInSequence;
+
     public Point() {
     }
 
@@ -28,6 +30,14 @@ public class Point {
         return longitude;
     }
 
+    public int getNumberInSequence() {
+        return numberInSequence;
+    }
+
+    public void setNumberInSequence(int numberInSequence) {
+        this.numberInSequence = numberInSequence;
+    }
+
     @Override
     public String toString() {
         return "Point{" +
@@ -35,6 +45,7 @@ public class Point {
                 ", zone=" + zone +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", number in sequence=" + numberInSequence +
                 '}';
     }
 }

@@ -26,6 +26,8 @@ import com.pointproject.pointproject.network.callback.GetZoneCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -130,9 +132,17 @@ public class MapsPresenter implements MapsContract.Presenter,
                 for(Zone zone : zones){
                     PolygonOptions po = new PolygonOptions();
                     List<LatLng> latLngs = new ArrayList<>();
-                    if(zone.getPoints().isEmpty())
+
+                    List<Point> points = new ArrayList<>();
+                    points.addAll(zone.getPoints());
+
+                    if(points.isEmpty()) {
                         continue;
-                    for(Point point: zone.getPoints()){
+                    }
+                    Collections.sort(points, (p1, p2) ->
+                            p1.getNumberInSequence()- p2.getNumberInSequence());
+
+                    for(Point point: points){
                         double lat = point.getLatitude();
                         double lon = point.getLongitude();
                         latLngs.add(new LatLng(lat, lon));
