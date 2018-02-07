@@ -72,5 +72,7 @@
     <string name="user_phone_number">Phone number: %d</string>
     <string name="bad_internet_connection">Bad internet connection</string>
     <string name="authentication_progress">Authenticating...</string>
+    <string name="crystals">Crystals</string>
+    <string name="user_info_title">User Info</string>
 
 </resources>

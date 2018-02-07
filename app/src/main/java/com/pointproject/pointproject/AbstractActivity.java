@@ -202,10 +202,9 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
 
     protected abstract int getNavigationMenuItemId();
 
-    private void setToolbarTitle(CharSequence title) {
+    protected void setToolbarTitle(CharSequence title) {
         assert getSupportActionBar()!=null;
         getSupportActionBar().setTitle(title);
-
     }
 
     private void setupDrawer() {
@@ -227,12 +226,6 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(mDrawerToggle);
-//        add badges to drawer items
-        //Gravity property aligns the text
-//        badgeCrystalItem.setGravity(Gravity.CENTER_VERTICAL);
-//        badgeCrystalItem.setTypeface(null, Typeface.BOLD);
-//        badgeCrystalItem.setTextColor(getResources().getColor(R.color.colorAccent));
-//        badgeCrystalItem.setText("69");
         navHeaderCrystal.setOnClickListener(v ->
                 startActivity(new Intent(getBaseContext(), CrystalsActivity.class)));
 

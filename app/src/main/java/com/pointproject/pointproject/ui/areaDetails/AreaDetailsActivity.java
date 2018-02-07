@@ -71,8 +71,6 @@ public class AreaDetailsActivity extends AbstractActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             name = extras.getString(EXTRA_AREA_NAME);
-
-
         }
 
         collapsingToolbar.setTitle(name);

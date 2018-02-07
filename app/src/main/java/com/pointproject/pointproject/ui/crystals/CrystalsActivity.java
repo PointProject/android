@@ -20,6 +20,8 @@ public class CrystalsActivity extends AbstractActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setToolbarTitle(getString(R.string.crystals));
+
         CrystalsMainFragment crystalsMainFragment = (CrystalsMainFragment)
                 getSupportFragmentManager().findFragmentById(ID_CONTENT_CONTAINER);
 

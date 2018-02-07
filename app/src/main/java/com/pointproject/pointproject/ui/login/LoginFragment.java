@@ -55,6 +55,9 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     public void onResume() {
         super.onResume();
         presenter.takeView(this);
+
+        if(progressDialog!=null)
+            progressDialog.dismiss();
     }
 
     @Override
@@ -134,7 +137,7 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @Override
     public void loginIn() {
-        hideProgressBar();
+//        hideProgressBar();
         startActivity(new Intent(context, MapsActivity.class));
     }
 

@@ -9,11 +9,15 @@ import com.pointproject.pointproject.network.callback.GetZoneCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 
 public class ApiClient {
@@ -82,10 +86,24 @@ public class ApiClient {
                 });
     }
 
+/** Get Zones, on Error repeat request 3 times each after 5 seconds,
+ * if all 3 times failed, call onError
+ *
+ * */
     public void getZone(GetZoneCallback callback){
+
+        final int ATTEMPTS = 3;
+
         requestsLinks.getZones()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(errors->
+                        errors
+                                .zipWith(Observable.range(1, ATTEMPTS), (n, i) ->
+                                        i < ATTEMPTS ?
+                                                Observable.timer((long)Math.pow(5,i), SECONDS) :
+                                                Observable.error(n))
+                                .flatMap(x->x))
                 .subscribe(new Observer<List<Zone>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
