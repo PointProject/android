@@ -11,10 +11,10 @@
         <item android:id="@+id/menu_leaders"
             android:title="@string/menu_leaders"
             />
-        <item android:id="@+id/menu_crystals"
+<!--        <item android:id="@+id/menu_crystals"
               android:title="@string/menu_crystals"
               app:actionViewClass="android.widget.TextView"
-              />
+              />-->
         <item android:id="@+id/menu_cash"
               android:title="@string/menu_cash_withdraw"
               />

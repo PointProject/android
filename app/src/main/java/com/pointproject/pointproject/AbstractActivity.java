@@ -24,6 +24,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,10 +57,11 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
 
     private TextView navHeaderName;
     private ImageView navHeaderImage;
+    private ImageButton navHeaderCrystal;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private TextView badgeCrystalItem;
+//    private TextView badgeCrystalItem;
 
 //    TODO Delete this afterwards
     private static int mockBadgeCounter = 1;
@@ -76,11 +78,14 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
 
-        badgeCrystalItem = (TextView) navigationView.getMenu().
-                findItem(R.id.menu_crystals).getActionView();
+//        badgeCrystalItem = (TextView) navigationView.getMenu().
+//                findItem(R.id.menu_crystals).getActionView();
 
         navHeaderName = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_header_name);
+
+        navHeaderCrystal = navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_header_crystal);
 
         navHeaderImage = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_header_image_view);
@@ -154,9 +159,9 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
                 case R.id.menu_settings:
                     startActivity(new Intent(this, SettingsActivity.class));
                     break;
-                case R.id.menu_crystals:
-                    startActivity(new Intent(this, CrystalsActivity.class));
-                    break;
+//                case R.id.menu_crystals:
+//                    startActivity(new Intent(this, CrystalsActivity.class));
+//                    break;
                 case R.id.menu_leaders:
                     startActivity(new Intent(this, LeadersActivity.class));
                     break;
@@ -224,10 +229,13 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         drawerLayout.addDrawerListener(mDrawerToggle);
 //        add badges to drawer items
         //Gravity property aligns the text
-        badgeCrystalItem.setGravity(Gravity.CENTER_VERTICAL);
-        badgeCrystalItem.setTypeface(null, Typeface.BOLD);
-        badgeCrystalItem.setTextColor(getResources().getColor(R.color.colorAccent));
-        badgeCrystalItem.setText("69");
+//        badgeCrystalItem.setGravity(Gravity.CENTER_VERTICAL);
+//        badgeCrystalItem.setTypeface(null, Typeface.BOLD);
+//        badgeCrystalItem.setTextColor(getResources().getColor(R.color.colorAccent));
+//        badgeCrystalItem.setText("69");
+        navHeaderCrystal.setOnClickListener(v ->
+                startActivity(new Intent(getBaseContext(), CrystalsActivity.class)));
+
 
         User currentUser = UserHandler.getUser();
         navHeaderName.setText(currentUser.getLogin());
