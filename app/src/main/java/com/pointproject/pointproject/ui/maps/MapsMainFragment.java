@@ -71,6 +71,8 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     private static final int PERMISSION_FINE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_CODE = 2;
 
+    private static final String KEY_LOCATION_DIALOG_PERMISSION = "com.pointproject.location";
+
     @Inject
     LocationSettingsRequest.Builder locationSettingsBuilder;
 
@@ -86,6 +88,9 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     private Marker mCurrentLocationMarker;
 
     private Map<Polygon, String> polygons;
+
+    /** Prevents permission dialog from duplication on screen rotation*/
+    private boolean alreadyAskedForLocationPermission = false;
 
     @Inject
     public MapsMainFragment() {
@@ -123,14 +128,23 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
         mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
 
+        if(savedInstanceState!=null)
+            alreadyAskedForLocationPermission = savedInstanceState.getBoolean(
+                    KEY_LOCATION_DIALOG_PERMISSION, false);
 
         return view;
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_LOCATION_DIALOG_PERMISSION, alreadyAskedForLocationPermission);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         mapFragment.getMapAsync(this);
 
@@ -218,35 +232,16 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(context, getString(R.string.permission_granted), Toast.LENGTH_LONG).show();
-
-                    try {
-                        presenter.startLocationUpdates();
-                    } catch (SecurityException e) {
-                        Toast.makeText(context, getString(R.string.security_exception) + e.toString(), Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(context, getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
-                    showNoGeoPermissionSnackbar();
-                }
-                return;
-            }
-        }
-    }
-
-    @Override
     public void onConnected(@Nullable Bundle bundle) {
+        if(alreadyAskedForLocationPermission)
+            return;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            assert getActivity() != null;
-            ActivityCompat.requestPermissions(getActivity(),
+
+            alreadyAskedForLocationPermission = true;
+            requestPermissions(
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_FINE_LOCATION);
 
@@ -258,6 +253,29 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
         presenter.setInitialLocation(initialLocation);
         updateUi(initialLocation);
         Log.d(TAG, "LastLocation: " + (initialLocation == null ? "NO LastLocation" : initialLocation.toString()));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(context, getString(R.string.permission_granted), Toast.LENGTH_LONG).show();
+
+                    try {
+                        alreadyAskedForLocationPermission = false;
+                        presenter.startLocationUpdates();
+                    } catch (SecurityException e) {
+                        Toast.makeText(context, getString(R.string.security_exception) + e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(context, getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
+                    showNoGeoPermissionSnackbar();
+                }
+                return;
+            }
+        }
     }
 
     @Override

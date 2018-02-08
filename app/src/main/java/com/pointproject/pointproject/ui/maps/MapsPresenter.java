@@ -2,7 +2,6 @@ package com.pointproject.pointproject.ui.maps;
 
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,14 +14,10 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.ColorUtils;
-import android.util.ArraySet;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.pointproject.pointproject.PointProjectApplication;
 import com.pointproject.pointproject.R;
-import com.pointproject.pointproject.data.Values;
 import com.pointproject.pointproject.model.Point;
 import com.pointproject.pointproject.model.Zone;
 import com.pointproject.pointproject.network.ApiClient;
@@ -31,17 +26,11 @@ import com.pointproject.pointproject.network.response.NetworkError;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
-
-import static com.pointproject.pointproject.data.Constants.KEY_TOKEN;
-import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
 
 public class MapsPresenter implements MapsContract.Presenter,
         LocationListener {
