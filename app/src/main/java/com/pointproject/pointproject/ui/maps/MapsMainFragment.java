@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -296,7 +297,18 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
 
     @Override
     public void showBadInternetConnection() {
-        Toast.makeText(context, R.string.bad_internet_connection, Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setMessage(R.string.bad_internet_connection)
+                .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {})
+                .show();
+    }
+
+    @Override
+    public void showMockedLocationProhibited(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setMessage(R.string.mocked_location_detected)
+            .setPositiveButton(getString(R.string.ok), (dialog1, which) ->{})
+            .show();
     }
 
     private void moveCameraSmoothly(Location location) {

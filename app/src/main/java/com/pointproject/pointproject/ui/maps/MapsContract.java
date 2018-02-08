@@ -1,6 +1,7 @@
 package com.pointproject.pointproject.ui.maps;
 
 
+import android.content.ContentResolver;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -29,5 +30,7 @@ public interface MapsContract {
         void putPoints(HashMap<String, LatLng> points);
 
         void showBadInternetConnection();
+
+        void showMockedLocationProhibited();
     }
 }

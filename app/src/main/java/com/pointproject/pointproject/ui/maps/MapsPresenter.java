@@ -2,6 +2,7 @@ package com.pointproject.pointproject.ui.maps;
 
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +11,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.util.ArraySet;
@@ -101,11 +104,29 @@ public class MapsPresenter implements MapsContract.Presenter,
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
+            if(isMockedLocation(location)){
+                locationManager.removeUpdates(this);
+                mapsView.showMockedLocationProhibited();
+            }
             if(isBetterLocation(location, currentBestLocation)){
                 currentBestLocation = location;
                 mapsView.updateUi(location);
             }
         }
+    }
+
+    private boolean isMockedLocation(Location location) {
+        boolean isMock = false;
+        if (android.os.Build.VERSION.SDK_INT >= 18) {
+            isMock = location.isFromMockProvider();
+        } else {
+            isMock = !Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        isMock = prefs.getBoolean("mock", true);
+
+        return !isMock;
     }
 
     @Override

@@ -70,9 +70,11 @@
     <string name="user_last_name">Last name: %s</string>
     <string name="user_age">Age: %d</string>
     <string name="user_phone_number">Phone number: %d</string>
-    <string name="bad_internet_connection">Bad internet connection</string>
+    <string name="bad_internet_connection">Check your internet connection</string>
     <string name="authentication_progress">Authenticating...</string>
     <string name="crystals">Crystals</string>
     <string name="user_info_title">User Info</string>
+    <string name="ok">OK</string>
+    <string name="mocked_location_detected">Cheater, no cheating!  You are using mock location. Please do not do it again.</string>
 
 </resources>

@@ -17,4 +17,10 @@
         android:key="address1"
         android:title="Like on Facebook">
     </Preference>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="mock"
+        android:summaryOff="Off"
+        android:summaryOn="On"
+        android:title="Allow Mock Location"/>
 </PreferenceScreen>
