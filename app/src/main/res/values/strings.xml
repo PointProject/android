@@ -76,5 +76,7 @@
     <string name="user_info_title">User Info</string>
     <string name="ok">OK</string>
     <string name="mocked_location_detected">Cheater, no cheating!  You are using mock location. Please do not do it again.</string>
+    <string name="no_account">No account yet? Create one</string>
+    <string name="user_load_error">Can\'t get user. Please check your network</string>
 
 </resources>

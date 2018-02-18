@@ -6,10 +6,9 @@ import com.pointproject.pointproject.model.User;
 
 public interface UserInfoContract {
     interface Presenter extends BasePresenter<View> {
-        void getUserInfo();
     }
 
     interface View extends BaseView<Presenter> {
-        void showUserInfo(User user);
+        void showUserInfo();
     }
 }

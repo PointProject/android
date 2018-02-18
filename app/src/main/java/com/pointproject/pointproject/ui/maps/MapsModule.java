@@ -1,9 +1,7 @@
 package com.pointproject.pointproject.ui.maps;
 
 
-import android.app.Application;
 import android.app.Service;
-import android.content.Context;
 import android.content.res.Resources;
 import android.location.LocationManager;
 
@@ -12,8 +10,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.di.ActivityScope;
 import com.pointproject.pointproject.di.FragmentScope;
-
-import javax.inject.Inject;
 
 import dagger.Binds;
 import dagger.Module;

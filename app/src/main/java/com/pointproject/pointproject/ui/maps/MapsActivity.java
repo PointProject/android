@@ -1,12 +1,19 @@
 package com.pointproject.pointproject.ui.maps;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.model.User;
+import com.pointproject.pointproject.network.ApiClient;
+import com.pointproject.pointproject.network.callback.UserCallback;
+import com.pointproject.pointproject.network.response.NetworkError;
 import com.pointproject.pointproject.util.ActivityUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -14,6 +21,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+
+import static com.pointproject.pointproject.data.Constants.KEY_USER;
+import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
 
 public class MapsActivity extends AbstractActivity  {
 
@@ -28,12 +38,30 @@ public class MapsActivity extends AbstractActivity  {
     @Inject
     MapsMainFragment mFragment;
 
+    @Inject
+    ApiClient apiClient;
+
 //    TODO Delete
     private long mockTimer = 10_800_000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sp = getBaseContext()
+                .getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String login = sp.getString(KEY_USER, " ");
+        apiClient.secureLogin(login, new UserCallback() {
+            @Override
+            public void onSuccess(User user) {
+                setupDrawerUser(user);
+            }
+
+            @Override
+            public void onError(NetworkError error) {
+                Toast.makeText(MapsActivity.this, R.string.user_load_error, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         startFakeCounter();
 

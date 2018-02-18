@@ -5,13 +5,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.UserHandle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,29 +19,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
 import com.pointproject.pointproject.ui.leaders.LeadersActivity;
+import com.pointproject.pointproject.ui.login.LoginActivity;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.ui.rules.RulesActivity;
 import com.pointproject.pointproject.ui.settings.SettingsActivity;
 import com.pointproject.pointproject.ui.userInfo.UserInfoActivity;
-import com.pointproject.pointproject.util.UserHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
 import me.leolin.shortcutbadger.ShortcutBadger;
+
+import static com.pointproject.pointproject.data.Constants.KEY_TOKEN;
+import static com.pointproject.pointproject.data.Constants.KEY_USER;
+import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
 
 public abstract class AbstractActivity extends DaggerAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,6 +74,17 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         setContentView(getContentViewId());
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         ButterKnife.bind(this);
+
+        SharedPreferences sp = getBaseContext()
+                .getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String login = sp.getString(KEY_USER, " ");
+        String token = sp.getString(KEY_TOKEN, " ");
+
+        if(login.isEmpty() || token.isEmpty()){
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
 
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
@@ -127,6 +138,7 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         //sync drawer state with burger icon state
         mDrawerToggle.syncState();
 
+
     }
 
     @Override
@@ -168,6 +180,14 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
                 case R.id.menu_rules:
                     startActivity(new Intent(this, RulesActivity.class));
                     break;
+                case R.id.menu_exit:
+                    SharedPreferences prefs = getBaseContext().
+                            getSharedPreferences(NAME_SHARED_PREFERENCES,Context.MODE_PRIVATE);
+                    prefs.edit().putString(KEY_TOKEN, "").apply();
+                    prefs.edit().putString(KEY_USER, "").apply();
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
+                    return;
                 case R.id.menu_mock_notification:
                     mockNotification();
                     break;
@@ -207,6 +227,16 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         getSupportActionBar().setTitle(title);
     }
 
+    protected void setupDrawerUser(User user){
+        navHeaderName.setText(user.getLogin());
+
+        navHeaderImage.setOnClickListener(v -> {
+
+            Intent intent = UserInfoActivity.getIntent(this, user);
+            startActivity(intent);
+        });
+    }
+
     private void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
         R.string.drawer_open, R.string.drawer_close) {
@@ -228,15 +258,6 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         drawerLayout.addDrawerListener(mDrawerToggle);
         navHeaderCrystal.setOnClickListener(v ->
                 startActivity(new Intent(getBaseContext(), CrystalsActivity.class)));
-
-
-        User currentUser = UserHandler.getUser();
-        navHeaderName.setText(currentUser.getLogin());
-
-        navHeaderImage.setOnClickListener(v -> {
-            Intent intent = UserInfoActivity.getIntent(this);
-            startActivity(intent);
-        });
     }
 
     private void updateNavigationBarState(){

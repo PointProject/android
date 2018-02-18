@@ -8,7 +8,7 @@ public interface LoginContract {
 
         void checkAccount(String login, String password);
 
-        void register(String login, String password);
+//        void register(String login, String password);
 
     }
 
@@ -24,6 +24,8 @@ public interface LoginContract {
         void showNoInternetError();
 
         void loginIn();
+
+        void register();
 
         void showProgressBar();
 

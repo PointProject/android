@@ -30,4 +30,7 @@ public interface ApiLinks {
     @GET("/secure/zone/list")
     Observable<List<Zone>> getZones();
 
+    @POST("/secure/user/login")
+    Observable<User> loginUser(@Body String login);
+
 }

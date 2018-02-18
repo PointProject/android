@@ -176,35 +176,6 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     }
 
 
-    private void requestTurnOnGPS() {
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
-                        locationSettingsBuilder.build());
-        result.setResultCallback(result1 -> {
-            final Status status = result1.getStatus();
-            switch (status.getStatusCode()) {
-                case LocationSettingsStatusCodes.SUCCESS:
-                    // All location settings are satisfied
-                    break;
-                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                    // Location settings are not satisfied. But could be fixed by showing the user
-                    // a dialog.
-                    try {
-                        // Show the dialog by calling startResolutionForResult()
-                        status.startResolutionForResult(
-                                getActivity(), 1000);
-                    } catch (IntentSender.SendIntentException e) {
-                        // Ignore the error.
-                    }
-                    break;
-                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                    // Location settings are not satisfied. However, we have no way to fix the
-                    // settings so we won't show the dialog.
-                    break;
-            }
-        });
-    }
-
     @Override
     public void putPoints(HashMap<String, LatLng> geofData) {
         GeofenceController gc = new GeofenceController(context);
@@ -338,6 +309,35 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
                 .build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 10000, null);
+    }
+
+    private void requestTurnOnGPS() {
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
+                        locationSettingsBuilder.build());
+        result.setResultCallback(result1 -> {
+            final Status status = result1.getStatus();
+            switch (status.getStatusCode()) {
+                case LocationSettingsStatusCodes.SUCCESS:
+                    // All location settings are satisfied
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    // Location settings are not satisfied. But could be fixed by showing the user
+                    // a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult()
+                        status.startResolutionForResult(
+                                getActivity(), 1000);
+                    } catch (IntentSender.SendIntentException e) {
+                        // Ignore the error.
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    // Location settings are not satisfied. However, we have no way to fix the
+                    // settings so we won't show the dialog.
+                    break;
+            }
+        });
     }
 
     public void changeMarkerPositionSmoothly(final Marker marker, final LatLng toPosition) {

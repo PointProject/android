@@ -1,11 +1,10 @@
 package com.pointproject.pointproject.network.callback;
 
-
-import com.pointproject.pointproject.model.User;
+import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.network.response.NetworkError;
 
-public interface RegisterCallback {
-    void onSuccess(User user);
+public interface UserTokenCallback {
+    void onSuccess(Token token);
 
     void onError(NetworkError error);
 }

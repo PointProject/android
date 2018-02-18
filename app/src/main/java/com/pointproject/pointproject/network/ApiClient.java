@@ -3,16 +3,16 @@ package com.pointproject.pointproject.network;
 import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.model.Zone;
-import com.pointproject.pointproject.network.callback.RegisterCallback;
 import com.pointproject.pointproject.network.callback.UserCallback;
+import com.pointproject.pointproject.network.callback.UserTokenCallback;
 import com.pointproject.pointproject.network.callback.GetZoneCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -32,7 +32,7 @@ public class ApiClient {
         requestsLinks = links;
     }
 
-    public void login(final User user, final UserCallback callback) {
+    public void login(final User user, final UserTokenCallback callback) {
         requestsLinks.login(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -59,7 +59,7 @@ public class ApiClient {
                 });
     }
 
-    public void register(final User user, final RegisterCallback callback){
+    public void register(final User user, final UserCallback callback){
         requestsLinks.register(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -86,7 +86,7 @@ public class ApiClient {
                 });
     }
 
-/** Get Zones, on Error repeat request 3 times each after 5 seconds,
+/** Get Zones, on Error repeat request 3 times,
  * if all 3 times failed, call onError
  *
  * */
@@ -113,6 +113,33 @@ public class ApiClient {
                     @Override
                     public void onNext(List<Zone> zones) {
                         callback.onSuccess(zones);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(new NetworkError(e));
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void secureLogin(String login, UserCallback callback){
+        requestsLinks.loginUser(login)
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        callback.onSuccess(user);
                     }
 
                     @Override

@@ -1,8 +1,5 @@
 package com.pointproject.pointproject.ui.login;
 
-import android.app.Activity;
-import android.content.Context;
-
 import com.pointproject.pointproject.di.ActivityScope;
 import com.pointproject.pointproject.di.FragmentScope;
 

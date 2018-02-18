@@ -7,8 +7,10 @@ public class Constants {
 
     public static final String LOG_TAG = "LOG";
 
+//    Shared Preferences
     public static final String NAME_SHARED_PREFERENCES = "com.point.project";
     public static final String KEY_TOKEN = "com.point.project.token";
+    public static final String KEY_USER = "com.point.project.user";
 
     //server info
     public static final String SERVER_HOST = "http://18.220.89.28:8080";

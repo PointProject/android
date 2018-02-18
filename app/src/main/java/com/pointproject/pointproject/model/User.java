@@ -1,8 +1,11 @@
 package com.pointproject.pointproject.model;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Set;
 
-public class User {
+public class User implements Serializable{
 
     private int id;
 

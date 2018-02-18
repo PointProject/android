@@ -4,7 +4,6 @@ package com.pointproject.pointproject.ui.userInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,8 @@ import butterknife.ButterKnife;
 
 public class UserInfoFragment extends AbstractFragment implements UserInfoContract.View{
 
+    public static final String EXTRA_USER = "fragment_user";
+
     @BindView(R.id.login_info) TextView login;
     @BindView(R.id.first_name_info) TextView firstName;
     @BindView(R.id.last_name_info) TextView lastName;
@@ -29,16 +30,16 @@ public class UserInfoFragment extends AbstractFragment implements UserInfoContra
 
     @Inject UserInfoContract.Presenter presenter;
 
+    private User currentUser;
+
     @Inject
     public UserInfoFragment(){
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
         presenter.takeView(this);
-        presenter.getUserInfo();
     }
 
     @Override
@@ -53,15 +54,19 @@ public class UserInfoFragment extends AbstractFragment implements UserInfoContra
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
         ButterKnife.bind(this, view);
 
+        assert savedInstanceState != null;
+        if(!savedInstanceState.isEmpty())
+            currentUser = (User)savedInstanceState.getSerializable(EXTRA_USER);
+
         return view;
     }
 
     @Override
-    public void showUserInfo(User user) {
-        login.setText(getString(R.string.user_login, user.getLogin()));
-        firstName.setText(getString(R.string.user_name, user.getFirstName()));
-        lastName.setText(getString(R.string.user_last_name, user.getLastName()));
-        age.setText(getString(R.string.user_age, user.getAge()));
-        phoneNumber.setText(getString(R.string.user_phone_number, user.getPhone()));
+    public void showUserInfo() {
+        login.setText(getString(R.string.user_login, currentUser.getLogin()));
+        firstName.setText(getString(R.string.user_name, currentUser.getFirstName()));
+        lastName.setText(getString(R.string.user_last_name, currentUser.getLastName()));
+        age.setText(getString(R.string.user_age, currentUser.getAge()));
+        phoneNumber.setText(getString(R.string.user_phone_number, currentUser.getPhone()));
     }
 }

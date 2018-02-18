@@ -30,8 +30,8 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     @BindView(R.id.sign_in_login)
     Button loginBtn;
 
-    @BindView(R.id.register_login)
-    Button regBtn;
+//    @BindView(R.id.register_login)
+//    Button regBtn;
 
     @BindView(R.id.password_login)
     EditText passwordField;
@@ -100,10 +100,10 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
             presenter.checkAccount(login, password);
         });
 
-        regBtn.setOnClickListener(view1 -> {
-            getCredentials();
-            presenter.register(login, password);
-        });
+//        regBtn.setOnClickListener(view1 -> {
+//            getCredentials();
+//            presenter.register(login, password);
+//        });
     }
 
     @Override
@@ -139,6 +139,11 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     public void loginIn() {
 //        hideProgressBar();
         startActivity(new Intent(context, MapsActivity.class));
+    }
+
+    @Override
+    public void register(){
+
     }
 
     @Override
