@@ -78,5 +78,8 @@
     <string name="mocked_location_detected">Cheater, no cheating!  You are using mock location. Please do not do it again.</string>
     <string name="no_account">No account yet? Create one</string>
     <string name="user_load_error">Can\'t get user. Please check your network</string>
+    <string name="auth_telegram">Authenticate by Telegram</string>
+    <string name="auth_sms">Authenticate by SMS</string>
+    <string name="auth_enter_code">Enter code</string>
 
 </resources>

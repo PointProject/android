@@ -1,4 +1,4 @@
-package com.pointproject.pointproject.ui.login;
+package com.pointproject.pointproject.ui.login.mainLogin;
 
 import com.pointproject.pointproject.BasePresenter;
 import com.pointproject.pointproject.BaseView;

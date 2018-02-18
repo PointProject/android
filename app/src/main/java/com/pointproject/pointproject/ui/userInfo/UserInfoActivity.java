@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import com.pointproject.pointproject.AbstractActivity;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.model.User;
-import com.pointproject.pointproject.ui.areaDetails.AreaDetailsActivity;
 import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;

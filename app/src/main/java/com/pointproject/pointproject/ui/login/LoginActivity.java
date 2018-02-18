@@ -3,6 +3,7 @@ package com.pointproject.pointproject.ui.login;
 import android.os.Bundle;
 
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.ui.login.mainLogin.LoginFragment;
 import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;

@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 import static com.pointproject.pointproject.data.Constants.KEY_USER;
 import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
@@ -51,7 +53,8 @@ public class MapsActivity extends AbstractActivity  {
         SharedPreferences sp = getBaseContext()
                 .getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         String login = sp.getString(KEY_USER, " ");
-        apiClient.secureLogin(login, new UserCallback() {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"),login);
+        apiClient.secureLogin(requestBody, new UserCallback() {
             @Override
             public void onSuccess(User user) {
                 setupDrawerUser(user);
@@ -59,7 +62,7 @@ public class MapsActivity extends AbstractActivity  {
 
             @Override
             public void onError(NetworkError error) {
-                Toast.makeText(MapsActivity.this, R.string.user_load_error, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MapsActivity.this, R.string.user_load_error, Toast.LENGTH_SHORT).show();
             }
         });
 

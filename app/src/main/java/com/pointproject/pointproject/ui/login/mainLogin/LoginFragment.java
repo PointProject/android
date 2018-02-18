@@ -1,4 +1,4 @@
-package com.pointproject.pointproject.ui.login;
+package com.pointproject.pointproject.ui.login.mainLogin;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,15 +16,20 @@ import android.widget.Toast;
 
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
+import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_CREDENTIALS;
+
 public class LoginFragment extends AbstractFragment implements LoginContract.View{
 
+    public  final static String TAG = "LoginFragment";
     private final static int LAYOUT = R.layout.login_fragment;
 
     @BindView(R.id.sign_in_login)
@@ -138,7 +143,16 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     @Override
     public void loginIn() {
 //        hideProgressBar();
-        startActivity(new Intent(context, MapsActivity.class));
+//        startActivity(new Intent(context, MapsActivity.class));
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_CREDENTIALS, login+password);
+        AuthFragment authFragment = new AuthFragment();
+        authFragment.setArguments(bundle);
+        ActivityUtils.addSupportFragmentToActivity(
+                getActivity().getSupportFragmentManager(),
+                authFragment,
+                ID_CONTENT_CONTAINER,
+                AuthFragment.TAG);
     }
 
     @Override

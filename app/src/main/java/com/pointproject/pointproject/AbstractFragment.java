@@ -8,6 +8,8 @@ import dagger.android.support.DaggerFragment;
 
 public abstract class AbstractFragment extends DaggerFragment {
 
+    protected static final int ID_CONTENT_CONTAINER = R.id.content_container;
+
     private String title;
 
     protected Context context;

@@ -49,6 +49,8 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
     protected static final int LAYOUT = R.layout.activity_maps;
     protected static final int ID_CONTENT_CONTAINER = R.id.content_container;
 
+    protected static User currentUser;
+
     //TODO сделать ебалу с demins для hdpi,mdpi etc
 
     @BindView(R.id.nav_view) NavigationView navigationView;
@@ -77,8 +79,8 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
 
         SharedPreferences sp = getBaseContext()
                 .getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        String login = sp.getString(KEY_USER, " ");
-        String token = sp.getString(KEY_TOKEN, " ");
+        String login = sp.getString(KEY_USER, "");
+        String token = sp.getString(KEY_TOKEN, "");
 
         if(login.isEmpty() || token.isEmpty()){
             startActivity(new Intent(this, LoginActivity.class));
@@ -108,6 +110,8 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
         }
 
         setupDrawer();
+        if(currentUser != null)
+            setupDrawerUser(currentUser);
     }
 
     @Override
@@ -228,6 +232,8 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
     }
 
     protected void setupDrawerUser(User user){
+        currentUser = user;
+
         navHeaderName.setText(user.getLogin());
 
         navHeaderImage.setOnClickListener(v -> {

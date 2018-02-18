@@ -1,4 +1,4 @@
-package com.pointproject.pointproject.ui.login;
+package com.pointproject.pointproject.ui.login.mainLogin;
 
 
 import android.content.Context;
@@ -10,6 +10,7 @@ import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.network.ApiClient;
 import com.pointproject.pointproject.network.callback.UserTokenCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
+import com.pointproject.pointproject.ui.login.LoginActivity;
 
 import javax.inject.Inject;
 

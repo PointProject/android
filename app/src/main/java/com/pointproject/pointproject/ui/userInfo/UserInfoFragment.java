@@ -54,9 +54,12 @@ public class UserInfoFragment extends AbstractFragment implements UserInfoContra
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
         ButterKnife.bind(this, view);
 
-        assert savedInstanceState != null;
-        if(!savedInstanceState.isEmpty())
-            currentUser = (User)savedInstanceState.getSerializable(EXTRA_USER);
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        if(!bundle.isEmpty())
+            currentUser = (User)bundle.getSerializable(EXTRA_USER);
+
+        showUserInfo();
 
         return view;
     }
