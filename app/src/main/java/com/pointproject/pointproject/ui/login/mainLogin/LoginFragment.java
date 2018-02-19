@@ -2,7 +2,6 @@ package com.pointproject.pointproject.ui.login.mainLogin;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment;
-import com.pointproject.pointproject.ui.maps.MapsActivity;
 import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;

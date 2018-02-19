@@ -109,7 +109,6 @@ public class LoginPresenter implements LoginContract.Presenter {
                 SharedPreferences prefs = activity.getSharedPreferences(NAME_SHARED_PREFERENCES,
                         Context.MODE_PRIVATE);
                 prefs.edit().putString(KEY_TOKEN, token.getToken()).apply();
-                prefs.edit().putString(KEY_USER, userN.getLogin()).apply();
 
                 loginView.loginIn();
             }
