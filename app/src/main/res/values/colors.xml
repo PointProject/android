@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F9A825</color>
-    <color name="colorPrimaryDark">#F57F17</color>
-    <color name="colorAccent">#0091EA</color>
+    <color name="colorPrimary">#00bcd4</color>
+    <color name="colorPrimaryDark">#0097a7</color>
+    <color name="colorAccent">#f2fe71</color>
+
+    <color name="colorPrimaryLight">#fabc57</color>
 
     <color name="colorDrawerIcon">#097B65</color>
 
     <color name="colorToolbarIcon">#000</color>
 
     <color name="colorTextProgressDialog">#FFFFFF</color>
+
+    <color name="colorLogo">#ffcb2b</color>
 </resources>

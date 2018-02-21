@@ -1,6 +1,9 @@
 package com.pointproject.pointproject.ui.login.doubleAuth;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.data.Constants;
 
 import javax.inject.Inject;
 
@@ -24,7 +29,9 @@ public class AuthFragment extends AbstractFragment implements AuthContract.View{
 
     public static final String EXTRA_CREDENTIALS = "extra_credentials";
     public static final String TAG = "AuthFragment";
+
     private final static int LAYOUT = R.layout.fragment_auth;
+    private final static String KEY_CODE_TEXT__EDIT_SHOWN = "key_text_shown";
 
     @Inject AuthPresenter presenter;
 
@@ -40,8 +47,14 @@ public class AuthFragment extends AbstractFragment implements AuthContract.View{
     @BindView(R.id.auth_telegram)
     Button authTelegram;
 
+    @BindView(R.id.enter_auth_code_layout)
+    LinearLayout authCodeLinearLayout;
+
     private String credentials;
 
+    private Configuration orientationConfig;
+
+    @Inject
     public AuthFragment(){
 
     }
@@ -51,6 +64,12 @@ public class AuthFragment extends AbstractFragment implements AuthContract.View{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
         ButterKnife.bind(this,view);
+
+        orientationConfig = getResources().getConfiguration();
+
+        if (savedInstanceState!=null)
+            if(savedInstanceState.getBoolean(KEY_CODE_TEXT__EDIT_SHOWN))
+                showCodeField();
 
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -72,21 +91,56 @@ public class AuthFragment extends AbstractFragment implements AuthContract.View{
         presenter.takeView(this);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_CODE_TEXT__EDIT_SHOWN, authCodeLinearLayout.isShown());
+    }
+
     @OnClick(R.id.auth_telegram)
     public void authTelegram(View view){
         presenter.authTelegram(credentials);
-        Intent telegram = new Intent(Intent.ACTION_VIEW , Uri.parse("https://telegram.me/pay_point_bot?start="+credentials));
+        Intent telegram = new Intent(Intent.ACTION_VIEW , Uri.parse(Constants.URI_TELEGRAM_BOT+credentials));
         startActivity(telegram);
     }
 
+    @OnClick(R.id.auth_sms)
+    public void authSms(View view){
+        presenter.authSms();
+    }
+
     @Override
-    public void showEnterCode(int code) {
-        codeText.setText(code+"");
+    public void showCodeField() {
+        if(orientationConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            authCodeLinearLayout.setVisibility(View.VISIBLE);
+            authCodeLinearLayout.animate()
+                    .translationY(authCodeLinearLayout.getHeight())
+                    .alpha(1.0F)
+                    .setListener(null);
+        }
+    }
+
+    @Override
+    public void hideCodeField(){
+        if(orientationConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            authCodeLinearLayout.animate()
+                    .translationY(0)
+                    .alpha(0.0f)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            authCodeLinearLayout.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
+        }
     }
 
     @Override
     public void wrongCode() {
-
+        hideCodeField();
     }
 
     @Override

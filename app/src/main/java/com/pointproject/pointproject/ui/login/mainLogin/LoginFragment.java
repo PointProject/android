@@ -151,6 +151,7 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
                 authFragment,
                 ID_CONTENT_CONTAINER,
                 AuthFragment.TAG);
+        hideProgressBar();
     }
 
     @Override

@@ -22,7 +22,9 @@ public class AuthPresenter implements AuthContract.Presenter{
 
     private static String TAG = AuthPresenter.class.getSimpleName();
 
-    AuthContract.View authView;
+    private int code;
+
+    private AuthContract.View authView;
 
     @Inject
     AuthPresenter(){}
@@ -39,7 +41,8 @@ public class AuthPresenter implements AuthContract.Presenter{
 
     @Override
     public void authTelegram(String credentials) {
-        generateCode(credentials);
+        code = generateCode(credentials);
+        authView.showCodeField();
     }
 
     @Override
@@ -47,7 +50,12 @@ public class AuthPresenter implements AuthContract.Presenter{
 
     }
 
-    private void generateCode(String credentials){
+    @Override
+    public void checkCode(int userCode){
+
+    }
+
+    private int generateCode(String credentials){
         TimeBasedOneTimePasswordGenerator totp = null;
         SecretKey secretKey = null;
 
@@ -77,7 +85,7 @@ public class AuthPresenter implements AuthContract.Presenter{
             e.printStackTrace();
         }
 
-        Log.d(TAG, code +"");
-        authView.showEnterCode(code);
+        Log.d(TAG, "Auth telegram one time password: " + code);
+        return code;
     }
 }

@@ -15,6 +15,9 @@ public class Constants {
     //server info
     public static final String SERVER_HOST = "http://18.220.89.28:8080";
 
+    //telegram auth bot
+    public static final String URI_TELEGRAM_BOT = "https://telegram.me/pay_point_bot?start=";
+
 
     public static final LatLngBounds ODESSA_LIMITS =  new LatLngBounds(
             new LatLng(46.295105, 30.517616),

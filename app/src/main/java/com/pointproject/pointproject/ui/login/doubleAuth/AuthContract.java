@@ -9,10 +9,14 @@ public interface AuthContract {
         void authTelegram(String credentials);
 
         void authSms();
+
+        void checkCode(int userCode);
     }
 
     interface View extends BaseView<Presenter> {
-        void showEnterCode(int code);
+        void showCodeField();
+
+        void hideCodeField();
 
         void wrongCode();
 

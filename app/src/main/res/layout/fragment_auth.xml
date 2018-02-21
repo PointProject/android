@@ -1,31 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="@color/colorPrimary">
 
-    <EditText
-        android:id="@+id/auth_code"
+    <LinearLayout
+        android:id="@+id/enter_auth_code_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/auth_enter_code"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/auth_enter_code"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"
+        android:alpha="0.0">
 
-    <Button
-        android:id="@+id/auth_telegram"
-        android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/auth_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/auth_enter_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auth_enter_code"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/auth_telegram"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true">
 
-    <Button
-        android:id="@+id/auth_sms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/auth_sms"/>
+        <Button
+            android:id="@+id/auth_telegram"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:drawablePadding="10dp"
+            android:text="@string/auth_telegram"
+            android:drawableStart="@drawable/ic_telegram"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/auth_sms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:drawablePadding="10dp"
+            android:text="@string/auth_sms"
+            android:drawableStart="@drawable/ic_sms"/>
+    </LinearLayout>
+
+</RelativeLayout>
