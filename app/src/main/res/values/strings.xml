@@ -81,5 +81,6 @@
     <string name="auth_telegram">Authenticate by Telegram</string>
     <string name="auth_sms">Authenticate by SMS</string>
     <string name="auth_enter_code">Enter code</string>
+    <string name="wrong_auth_code">Wrong code. Try again.</string>
 
 </resources>

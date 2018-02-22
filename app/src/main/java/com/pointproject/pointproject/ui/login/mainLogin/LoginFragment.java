@@ -24,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_CREDENTIALS;
+import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_LOGIN;
 
 public class LoginFragment extends AbstractFragment implements LoginContract.View{
 
@@ -144,6 +145,7 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 //        startActivity(new Intent(context, MapsActivity.class));
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_CREDENTIALS, login+password);
+        bundle.putString(EXTRA_LOGIN, login);
         AuthFragment authFragment = new AuthFragment();
         authFragment.setArguments(bundle);
         ActivityUtils.addSupportFragmentToActivity(

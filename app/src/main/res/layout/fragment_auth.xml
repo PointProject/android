@@ -38,23 +38,15 @@
 
         <Button
             android:id="@+id/auth_telegram"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:padding="16dp"
-            android:drawablePadding="10dp"
             android:text="@string/auth_telegram"
-            android:drawableStart="@drawable/ic_telegram"/>
+            android:drawableStart="@drawable/ic_telegram"
+            style="@style/ButtonAuth"/>
 
         <Button
             android:id="@+id/auth_sms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="textStart"
-            android:padding="16dp"
-            android:drawablePadding="10dp"
             android:text="@string/auth_sms"
-            android:drawableStart="@drawable/ic_sms"/>
+            android:drawableStart="@drawable/ic_sms"
+            style="@style/ButtonAuth"/>
     </LinearLayout>
 
 </RelativeLayout>

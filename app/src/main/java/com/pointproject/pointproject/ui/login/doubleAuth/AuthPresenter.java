@@ -41,7 +41,7 @@ public class AuthPresenter implements AuthContract.Presenter{
 
     @Override
     public void authTelegram(String credentials) {
-        code = generateCode(credentials);
+        code = generateCode(credentials.hashCode());
         authView.showCodeField();
     }
 
@@ -52,10 +52,15 @@ public class AuthPresenter implements AuthContract.Presenter{
 
     @Override
     public void checkCode(int userCode){
-
+        if(code == userCode){
+            authView.next();
+        } else{
+            authView.wrongCode();
+        }
     }
 
-    private int generateCode(String credentials){
+    private int generateCode(int intCredentials){
+        String credentials = String.valueOf(intCredentials);
         TimeBasedOneTimePasswordGenerator totp = null;
         SecretKey secretKey = null;
 
