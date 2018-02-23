@@ -16,17 +16,41 @@
         android:alpha="0.0">
 
         <EditText
-            android:id="@+id/auth_code"
+            android:id="@+id/auth_code_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:gravity="center"/>
 
         <Button
-            android:id="@+id/auth_enter_code"
+            android:id="@+id/auth_enter_code_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/auth_enter_code"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/enter_phone_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"
+        android:alpha="0.0">
+
+        <EditText
+            android:id="@+id/auth_phone_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/auth_enter_phone_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"/>
     </LinearLayout>
 
     <LinearLayout
@@ -37,16 +61,17 @@
         android:layout_centerInParent="true">
 
         <Button
-            android:id="@+id/auth_telegram"
+            android:id="@+id/auth_telegram_button"
             android:text="@string/auth_telegram"
             android:drawableStart="@drawable/ic_telegram"
             style="@style/ButtonAuth"/>
 
         <Button
-            android:id="@+id/auth_sms"
+            android:id="@+id/auth_sms_button"
             android:text="@string/auth_sms"
             android:drawableStart="@drawable/ic_sms"
             style="@style/ButtonAuth"/>
     </LinearLayout>
+
 
 </RelativeLayout>

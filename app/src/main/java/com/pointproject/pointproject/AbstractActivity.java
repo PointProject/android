@@ -26,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.ui.crystals.CrystalsActivity;
 import com.pointproject.pointproject.ui.leaders.LeadersActivity;
@@ -175,9 +176,6 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
                 case R.id.menu_settings:
                     startActivity(new Intent(this, SettingsActivity.class));
                     break;
-//                case R.id.menu_crystals:
-//                    startActivity(new Intent(this, CrystalsActivity.class));
-//                    break;
                 case R.id.menu_leaders:
                     startActivity(new Intent(this, LeadersActivity.class));
                     break;
@@ -189,6 +187,7 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
                             getSharedPreferences(NAME_SHARED_PREFERENCES,Context.MODE_PRIVATE);
                     prefs.edit().putString(KEY_TOKEN, "").apply();
                     prefs.edit().putString(KEY_USER, "").apply();
+                    FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(this, LoginActivity.class));
                     finish();
                     return;

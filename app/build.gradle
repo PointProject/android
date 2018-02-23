@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '26.0.3'
     defaultConfig {
         applicationId "com.pointproject.pointproject"
         minSdkVersion 17
@@ -68,6 +69,11 @@ dependencies {
 
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.9'
+//Authentication
+    compile 'com.google.firebase:firebase-auth:11.8.0'
+    compile 'com.google.android.gms:play-services-auth:11.8.0'
 
     testCompile 'junit:junit:4.12'
 }
+
+apply plugin: 'com.google.gms.google-services'

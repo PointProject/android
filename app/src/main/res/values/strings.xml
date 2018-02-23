@@ -75,6 +75,7 @@
     <string name="crystals">Crystals</string>
     <string name="user_info_title">User Info</string>
     <string name="ok">OK</string>
+    <string name="add">ADD</string>
     <string name="mocked_location_detected">Cheater, no cheating!  You are using mock location. Please do not do it again.</string>
     <string name="no_account">No account yet? Create one</string>
     <string name="user_load_error">Can\'t get user. Please check your network</string>
@@ -82,5 +83,8 @@
     <string name="auth_sms">Authenticate by SMS</string>
     <string name="auth_enter_code">Enter code</string>
     <string name="wrong_auth_code">Wrong code. Try again.</string>
+    <string name="invalid_phone_number">Invalid phone number.</string>
+    <string name="sms_quota_exceeded">SMS quota exceeded. Please let us know if you see this message.</string>
+    <string name="sms_will_arrive">Your sms will arrive in few seconds.</string>
 
 </resources>

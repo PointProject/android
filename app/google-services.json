@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "284075199476",
+    "firebase_url": "https://paypoint-be0c9.firebaseio.com",
+    "project_id": "paypoint-be0c9",
+    "storage_bucket": "paypoint-be0c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284075199476:android:33628e1d71313159",
+        "android_client_info": {
+          "package_name": "com.pointproject.pointproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284075199476-sltprg3agr54pslk5oj1b6v2q3063o34.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pointproject.pointproject",
+            "certificate_hash": "c74dfdbeefa6cac5baf5f4448a0f0adc8eb4dd6e"
+          }
+        },
+        {
+          "client_id": "284075199476-d8cr4r8mho0rtnug9ggu8t3k6scbqcs2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIK1dz07jKzrkQ3tgq7HXE6aJ5oTXazzs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284075199476-d8cr4r8mho0rtnug9ggu8t3k6scbqcs2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

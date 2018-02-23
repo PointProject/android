@@ -53,18 +53,20 @@ public class MapsActivity extends AbstractActivity  {
         SharedPreferences sp = getBaseContext()
                 .getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         String login = sp.getString(KEY_USER, " ");
-        RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"),login);
-        apiClient.secureLogin(requestBody, new UserCallback() {
-            @Override
-            public void onSuccess(User user) {
-                setupDrawerUser(user);
-            }
+        if(!login.isEmpty() && !login.equals(" ")) {
+            RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), login);
+            apiClient.secureLogin(requestBody, new UserCallback() {
+                @Override
+                public void onSuccess(User user) {
+                    setupDrawerUser(user);
+                }
 
-            @Override
-            public void onError(NetworkError error) {
+                @Override
+                public void onError(NetworkError error) {
 //                Toast.makeText(MapsActivity.this, R.string.user_load_error, Toast.LENGTH_SHORT).show();
-            }
-        });
+                }
+            });
+        }
 
         startFakeCounter();
 

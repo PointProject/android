@@ -46,10 +46,7 @@
         <service android:name=".geofence.GeofenceIntentService" />
 
         <activity
-            android:name=".ui.login.LoginActivity">
-
-
-        </activity>
+            android:name=".ui.login.LoginActivity"/>
 
         <activity android:name=".ui.crystals.CrystalsActivity"/>
         <activity android:name=".ui.settings.SettingsActivity"/>
