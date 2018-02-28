@@ -125,8 +125,6 @@ public abstract class AbstractActivity extends DaggerAppCompatActivity implement
     @Override
     public void onPause() {
         super.onPause();
-        //animation
-        //   overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 
     @Override

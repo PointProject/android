@@ -18,9 +18,6 @@ import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.ui.login.AuthReason;
-import com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment;
-import com.pointproject.pointproject.ui.login.registration.RegistrationFragment;
-import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;
 
@@ -28,13 +25,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_AUTH_REASON;
-import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_USER;
-
 public class LoginFragment extends AbstractFragment implements LoginContract.View{
 
     public  final static String TAG = "LoginFragment";
     private final static int LAYOUT = R.layout.login_fragment;
+
+    private OnFragmentRegAuthInteraction mCallback;
+
+    public interface OnFragmentRegAuthInteraction{
+        void showRegistration();
+
+        void showAuthentication(User user, AuthReason reason);
+    }
 
     @BindView(R.id.sign_in_login)
     Button loginBtn;
@@ -81,6 +83,13 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
         super.onAttach(context);
 
         setContext(context);
+
+        try {
+            mCallback = (OnFragmentRegAuthInteraction) context;
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString() +
+                    " must implement OnFragmentRegAuthInteraction");
+        }
     }
 
     @Nullable
@@ -152,27 +161,13 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @Override
     public void loginIn(User userN) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(EXTRA_AUTH_REASON, AuthReason.LOGIN);
-        bundle.putSerializable(EXTRA_USER, userN);
-        AuthFragment authFragment = new AuthFragment();
-        authFragment.setArguments(bundle);
-        ActivityUtils.addSupportFragmentToActivity(
-                getActivity().getSupportFragmentManager(),
-                authFragment,
-                ID_CONTENT_CONTAINER,
-                AuthFragment.TAG);
+        mCallback.showAuthentication(userN, AuthReason.LOGIN);
         hideProgressBar();
     }
 
     @Override
     public void register(){
-        RegistrationFragment regFragment = new RegistrationFragment();
-        ActivityUtils.addSupportFragmentToActivity(
-                getActivity().getSupportFragmentManager(),
-                regFragment,
-                ID_CONTENT_CONTAINER,
-                RegistrationFragment.TAG);
+        mCallback.showRegistration();
     }
 
     @Override

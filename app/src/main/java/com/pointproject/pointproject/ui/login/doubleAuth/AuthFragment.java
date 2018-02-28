@@ -52,6 +52,11 @@ public class AuthFragment extends AbstractFragment implements
         AuthContract.View,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private OnSuccessfulAuth mCallback;
+    public interface OnSuccessfulAuth{
+        void startMainMap();
+    }
+
     public static final String EXTRA_USER = "extra_user";
     public static final String EXTRA_AUTH_REASON = "extra_reason";
     public static final String TAG = "AuthFragment";
@@ -98,6 +103,13 @@ public class AuthFragment extends AbstractFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
         setContext(context);
+
+        try{
+            mCallback = (OnSuccessfulAuth) context;
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString() +
+                    " must implement OnSuccessfulAuth interface");
+        }
     }
 
     @Nullable
@@ -287,9 +299,8 @@ public class AuthFragment extends AbstractFragment implements
         SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
         prefs.edit().putString(KEY_USER, user.getLogin()).apply();
-        Intent intent = new Intent(getContext(), MapsActivity.class);
-        startActivity(intent);
-        getActivity().finish();
+
+        mCallback.startMainMap();
     }
 
     @Override

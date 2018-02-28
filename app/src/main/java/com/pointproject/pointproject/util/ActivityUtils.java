@@ -6,12 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.pointproject.pointproject.R;
+
 public class ActivityUtils {
     public static void addSupportFragmentToActivity(@NonNull FragmentManager fragmentManager,
                                                     @NonNull Fragment fragment, int frameId,
                                                     @Nullable String tag) {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
         transaction.replace(frameId, fragment, tag);
         transaction.commit();
     }

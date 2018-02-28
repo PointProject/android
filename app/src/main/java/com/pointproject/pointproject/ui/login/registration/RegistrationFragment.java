@@ -36,6 +36,14 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
     public static final String TAG = RegistrationFragment.class.getSimpleName();
     private static final int LAYOUT = R.layout.fragment_registration;
 
+    private OnFragmentLoginAuthInteraction mCallback;
+
+    public interface OnFragmentLoginAuthInteraction{
+        void showLogin();
+
+        void showAuth(User user, AuthReason reason);
+    }
+
     @Inject RegistrationPresenter regPresenter;
 
     @BindView(R.id.input_login)
@@ -61,6 +69,13 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
     public void onAttach(Context context) {
         super.onAttach(context);
         setContext(context);
+
+        try{
+            mCallback = (OnFragmentLoginAuthInteraction) context;
+        } catch(ClassCastException e){
+            throw new ClassCastException(context.toString() +
+                    " must implement OnFragmentLoginAuthInteraction interfacr");
+        }
     }
 
     @Nullable
@@ -104,11 +119,7 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
 
     @OnClick(R.id.link_login)
     public void showLogin(View view){
-        LoginFragment loginFragment = new LoginFragment();
-        ActivityUtils.addSupportFragmentToActivity(getFragmentManager(),
-                loginFragment,
-                ID_CONTENT_CONTAINER,
-                LoginFragment.TAG);
+        mCallback.showLogin();
     }
 
     @Override
@@ -174,17 +185,7 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
 
     @Override
     public void startAuth(User user) {
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(EXTRA_AUTH_REASON, AuthReason.REGISTRATION);
-        bundle.putSerializable(EXTRA_USER, user);
-        AuthFragment authFragment = new AuthFragment();
-        authFragment.setArguments(bundle);
-        ActivityUtils.addSupportFragmentToActivity(
-                getActivity().getSupportFragmentManager(),
-                authFragment,
-                ID_CONTENT_CONTAINER,
-                AuthFragment.TAG);
+        mCallback.showAuth(user, AuthReason.REGISTRATION);
     }
 
     private void register(){
