@@ -16,7 +16,7 @@ public class CredentialUtils {
         }else if (TextUtils.isEmpty(login)) {
             view.showEmptyLoginError();
             return false;
-        } else if (!isEmailValid(login)) {
+        } else if (!isLoginValid(login)) {
             view.showLoginError(R.string.error_invalid_login);
             return false;
         }
@@ -40,7 +40,7 @@ public class CredentialUtils {
         return phone.length() >= 10;
     }
 
-    private static boolean isEmailValid(String email) {
+    private static boolean isLoginValid(String email) {
         //TODO: Replace this with your own logic
         return email.length()>3;
     }

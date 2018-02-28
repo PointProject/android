@@ -49,7 +49,8 @@
             android:name=".ui.login.LoginActivity"/>
 
         <activity android:name=".ui.crystals.CrystalsActivity"/>
-        <activity android:name=".ui.settings.SettingsActivity"/>
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:theme="@style/PreferencesTheme"/>
         <activity android:name=".ui.leaders.LeadersActivity"/>
         <activity android:name=".ui.rules.RulesActivity"/>
         <activity android:name=".ui.areaDetails.AreaDetailsActivity"/>

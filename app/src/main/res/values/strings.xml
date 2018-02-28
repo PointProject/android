@@ -94,5 +94,6 @@
     <string name="msg_invalid_phone">This phone is invalid</string>
     <string name="empty_login">Empty login</string>
     <string name="empty_password">Empty password</string>
+    <string name="wrong_login_password">Wrong login or password</string>
 
 </resources>

@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--different group ids for view separator between groups-->
     <group android:checkableBehavior="single"
         android:id="@+id/main">
         <item android:id="@+id/menu_play"
             android:title="@string/menu_play"
+            android:icon="@drawable/ic_play_drawer"
             />
         <item android:id="@+id/menu_leaders"
             android:title="@string/menu_leaders"
+            android:icon="@drawable/ic_leaders_drawer"
             />
         <item android:id="@+id/menu_rules"
             android:title="@string/menu_rules"
+            android:icon="@drawable/ic_rules_drawer"
             />
         <item android:id="@+id/menu_settings"
             android:title="@string/menu_settings"
+            android:icon="@drawable/ic_settings_drawer"
             />
         <item android:id="@+id/menu_exit"
             android:title="@string/menu_exit"
+            android:icon="@drawable/ic_exit_drawer"
             />
     </group>
 

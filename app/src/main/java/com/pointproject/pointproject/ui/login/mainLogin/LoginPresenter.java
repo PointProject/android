@@ -77,7 +77,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 }
 
                 loginView.hideProgressBar();
-                loginView.showLoginError(R.string.error_invalid_login);
+                loginView.showLoginError(R.string.wrong_login_password);
             }
         });
     }
