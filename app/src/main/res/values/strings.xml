@@ -86,5 +86,13 @@
     <string name="invalid_phone_number">Invalid phone number.</string>
     <string name="sms_quota_exceeded">SMS quota exceeded. Please let us know if you see this message.</string>
     <string name="sms_will_arrive">Your sms will arrive in few seconds.</string>
+    <string name="create_account">Create Account</string>
+    <string name="registration_login_text">Already a member? Login</string>
+
+    <string name="prompt_phone">Phone number</string>
+    <string name="sign_up">Sign up</string>
+    <string name="msg_invalid_phone">This phone is invalid</string>
+    <string name="empty_login">Empty login</string>
+    <string name="empty_password">Empty password</string>
 
 </resources>

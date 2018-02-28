@@ -11,21 +11,11 @@
         <item android:id="@+id/menu_leaders"
             android:title="@string/menu_leaders"
             />
-<!--        <item android:id="@+id/menu_crystals"
-              android:title="@string/menu_crystals"
-              app:actionViewClass="android.widget.TextView"
-              />-->
-        <item android:id="@+id/menu_cash"
-              android:title="@string/menu_cash_withdraw"
-              />
         <item android:id="@+id/menu_rules"
             android:title="@string/menu_rules"
             />
         <item android:id="@+id/menu_settings"
             android:title="@string/menu_settings"
-            />
-        <item android:id="@+id/menu_social_network"
-            android:title="@string/menu_social"
             />
         <item android:id="@+id/menu_exit"
             android:title="@string/menu_exit"

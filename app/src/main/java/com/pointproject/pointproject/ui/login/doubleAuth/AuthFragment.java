@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.network.ApiClient;
 import com.pointproject.pointproject.network.callback.UserCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
+import com.pointproject.pointproject.ui.login.AuthReason;
 import com.pointproject.pointproject.ui.maps.MapsActivity;
 
 import javax.inject.Inject;
@@ -50,13 +52,14 @@ public class AuthFragment extends AbstractFragment implements
         AuthContract.View,
         GoogleApiClient.OnConnectionFailedListener {
 
-    public static final String EXTRA_CREDENTIALS = "extra_credentials";
-    public static final String EXTRA_LOGIN = "extra_login";
+    public static final String EXTRA_USER = "extra_user";
+    public static final String EXTRA_AUTH_REASON = "extra_reason";
     public static final String TAG = "AuthFragment";
 
     private final static int LAYOUT = R.layout.fragment_auth;
     private final static String KEY_CODE_TEXT_EDIT_SHOWN = "key_text_shown";
     private static final String KEY_PHONE_EDIT_TEXT_SHOWN = "phone_text_shown";
+    private static final String KEY_AUTH_REASON = "key_auth_reason";
     private static final int RESOLVE_HINT = 1;
 
     @Inject AuthPresenter presenter;
@@ -76,13 +79,14 @@ public class AuthFragment extends AbstractFragment implements
     @BindView(R.id.auth_phone_text)
     EditText phoneText;
 
-    private String credentials, login;
+//    private String credentials, login;
 
     private User user;
 
     private Configuration orientationConfig;
 
     private AuthMethod authMethod;
+    private AuthReason authReason;
     private GoogleApiClient googleApiClient;
 
     @Inject
@@ -90,14 +94,20 @@ public class AuthFragment extends AbstractFragment implements
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        setContext(context);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
-        googleApiClient = new GoogleApiClient.Builder(getContext())
-                .enableAutoManage(getActivity(), this)
+        googleApiClient = new GoogleApiClient.Builder(context)
+                .enableAutoManage((FragmentActivity) context, this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
 
@@ -108,28 +118,31 @@ public class AuthFragment extends AbstractFragment implements
                 showCodeField();
             if(savedInstanceState.getBoolean(KEY_PHONE_EDIT_TEXT_SHOWN))
                 showPhoneField();
+            authReason = (AuthReason) savedInstanceState.getSerializable(KEY_AUTH_REASON);
         }
 
         Bundle bundle = getArguments();
         assert bundle != null;
         if(!bundle.isEmpty()){
-            credentials = bundle.getString(EXTRA_CREDENTIALS);
-            login = bundle.getString(EXTRA_LOGIN, "");
+            user = (User) bundle.getSerializable(EXTRA_USER);
+            authReason = (AuthReason) bundle.getSerializable(EXTRA_AUTH_REASON);
         }
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), login);
-        serverApiClient.secureLogin(requestBody, new UserCallback() {
-            @Override
-            public void onSuccess(User serverUser) {
-                user = serverUser;
-            }
+        if(authReason == AuthReason.LOGIN) {
+            RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), user.getLogin());
+            serverApiClient.secureLogin(requestBody, new UserCallback() {
+                @Override
+                public void onSuccess(User serverUser) {
+                    user = serverUser;
+                }
 
-            @Override
-            public void onError(NetworkError error) {
-                Log.e(TAG, error.getMessage());
-                Toast.makeText(getContext(), R.string.msg_no_internet, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onError(NetworkError error) {
+                    Log.e(TAG, error.getMessage());
+                    Toast.makeText(getContext(), R.string.msg_no_internet, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         return view;
     }
@@ -143,7 +156,7 @@ public class AuthFragment extends AbstractFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        presenter.takeView(this);
+        presenter.takeView(this, authReason);
     }
 
     @Override
@@ -152,14 +165,23 @@ public class AuthFragment extends AbstractFragment implements
 
         outState.putBoolean(KEY_CODE_TEXT_EDIT_SHOWN, authCodeLinearLayout.isShown());
         outState.putBoolean(KEY_PHONE_EDIT_TEXT_SHOWN, authPhoneLinearLayout.isShown());
+        outState.putSerializable(KEY_AUTH_REASON, authReason);
     }
 
     @OnClick(R.id.auth_telegram_button)
     public void authTelegram(View view){
         authMethod = AuthMethod.TELEGRAM;
+        String credentials = user.getLogin()+user.getPassword();
         presenter.authTelegram(credentials);
 
-        Intent telegram = new Intent(Intent.ACTION_VIEW , Uri.parse(Constants.URI_TELEGRAM_BOT+credentials.hashCode()));
+        Intent telegram;
+        switch (authReason){
+            case REGISTRATION:
+                telegram = new Intent(Intent.ACTION_VIEW , Uri.parse(Constants.URI_TELEGRAM_BOT+credentials.hashCode()+"_registration"));
+                break;
+            default:
+                telegram = new Intent(Intent.ACTION_VIEW , Uri.parse(Constants.URI_TELEGRAM_BOT+credentials.hashCode()));
+        }
         startActivity(telegram);
     }
 
@@ -184,11 +206,16 @@ public class AuthFragment extends AbstractFragment implements
             presenter.checkCode(code, authMethod);
     }
 
+    @Override
+    public User getRegisteredUser() {
+        return user;
+    }
+
     @OnClick(R.id.auth_enter_phone_button)
     public void enterPhone(View view){
         String phone = phoneText.getText().toString();
         if(!phone.isEmpty() && !(phone.length()<10))
-            /**TODO check if phone is already in user, otherwise add to user
+            /**TODO check if user have phone, otherwise add phone to user
              * apiClient.checkPhone(phone, UserCallback{
              *     @Override
              *     public void onSuccess(User user){
@@ -256,10 +283,10 @@ public class AuthFragment extends AbstractFragment implements
     }
 
     @Override
-    public void next() {
-        SharedPreferences prefs = getContext().getSharedPreferences(NAME_SHARED_PREFERENCES,
+    public void showMapsActivity() {
+        SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
-        prefs.edit().putString(KEY_USER, login).apply();
+        prefs.edit().putString(KEY_USER, user.getLogin()).apply();
         Intent intent = new Intent(getContext(), MapsActivity.class);
         startActivity(intent);
         getActivity().finish();
@@ -299,7 +326,7 @@ public class AuthFragment extends AbstractFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        presenter.takeView(this);
+        presenter.takeView(this, authReason);
         if (requestCode == RESOLVE_HINT) {
             if (resultCode == RESULT_OK) {
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);

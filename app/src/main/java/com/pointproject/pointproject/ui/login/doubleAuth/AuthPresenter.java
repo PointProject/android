@@ -3,6 +3,7 @@ package com.pointproject.pointproject.ui.login.doubleAuth;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator;
@@ -13,6 +14,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.model.Token;
+import com.pointproject.pointproject.model.User;
+import com.pointproject.pointproject.network.ApiClient;
+import com.pointproject.pointproject.network.callback.UserCallback;
+import com.pointproject.pointproject.network.callback.UserTokenCallback;
+import com.pointproject.pointproject.network.response.NetworkError;
+import com.pointproject.pointproject.ui.login.AuthReason;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -27,15 +35,23 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 
+import static com.pointproject.pointproject.data.Constants.KEY_TOKEN;
+import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
+import static com.pointproject.pointproject.network.response.NetworkError.NETWORK_ERROR_MESSAGE;
+
 public class AuthPresenter implements AuthContract.Presenter{
 
     private static String TAG = AuthPresenter.class.getSimpleName();
+
+    @Inject
+    ApiClient apiClient;
 
     private int code;
 
     private AuthContract.View authView;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId;
+    private AuthReason authReason;
 
     @Inject
     AuthPresenter(){}
@@ -43,6 +59,12 @@ public class AuthPresenter implements AuthContract.Presenter{
     @Override
     public void takeView(AuthContract.View view) {
         authView = view;
+    }
+
+    @Override
+    public void takeView(AuthContract.View view, AuthReason reason) {
+        authView = view;
+        authReason = reason;
     }
 
     @Override
@@ -74,7 +96,7 @@ public class AuthPresenter implements AuthContract.Presenter{
         switch (authMethod) {
             case TELEGRAM:
                 if (code == Integer.valueOf(userCode)) {
-                    authView.next();
+                    codeIsRight();
                 } else {
                     authView.showError(R.string.wrong_auth_code);
                 }
@@ -166,7 +188,7 @@ public class AuthPresenter implements AuthContract.Presenter{
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-                        authView.next();
+                        codeIsRight();
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -182,5 +204,46 @@ public class AuthPresenter implements AuthContract.Presenter{
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
 
         signInWithPhoneAuthCredential(credential);
+    }
+
+    private void codeIsRight(){
+        switch (authReason){
+            case LOGIN:
+                authView.showMapsActivity();
+                break;
+            case REGISTRATION:
+                apiClient.register(authView.getRegisteredUser(), new UserCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+//                        TODO: remove
+                        login(user, authView.getContext());
+                        authView.showMapsActivity();
+                    }
+
+                    @Override
+                    public void onError(NetworkError error) {
+                        if(error.getAppErrorMessage().equals(NETWORK_ERROR_MESSAGE)){
+                            authView.showError(R.string.msg_no_internet);
+                        }
+                    }
+                });
+        }
+    }
+
+//    TODO: remove this unholy thing when server implements token return on registration
+    private void login(User userN, Context context) {
+
+        apiClient.login(userN, new UserTokenCallback() {
+            @Override
+            public void onSuccess(Token token) {
+                SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
+                        Context.MODE_PRIVATE);
+                prefs.edit().putString(KEY_TOKEN, token.getToken()).apply();
+            }
+
+            @Override
+            public void onError(NetworkError error) {
+            }
+        });
     }
 }

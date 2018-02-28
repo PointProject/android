@@ -15,16 +15,20 @@ import android.widget.Toast;
 
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.model.User;
+import com.pointproject.pointproject.ui.login.AuthReason;
 import com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment;
+import com.pointproject.pointproject.ui.login.registration.RegistrationFragment;
 import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_CREDENTIALS;
-import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_LOGIN;
+import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_AUTH_REASON;
+import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_USER;
 
 public class LoginFragment extends AbstractFragment implements LoginContract.View{
 
@@ -33,9 +37,6 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @BindView(R.id.sign_in_login)
     Button loginBtn;
-
-//    @BindView(R.id.register_login)
-//    Button regBtn;
 
     @BindView(R.id.password_login)
     EditText passwordField;
@@ -51,9 +52,7 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
 
     @Inject
-    public LoginFragment(){
-
-    }
+    public LoginFragment(){    }
 
     @Override
     public void onResume() {
@@ -70,7 +69,6 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
         super.onPause();
     }
 
-    //    Context is lost on screen rotation. Resetting it onAttach solve rotation crash problem
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -94,20 +92,15 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
 
                 getCredentials();
-                presenter.checkAccount(login, password);
+                presenter.checkAccount(login, password, context);
                 return true;
             }
             return false;
         });
         loginBtn.setOnClickListener(view1 -> {
             getCredentials();
-            presenter.checkAccount(login, password);
+            presenter.checkAccount(login, password, getContext());
         });
-
-//        regBtn.setOnClickListener(view1 -> {
-//            getCredentials();
-//            presenter.register(login, password);
-//        });
     }
 
     @Override
@@ -117,9 +110,15 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     }
 
     @Override
-    public void showPasswordError() {
-        passwordField.setError(getString(R.string.error_invalid_password));
+    public void showPasswordError(int resId) {
+        passwordField.setError(getString(resId));
         passwordField.requestFocus();
+    }
+
+    @Override
+    public void showLoginError(int resId) {
+        loginField.setError(getString(resId));
+        loginField.requestFocus();
     }
 
     @Override
@@ -129,9 +128,13 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     }
 
     @Override
-    public void showInvalidLoginError() {
-        loginField.setError(getString(R.string.error_invalid_login));
-        loginField.requestFocus();
+    public void showEmptyPasswordError() {
+        passwordField.setError(getString(R.string.error_incorrect_password));
+    }
+
+    @Override
+    public void showError(int resId) {
+        Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -139,13 +142,14 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
         Toast.makeText(getContext(), R.string.msg_no_internet, Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
-    public void loginIn() {
-//        hideProgressBar();
-//        startActivity(new Intent(context, MapsActivity.class));
+    public void loginIn(User userN) {
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_CREDENTIALS, login+password);
-        bundle.putString(EXTRA_LOGIN, login);
+//        bundle.putString(EXTRA_CREDENTIALS, login+password);
+//        bundle.putString(EXTRA_LOGIN, login);
+        bundle.putSerializable(EXTRA_AUTH_REASON, AuthReason.LOGIN);
+        bundle.putSerializable(EXTRA_USER, userN);
         AuthFragment authFragment = new AuthFragment();
         authFragment.setArguments(bundle);
         ActivityUtils.addSupportFragmentToActivity(
@@ -158,7 +162,12 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @Override
     public void register(){
-
+        RegistrationFragment regFragment = new RegistrationFragment();
+        ActivityUtils.addSupportFragmentToActivity(
+                getActivity().getSupportFragmentManager(),
+                regFragment,
+                ID_CONTENT_CONTAINER,
+                RegistrationFragment.TAG);
     }
 
     @Override
@@ -180,4 +189,12 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
         login = loginField.getText().toString();
         password = passwordField.getText().toString();
     }
+
+    @OnClick(R.id.register_text_view)
+    public void register(View view){
+        register();
+    }
+
+    @Override
+    public void showPhoneError(int resId) {}
 }

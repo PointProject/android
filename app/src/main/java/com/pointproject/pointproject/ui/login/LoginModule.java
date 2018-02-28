@@ -8,6 +8,9 @@ import com.pointproject.pointproject.ui.login.doubleAuth.AuthPresenter;
 import com.pointproject.pointproject.ui.login.mainLogin.LoginContract;
 import com.pointproject.pointproject.ui.login.mainLogin.LoginFragment;
 import com.pointproject.pointproject.ui.login.mainLogin.LoginPresenter;
+import com.pointproject.pointproject.ui.login.registration.RegistrationContract;
+import com.pointproject.pointproject.ui.login.registration.RegistrationFragment;
+import com.pointproject.pointproject.ui.login.registration.RegistrationPresenter;
 
 import dagger.Binds;
 import dagger.Module;
@@ -31,4 +34,12 @@ public abstract class LoginModule {
     @ActivityScope
     @Binds
     abstract AuthContract.Presenter authPresenter(AuthPresenter presenter);
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    abstract RegistrationFragment registrationFragment();
+
+    @ActivityScope
+    @Binds
+    abstract RegistrationContract.Presenter regPresenter(RegistrationPresenter presenter);
 }
