@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,13 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
     EditText passwordField;
     @BindView(R.id.input_phone)
     EditText phoneField;
+
+    @BindView(R.id.login_text_input_layout_reg)
+    TextInputLayout tilLogin;
+    @BindView(R.id.password_text_input_layout_reg)
+    TextInputLayout tilPassword;
+    @BindView(R.id.phone_text_input_layout_reg)
+    TextInputLayout tilPhone;
 
     private ProgressDialog progressDialog;
 
@@ -110,32 +118,32 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
 
     @Override
     public void showLoginError(int resId) {
-        loginField.setError(getString(resId));
-        loginField.requestFocus();
+        tilLogin.setErrorEnabled(true);
+        tilLogin.setError(getString(resId));
     }
 
     @Override
     public void showEmptyLoginError() {
-        loginField.setError(getString(R.string.empty_login));
-        loginField.requestFocus();
+        tilLogin.setErrorEnabled(true);
+        tilLogin.setError(getString(R.string.empty_login));
     }
 
     @Override
     public void showEmptyPasswordError() {
-        passwordField.setError(getString(R.string.empty_password));
-        passwordField.requestFocus();
+        tilPassword.setErrorEnabled(true);
+        tilPassword.setError(getString(R.string.empty_password));
     }
 
     @Override
     public void showPasswordError(int resId) {
-        passwordField.setError(getString(resId));
-        passwordField.requestFocus();
+        tilPassword.setErrorEnabled(true);
+        tilPassword.setError(getString(resId));
     }
 
     @Override
     public void showPhoneError(int resId) {
-        phoneField.setError(getString(resId));
-        phoneField.requestFocus();
+        tilPhone.setErrorEnabled(true);
+        tilPhone.setError(getString(resId));
     }
 
     @Override
@@ -146,9 +154,9 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
 
     @Override
     public void resetErrors(){
-        loginField.setError(null);
-        passwordField.setError(null);
-        phoneField.setError(null);
+        tilLogin.setError(null);
+        tilPassword.setError(null);
+        tilPhone.setError(null);
     }
 
     @Override

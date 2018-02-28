@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,12 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @BindView(R.id.login_login)
     EditText loginField;
+
+    @BindView(R.id.login_text_input_layout_login)
+    TextInputLayout tilLogin;
+
+    @BindView(R.id.password_text_input_layout_login)
+    TextInputLayout tilPassword;
 
     @Inject LoginContract.Presenter presenter;
 
@@ -105,31 +112,31 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @Override
     public void resetErrors() {
-        loginField.setError(null);
-        passwordField.setError(null);
+        tilLogin.setError(null);
+        tilPassword.setError(null);
     }
 
     @Override
     public void showPasswordError(int resId) {
-        passwordField.setError(getString(resId));
-        passwordField.requestFocus();
+        tilPassword.setErrorEnabled(true);
+        tilPassword.setError(getString(resId));
     }
 
     @Override
     public void showLoginError(int resId) {
-        loginField.setError(getString(resId));
-        loginField.requestFocus();
+        tilLogin.setErrorEnabled(true);
+        tilLogin.setError(getString(resId));
     }
 
     @Override
     public void showEmptyLoginError() {
-        loginField.setError(getString(R.string.error_field_required));
-        loginField.requestFocus();
+        tilLogin.setErrorEnabled(true);
+        tilLogin.setError(getString(R.string.error_field_required));
     }
 
     @Override
     public void showEmptyPasswordError() {
-        passwordField.setError(getString(R.string.error_incorrect_password));
+        tilPassword.setError(getString(R.string.error_incorrect_password));
     }
 
     @Override
@@ -146,8 +153,6 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     @Override
     public void loginIn(User userN) {
         Bundle bundle = new Bundle();
-//        bundle.putString(EXTRA_CREDENTIALS, login+password);
-//        bundle.putString(EXTRA_LOGIN, login);
         bundle.putSerializable(EXTRA_AUTH_REASON, AuthReason.LOGIN);
         bundle.putSerializable(EXTRA_USER, userN);
         AuthFragment authFragment = new AuthFragment();

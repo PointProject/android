@@ -13,4 +13,6 @@
     <color name="colorTextProgressDialog">#FFFFFF</color>
 
     <color name="colorLogo">#ffcb2b</color>
+
+    <color name="errorColor">#ff6961</color>
 </resources>
