@@ -80,6 +80,11 @@ public class AuthPresenter implements AuthContract.Presenter{
 
     @Override
     public void authSms(Context context, String phone) {
+        if(phone.isEmpty()){
+            authView.showEmptyPhoneFieldError();
+            return;
+        }
+
         initializePhoneAuthCallback();
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -102,6 +107,14 @@ public class AuthPresenter implements AuthContract.Presenter{
                 }
                 break;
             case PHONE:
+                if(userCode.isEmpty()) {
+                    authView.showEmptyCodeError();
+                    return;
+                }
+                if(userCode.length() < 10){
+                    authView.showInvalidPhoneError();
+                    return;
+                }
                 verifyPhoneNumberWithCode(mVerificationId, String.valueOf(userCode));
         }
     }
@@ -164,7 +177,7 @@ public class AuthPresenter implements AuthContract.Presenter{
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
-                    authView.showError(R.string.invalid_phone_number);
+                    authView.showInvalidPhoneError();
                     authView.showPhoneField();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
@@ -193,7 +206,7 @@ public class AuthPresenter implements AuthContract.Presenter{
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                             // The verification code entered was invalid
-                            authView.showError(R.string.wrong_auth_code);
+                            authView.showWrongCodeError();
                         }
                     }
                 });

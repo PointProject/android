@@ -96,5 +96,8 @@
     <string name="empty_password">Empty password</string>
     <string name="wrong_login_password">Wrong login or password</string>
     <string name="code">Code</string>
+    <string name="empty_field">This field can not be empty</string>
+    <string name="wrong_code">Wrong code</string>
+    <string name="invalid_phone">This phone number is not valid</string>
 
 </resources>

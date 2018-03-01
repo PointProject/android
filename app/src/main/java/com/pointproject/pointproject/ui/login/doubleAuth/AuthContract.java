@@ -37,6 +37,14 @@ public interface AuthContract {
 
         User getRegisteredUser();
 
+        void showEmptyPhoneFieldError();
+
+        void showEmptyCodeError();
+
+        void showWrongCodeError();
+
+        void showInvalidPhoneError();
+
 //        TODO remove
         Context getContext();
     }

@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,7 +84,11 @@ public class AuthFragment extends AbstractFragment implements
     @BindView(R.id.auth_phone_text)
     EditText phoneText;
 
-//    private String credentials, login;
+    @BindView(R.id.til_code)
+    TextInputLayout tilCode;
+
+    @BindView(R.id.til_phone)
+    TextInputLayout tilPhone;
 
     private User user;
 
@@ -222,11 +227,36 @@ public class AuthFragment extends AbstractFragment implements
         return user;
     }
 
+    @Override
+    public void showEmptyPhoneFieldError() {
+        tilPhone.setFocusable(true);
+        tilPhone.setError(getString(R.string.empty_field));
+    }
+
+    @Override
+    public void showEmptyCodeError() {
+        tilCode.setFocusable(true);
+        tilCode.setError(getString(R.string.empty_field));
+    }
+
+    @Override
+    public void showWrongCodeError() {
+        tilCode.setFocusable(true);
+        tilCode.setError(getString(R.string.wrong_code));
+    }
+
+    @Override
+    public void showInvalidPhoneError() {
+        tilPhone.setFocusable(true);
+        tilCode.setError(getString(R.string.invalid_phone));
+    }
+
     @OnClick(R.id.auth_enter_phone_button)
     public void enterPhone(View view){
         String phone = phoneText.getText().toString();
-        if(!phone.isEmpty() && !(phone.length()<10))
-            /**TODO check if user have phone, otherwise add phone to user
+            /**TODO: check if user have phone, otherwise add phone to user
+             * TODO: and move this check to presenter
+             *
              * apiClient.checkPhone(phone, UserCallback{
              *     @Override
              *     public void onSuccess(User user){
@@ -250,7 +280,7 @@ public class AuthFragment extends AbstractFragment implements
              *     }
              * })
             * */
-            presenter.authSms(getContext(), phone);
+        presenter.authSms(getContext(), phone);
     }
 
     @Override

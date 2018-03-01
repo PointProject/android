@@ -28,7 +28,7 @@ import butterknife.OnClick;
 public class LoginFragment extends AbstractFragment implements LoginContract.View{
 
     public  final static String TAG = "LoginFragment";
-    private final static int LAYOUT = R.layout.login_fragment;
+    private final static int LAYOUT = R.layout.fragment_login;
 
     private OnFragmentRegAuthInteraction mCallback;
 
