@@ -164,9 +164,8 @@ public class AuthPresenter implements AuthContract.Presenter{
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
-                    // [START_EXCLUDE]
                     authView.showError(R.string.invalid_phone_number);
-                    // [END_EXCLUDE]
+                    authView.showPhoneField();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     Log.d(TAG, "Quota exceeded");

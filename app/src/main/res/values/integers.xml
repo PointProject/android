@@ -6,4 +6,6 @@
     <integer name="geofences_radius_in_meters">10</integer><!--in meters, geofence radius-->
     <integer name="network_provider_location_updates">2000</integer><!--in milliseconds, min time-->
     <integer name="gps_provider_location_updates">2000</integer><!--in milliseconds, min time-->
+
+    <integer name="phone_digits_number">10</integer>
 </resources>

@@ -34,7 +34,6 @@ import com.pointproject.pointproject.network.ApiClient;
 import com.pointproject.pointproject.network.callback.UserCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
 import com.pointproject.pointproject.ui.login.AuthReason;
-import com.pointproject.pointproject.ui.maps.MapsActivity;
 
 import javax.inject.Inject;
 

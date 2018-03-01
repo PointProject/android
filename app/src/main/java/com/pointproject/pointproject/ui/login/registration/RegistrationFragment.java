@@ -18,18 +18,12 @@ import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.ui.login.AuthReason;
-import com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment;
-import com.pointproject.pointproject.ui.login.mainLogin.LoginFragment;
-import com.pointproject.pointproject.util.ActivityUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_AUTH_REASON;
-import static com.pointproject.pointproject.ui.login.doubleAuth.AuthFragment.EXTRA_USER;
 
 public class RegistrationFragment extends AbstractFragment implements RegistrationContract.View{
 
@@ -74,7 +68,7 @@ public class RegistrationFragment extends AbstractFragment implements Registrati
             mCallback = (OnFragmentLoginAuthInteraction) context;
         } catch(ClassCastException e){
             throw new ClassCastException(context.toString() +
-                    " must implement OnFragmentLoginAuthInteraction interfacr");
+                    " must implement OnFragmentLoginAuthInteraction interface");
         }
     }
 

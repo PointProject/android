@@ -15,12 +15,18 @@
         android:visibility="invisible"
         android:alpha="0.0">
 
-        <EditText
-            android:id="@+id/auth_code_text"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:gravity="center"/>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/auth_code_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/code"
+                android:inputType="number"
+                android:gravity="center"/>
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/auth_enter_code_button"
@@ -39,12 +45,19 @@
         android:visibility="invisible"
         android:alpha="0.0">
 
-        <EditText
-            android:id="@+id/auth_phone_text"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:gravity="center"/>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/auth_phone_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_phone"
+                android:maxLength="@integer/phone_digits_number"
+                android:inputType="phone"
+                android:gravity="center"/>
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/auth_enter_phone_button"
