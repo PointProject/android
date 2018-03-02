@@ -78,12 +78,6 @@
         android:layout_centerInParent="true">
 
         <Button
-            android:id="@+id/auth_telegram_button"
-            android:text="@string/auth_telegram"
-            android:drawableStart="@drawable/ic_telegram"
-            style="@style/ButtonAuth"/>
-
-        <Button
             android:id="@+id/auth_sms_button"
             android:text="@string/auth_sms"
             android:drawableStart="@drawable/ic_sms"

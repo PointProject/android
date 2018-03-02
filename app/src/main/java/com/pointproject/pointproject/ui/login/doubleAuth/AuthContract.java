@@ -13,11 +13,9 @@ public interface AuthContract {
 
         void takeView(View view, AuthReason reason);
 
-        void authTelegram(String credentials);
-
         void authSms(Context context, String phone);
 
-        void checkCode(String userCode, AuthMethod authMethod);
+        void checkCode(String userCode);
     }
 
     interface View extends BaseView<Presenter> {

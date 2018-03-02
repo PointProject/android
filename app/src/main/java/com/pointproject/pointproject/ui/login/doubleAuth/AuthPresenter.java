@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,17 +21,8 @@ import com.pointproject.pointproject.network.callback.UserTokenCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
 import com.pointproject.pointproject.ui.login.AuthReason;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 
 import static com.pointproject.pointproject.data.Constants.KEY_TOKEN;
@@ -45,8 +35,6 @@ public class AuthPresenter implements AuthContract.Presenter{
 
     @Inject
     ApiClient apiClient;
-
-    private int code;
 
     private AuthContract.View authView;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
@@ -73,12 +61,6 @@ public class AuthPresenter implements AuthContract.Presenter{
     }
 
     @Override
-    public void authTelegram(String credentials) {
-        code = generateCode(credentials.hashCode());
-        authView.showCodeField();
-    }
-
-    @Override
     public void authSms(Context context, String phone) {
         if(phone.isEmpty()){
             authView.showEmptyPhoneFieldError();
@@ -97,61 +79,17 @@ public class AuthPresenter implements AuthContract.Presenter{
     }
 
     @Override
-    public void checkCode(String userCode, AuthMethod authMethod){
-        switch (authMethod) {
-            case TELEGRAM:
-                if (code == Integer.valueOf(userCode)) {
-                    codeIsRight();
-                } else {
-                    authView.showError(R.string.wrong_auth_code);
-                }
-                break;
-            case PHONE:
-                if(userCode.isEmpty()) {
-                    authView.showEmptyCodeError();
-                    return;
-                }
-                if(userCode.length() < 10){
-                    authView.showInvalidPhoneError();
-                    return;
-                }
-                verifyPhoneNumberWithCode(mVerificationId, String.valueOf(userCode));
+    public void checkCode(String userCode){
+        if(userCode.isEmpty()) {
+            authView.showEmptyCodeError();
+            return;
         }
-    }
-
-    private int generateCode(int intCredentials){
-        String credentials = String.valueOf(intCredentials);
-        TimeBasedOneTimePasswordGenerator totp = null;
-        SecretKey secretKey = null;
-
-        try {
-            totp = new TimeBasedOneTimePasswordGenerator(5, TimeUnit.MINUTES);
-
-            byte[] salt = {
-                    (byte) 0xc7, (byte) 0x73, (byte) 0x21, (byte) 0x8c,
-                    (byte) 0x7e, (byte) 0xc8, (byte) 0xee, (byte) 0x99
-            };
-
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            KeySpec spec = new PBEKeySpec(credentials.toCharArray(), salt, 20, 512);
-            SecretKey tmp = factory.generateSecret(spec);
-            secretKey = new SecretKeySpec(tmp.getEncoded(), totp.getAlgorithm());
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, e.toString());
-        } catch (InvalidKeySpecException e) {
-            Log.e(TAG, e.toString());
+        if(userCode.length() < 10){
+            authView.showInvalidPhoneError();
+            return;
         }
 
-        int code = 0;
-        try {
-            assert totp != null;
-            code = totp.generateOneTimePassword(secretKey, new Date());
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, "Auth telegram one time password: " + code);
-        return code;
+        verifyPhoneNumberWithCode(mVerificationId, String.valueOf(userCode));
     }
 
     private void initializePhoneAuthCallback(){

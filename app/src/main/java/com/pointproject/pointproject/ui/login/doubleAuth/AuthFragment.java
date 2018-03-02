@@ -94,7 +94,6 @@ public class AuthFragment extends AbstractFragment implements
 
     private Configuration orientationConfig;
 
-    private AuthMethod authMethod;
     private AuthReason authReason;
     private GoogleApiClient googleApiClient;
 
@@ -184,27 +183,9 @@ public class AuthFragment extends AbstractFragment implements
         outState.putSerializable(KEY_AUTH_REASON, authReason);
     }
 
-    @OnClick(R.id.auth_telegram_button)
-    public void authTelegram(View view){
-        authMethod = AuthMethod.TELEGRAM;
-        String credentials = user.getLogin()+user.getPassword();
-        presenter.authTelegram(credentials);
-
-        Intent telegram;
-        switch (authReason){
-            case REGISTRATION:
-                telegram = new Intent(Intent.ACTION_VIEW , Uri.parse(Constants.URI_TELEGRAM_BOT+credentials.hashCode()+"_registration"));
-                break;
-            default:
-                telegram = new Intent(Intent.ACTION_VIEW , Uri.parse(Constants.URI_TELEGRAM_BOT+credentials.hashCode()));
-        }
-        startActivity(telegram);
-    }
-
 //    TODO replace int phone with string phone
     @OnClick(R.id.auth_sms_button)
     public void authSms(View view){
-        authMethod = AuthMethod.PHONE;
         if(user != null){
             int phone = user.getPhone();
             if(phone != 0){
@@ -219,7 +200,7 @@ public class AuthFragment extends AbstractFragment implements
     public void enterCode(View view){
         String code = codeText.getText().toString();
         if(!code.isEmpty())
-            presenter.checkCode(code, authMethod);
+            presenter.checkCode(code);
     }
 
     @Override
