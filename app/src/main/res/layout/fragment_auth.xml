@@ -20,7 +20,7 @@
             android:id="@+id/til_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorTextAppearance="@style/error_appearance_center">
+            app:errorTextAppearance="@style/error_appearance">
 
             <EditText
                 android:id="@+id/auth_code_text"
