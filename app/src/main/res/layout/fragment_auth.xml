@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="56dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
     android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/auth_image"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_auth"/>
 
     <LinearLayout
         android:id="@+id/enter_auth_code_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:visibility="invisible"
-        android:alpha="0.0">
+        android:gravity="center_horizontal">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_code"
@@ -31,7 +39,7 @@
                 android:gravity="center"/>
         </android.support.design.widget.TextInputLayout>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/auth_enter_code_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,10 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:visibility="invisible"
-        android:alpha="0.0">
+        android:gravity="center_horizontal"
+        android:visibility="gone">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_phone"
@@ -60,29 +66,24 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_phone"
                 android:maxLength="@integer/phone_digits_number"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:gravity="center"/>
         </android.support.design.widget.TextInputLayout>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/auth_enter_phone_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/auth_msg_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_centerInParent="true">
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:padding="20sp"
+        android:gravity="center_horizontal"/>
 
-        <Button
-            android:id="@+id/auth_sms_button"
-            android:text="@string/auth_sms"
-            android:drawableStart="@drawable/ic_sms"
-            style="@style/ButtonAuth"/>
-    </LinearLayout>
-
-
-</RelativeLayout>
+</LinearLayout>

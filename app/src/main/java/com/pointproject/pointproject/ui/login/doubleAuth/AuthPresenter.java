@@ -84,12 +84,8 @@ public class AuthPresenter implements AuthContract.Presenter{
             authView.showEmptyCodeError();
             return;
         }
-        if(userCode.length() < 10){
-            authView.showInvalidPhoneError();
-            return;
-        }
 
-        verifyPhoneNumberWithCode(mVerificationId, String.valueOf(userCode));
+        verifyPhoneNumberWithCode(mVerificationId, userCode);
     }
 
     private void initializePhoneAuthCallback(){
@@ -111,6 +107,7 @@ public class AuthPresenter implements AuthContract.Presenter{
                 // This callback is invoked in an invalid request for verification is made,
                 // for instance if the the phone number format is not valid.
                 Log.w(TAG, "onVerificationFailed", e);
+                authView.showMessage(R.string.msg_sms_verification_failed);
 
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
@@ -120,7 +117,7 @@ public class AuthPresenter implements AuthContract.Presenter{
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     Log.d(TAG, "Quota exceeded");
-                    authView.showError(R.string.sms_quota_exceeded);
+                    authView.showMessage(R.string.sms_quota_exceeded);
                 }
             }
 
@@ -128,6 +125,7 @@ public class AuthPresenter implements AuthContract.Presenter{
             public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 mVerificationId = verificationId;
                 authView.showCodeField();
+                authView.showMessage(R.string.wait_for_sms);
             }
         };
     }
@@ -173,7 +171,7 @@ public class AuthPresenter implements AuthContract.Presenter{
                     @Override
                     public void onError(NetworkError error) {
                         if(error.getAppErrorMessage().equals(NETWORK_ERROR_MESSAGE)){
-                            authView.showError(R.string.msg_no_internet);
+                            authView.showMessage(R.string.no_internet_msg);
                         }
                     }
                 });

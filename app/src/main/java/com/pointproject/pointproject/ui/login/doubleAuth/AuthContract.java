@@ -21,17 +21,11 @@ public interface AuthContract {
     interface View extends BaseView<Presenter> {
         void showCodeField();
 
-        void hideCodeField();
-
-        void showError(String errorText);
-
-        void showError(int stringResId);
+        void showMessage(int stringResId);
 
         void showMapsActivity();
 
         void showPhoneField();
-
-        void hidePhoneField();
 
         User getRegisteredUser();
 

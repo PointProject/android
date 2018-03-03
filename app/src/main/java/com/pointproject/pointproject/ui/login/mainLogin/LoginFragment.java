@@ -155,7 +155,7 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
 
     @Override
     public void showNoInternetError() {
-        Toast.makeText(getContext(), R.string.msg_no_internet, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.no_internet_msg, Toast.LENGTH_LONG).show();
     }
 
 

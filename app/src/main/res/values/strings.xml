@@ -63,7 +63,6 @@
     <string name="raceArea">Area in meters: %f</string>
     <string name="pointLifetime">Point life time: %f</string>
     <string name="startTime">Start time: %f</string>
-    <string name="msg_no_internet">No internet connection</string>
     <string name="msg_default_login_error">Sorry, server error occurred.</string>
     <string name="user_login">Login: %s</string>
     <string name="user_name">Name: %s</string>
@@ -84,7 +83,7 @@
     <string name="auth_enter_code">Enter code</string>
     <string name="wrong_auth_code">Wrong code. Try again.</string>
     <string name="invalid_phone_number">Invalid phone number.</string>
-    <string name="sms_quota_exceeded">SMS quota exceeded. Please let us know if you see this message.</string>
+    <string name="sms_quota_exceeded">SMS quota exceeded\n Please let us know if you see this message, we\'ll fix this little problem as soon as possible</string>
     <string name="sms_will_arrive">Your sms will arrive in few seconds.</string>
     <string name="create_account">Create Account</string>
     <string name="registration_login_text">Already a member? Login</string>
@@ -99,5 +98,12 @@
     <string name="empty_field">This field can not be empty</string>
     <string name="wrong_code">Wrong code</string>
     <string name="invalid_phone">This phone number is not valid</string>
+    <string name="wait_for_sms">Sit back and Relax while we verify your mobile number\n (Enter the code overhead if we fail to detect the SMS automatically)</string>
+    <string name="no_internet_msg">No Internet Connection\n  Make sure your device connected to the internet</string>
+    <string name="msg_empty_number">Please enter you phone number</string>
+    <string name="msg_empty_code">Please enter code</string>
+    <string name="msg_wrong_code">Wrong code\n Please tre again</string>
+    <string name="msg_invalid_phone_number">Entered phone number is not valid\n Please enter phone number, which you are using at the moment</string>
+    <string name="msg_sms_verification_failed">Sorry, you sms verification failed for some reasons\n Please try again</string>
 
 </resources>

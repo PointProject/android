@@ -1,14 +1,10 @@
 package com.pointproject.pointproject.ui.login.doubleAuth;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -29,7 +25,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
-import com.pointproject.pointproject.data.Constants;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.network.ApiClient;
 import com.pointproject.pointproject.network.callback.UserCallback;
@@ -61,10 +56,10 @@ public class AuthFragment extends AbstractFragment implements
     public static final String EXTRA_AUTH_REASON = "extra_reason";
     public static final String TAG = "AuthFragment";
 
-    private final static int LAYOUT = R.layout.fragment_auth;
-    private final static String KEY_CODE_TEXT_EDIT_SHOWN = "key_text_shown";
+    private static final int LAYOUT = R.layout.fragment_auth;
     private static final String KEY_PHONE_EDIT_TEXT_SHOWN = "phone_text_shown";
     private static final String KEY_AUTH_REASON = "key_auth_reason";
+    private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
     private static final int RESOLVE_HINT = 1;
 
     @Inject AuthPresenter presenter;
@@ -74,33 +69,31 @@ public class AuthFragment extends AbstractFragment implements
 
     @BindView(R.id.enter_auth_code_layout)
     LinearLayout authCodeLinearLayout;
-
     @BindView(R.id.auth_code_text)
     EditText codeText;
 
     @BindView(R.id.enter_phone_layout)
     LinearLayout authPhoneLinearLayout;
-
     @BindView(R.id.auth_phone_text)
     EditText phoneText;
 
     @BindView(R.id.til_code)
     TextInputLayout tilCode;
-
     @BindView(R.id.til_phone)
     TextInputLayout tilPhone;
 
-    private User user;
+    @BindView(R.id.auth_msg_text)
+    TextView authMsg;
 
-    private Configuration orientationConfig;
+    private User user;
 
     private AuthReason authReason;
     private GoogleApiClient googleApiClient;
 
-    @Inject
-    public AuthFragment(){
+    private boolean mVerificationInProgress = false;
 
-    }
+    @Inject
+    public AuthFragment(){}
 
     @Override
     public void onAttach(Context context) {
@@ -121,20 +114,11 @@ public class AuthFragment extends AbstractFragment implements
         view = inflater.inflate(LAYOUT, container, false);
         ButterKnife.bind(this, view);
 
+//      googleApiClient for phone hint request
         googleApiClient = new GoogleApiClient.Builder(context)
                 .enableAutoManage((FragmentActivity) context, this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
-
-        orientationConfig = getResources().getConfiguration();
-
-        if (savedInstanceState!=null) {
-            if (savedInstanceState.getBoolean(KEY_CODE_TEXT_EDIT_SHOWN))
-                showCodeField();
-            if(savedInstanceState.getBoolean(KEY_PHONE_EDIT_TEXT_SHOWN))
-                showPhoneField();
-            authReason = (AuthReason) savedInstanceState.getSerializable(KEY_AUTH_REASON);
-        }
 
         Bundle bundle = getArguments();
         assert bundle != null;
@@ -154,10 +138,20 @@ public class AuthFragment extends AbstractFragment implements
                 @Override
                 public void onError(NetworkError error) {
                     Log.e(TAG, error.getMessage());
-                    Toast.makeText(getContext(), R.string.msg_no_internet, Toast.LENGTH_SHORT).show();
+                    authMsg.setText(R.string.no_internet_msg);
                 }
             });
         }
+
+        if (savedInstanceState!=null) {
+            if(savedInstanceState.getBoolean(KEY_PHONE_EDIT_TEXT_SHOWN))
+                showPhoneField();
+            else
+                showCodeField();
+            mVerificationInProgress = savedInstanceState.getBoolean(KEY_VERIFY_IN_PROGRESS, false);
+            authReason = (AuthReason) savedInstanceState.getSerializable(KEY_AUTH_REASON);
+        }
+
 
         return view;
     }
@@ -175,21 +169,30 @@ public class AuthFragment extends AbstractFragment implements
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        if(!mVerificationInProgress){
+            authSms();
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_CODE_TEXT_EDIT_SHOWN, authCodeLinearLayout.isShown());
         outState.putBoolean(KEY_PHONE_EDIT_TEXT_SHOWN, authPhoneLinearLayout.isShown());
+        outState.putBoolean(KEY_VERIFY_IN_PROGRESS, mVerificationInProgress);
         outState.putSerializable(KEY_AUTH_REASON, authReason);
     }
 
 //    TODO replace int phone with string phone
-    @OnClick(R.id.auth_sms_button)
-    public void authSms(View view){
+    private void authSms(){
         if(user != null){
             int phone = user.getPhone();
             if(phone != 0){
                 presenter.authSms(getContext(), String.valueOf(phone));
+                mVerificationInProgress = true;
             } else{
                 requestHint();
             }
@@ -199,8 +202,12 @@ public class AuthFragment extends AbstractFragment implements
     @OnClick(R.id.auth_enter_code_button)
     public void enterCode(View view){
         String code = codeText.getText().toString();
-        if(!code.isEmpty())
-            presenter.checkCode(code);
+        presenter.checkCode(code);
+    }
+
+    @OnClick(R.id.auth_phone_text)
+    public void authPhoneText(View view){
+        requestHint();
     }
 
     @Override
@@ -210,26 +217,29 @@ public class AuthFragment extends AbstractFragment implements
 
     @Override
     public void showEmptyPhoneFieldError() {
-        tilPhone.setFocusable(true);
-        tilPhone.setError(getString(R.string.empty_field));
+        tilPhone.setError(" ");
+        authMsg.setText(R.string.msg_empty_number);
+
+        mVerificationInProgress = false;
     }
 
     @Override
     public void showEmptyCodeError() {
-        tilCode.setFocusable(true);
-        tilCode.setError(getString(R.string.empty_field));
+        tilCode.setError(" ");
+        authMsg.setText(R.string.msg_empty_code);
     }
 
     @Override
     public void showWrongCodeError() {
-        tilCode.setFocusable(true);
-        tilCode.setError(getString(R.string.wrong_code));
+        tilCode.setError(" ");
+        authMsg.setText(R.string.msg_wrong_code);
     }
 
     @Override
     public void showInvalidPhoneError() {
-        tilPhone.setFocusable(true);
-        tilCode.setError(getString(R.string.invalid_phone));
+        tilPhone.setError(" ");
+        authMsg.setText(R.string.msg_invalid_phone_number);
+        mVerificationInProgress = false;
     }
 
     @OnClick(R.id.auth_enter_phone_button)
@@ -261,51 +271,19 @@ public class AuthFragment extends AbstractFragment implements
              *     }
              * })
             * */
+        mVerificationInProgress = true;
         presenter.authSms(getContext(), phone);
     }
 
     @Override
-    public void showCodeField() {
-        if(orientationConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if(authPhoneLinearLayout.isShown()){
-                hidePhoneField();
-            }
-            authCodeLinearLayout.setVisibility(View.VISIBLE);
-            authCodeLinearLayout.animate()
-                    .translationY(authCodeLinearLayout.getHeight())
-                    .alpha(1.0F)
-                    .setListener(null);
-        }
-    }
-
-    @Override
-    public void hideCodeField(){
-        if(orientationConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            authCodeLinearLayout.animate()
-                    .translationY(0)
-                    .alpha(0.0f)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            authCodeLinearLayout.setVisibility(View.INVISIBLE);
-                        }
-                    });
-        }
-    }
-
-    @Override
-    public void showError(String text) {
-        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showError(int stringResId) {
-        Toast.makeText(getContext(), stringResId, Toast.LENGTH_SHORT).show();
+    public void showMessage(int stringResId) {
+        authMsg.setText(stringResId);
     }
 
     @Override
     public void showMapsActivity() {
+        mVerificationInProgress = false;
+
         SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
         prefs.edit().putString(KEY_USER, user.getLogin()).apply();
@@ -314,34 +292,15 @@ public class AuthFragment extends AbstractFragment implements
     }
 
     @Override
-    public void showPhoneField() {
-        if(orientationConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if(authCodeLinearLayout.isShown()){
-                hideCodeField();
-            }
-            authPhoneLinearLayout.setVisibility(View.VISIBLE);
-            authPhoneLinearLayout.animate()
-                    .translationY(authPhoneLinearLayout.getHeight())
-                    .alpha(1.0F)
-                    .setListener(null);
-        }
+    public void showCodeField() {
+        authPhoneLinearLayout.setVisibility(View.GONE);
+        authCodeLinearLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hidePhoneField(){
-        if(orientationConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            authPhoneLinearLayout.animate()
-                    .translationY(0)
-                    .alpha(0.0f)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            authPhoneLinearLayout.setVisibility(View.INVISIBLE);
-                        }
-                    });
-
-        }
+    public void showPhoneField() {
+        authCodeLinearLayout.setVisibility(View.GONE);
+        authPhoneLinearLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -354,8 +313,8 @@ public class AuthFragment extends AbstractFragment implements
                 String phone = credential.getId();
 //                TODO check if phone is already used, otherwise add phone to user account
 //                user.setPhone(phone);
+                mVerificationInProgress = true;
                 presenter.authSms(getActivity(), phone);
-                Toast.makeText(getContext(), R.string.sms_will_arrive, Toast.LENGTH_SHORT).show();
             } else{
                 showPhoneField();
             }

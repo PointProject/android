@@ -9,6 +9,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:background="@color/colorPrimary"
+        android:animateLayoutChanges="true"
         tools:context="com.pointproject.pointproject.ui.login.LoginActivity">
 
             <ImageView
