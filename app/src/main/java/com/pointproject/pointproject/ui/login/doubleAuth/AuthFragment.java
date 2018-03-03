@@ -282,12 +282,12 @@ public class AuthFragment extends AbstractFragment implements
 
     @Override
     public void showMapsActivity() {
-        mVerificationInProgress = false;
 
         SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
         prefs.edit().putString(KEY_USER, user.getLogin()).apply();
 
+        mVerificationInProgress = false;
         mCallback.startMainMap();
     }
 
