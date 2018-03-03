@@ -7,5 +7,5 @@
     <integer name="network_provider_location_updates">2000</integer><!--in milliseconds, min time-->
     <integer name="gps_provider_location_updates">2000</integer><!--in milliseconds, min time-->
 
-    <integer name="phone_digits_number">10</integer>
+    <integer name="phone_digits_number">13</integer>
 </resources>

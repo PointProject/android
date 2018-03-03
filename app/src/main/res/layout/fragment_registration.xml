@@ -93,10 +93,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-            android:text="@string/registration_login_text"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textColor="@color/colorAccent"/>
+        android:text="@string/registration_login_text"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
 </ScrollView>
