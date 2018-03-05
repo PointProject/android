@@ -115,8 +115,7 @@ public class AuthFragment extends AbstractFragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRetainInstance(true);
-//        presenter.takeView(this);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -172,24 +171,12 @@ public class AuthFragment extends AbstractFragment implements
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-//        presenter.dropView();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-//        presenter.takeView(this, authReason, user);
 
         if(!mVerificationInProgress && authReason == AuthReason.REGISTRATION){
             authSms();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override

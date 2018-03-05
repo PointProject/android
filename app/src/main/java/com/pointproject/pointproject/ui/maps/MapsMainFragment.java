@@ -1,6 +1,7 @@
 package com.pointproject.pointproject.ui.maps;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -98,25 +99,16 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-
-        presenter.takeView(this);
-    }
-
-    @Override
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        presenter.dropView();
-        super.onStop();
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         setContext(context);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
     }
 
     @Nullable
@@ -128,9 +120,12 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
         mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
 
-        if(savedInstanceState!=null)
+        if(savedInstanceState!=null){
             alreadyAskedForLocationPermission = savedInstanceState.getBoolean(
                     KEY_LOCATION_DIALOG_PERMISSION, false);
+        }
+
+        presenter.takeView(this);
 
         return view;
     }
@@ -175,6 +170,11 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
         presenter.getAreas();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mGoogleApiClient.disconnect();
+    }
 
     @Override
     public void putPoints(HashMap<String, LatLng> geofData) {
@@ -244,7 +244,6 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
                     Toast.makeText(context, getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
                     showNoGeoPermissionSnackbar();
                 }
-                return;
             }
         }
     }
@@ -272,7 +271,7 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
 
 
         MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(lat, lng));
-        if (mCurrentLocationMarker == null) {
+        if (mCurrentLocationMarker == null && mMap != null) {
             mCurrentLocationMarker = mMap.addMarker(markerOptions);
             mMap.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
@@ -382,7 +381,9 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
                         .show();
             } else {
                 Log.d(TAG, "Google Play Services. This device is not supported.");
-                getActivity().finish();
+                Activity activity = getActivity();
+                assert activity!=null;
+                activity.finish();
             }
             return false;
         }

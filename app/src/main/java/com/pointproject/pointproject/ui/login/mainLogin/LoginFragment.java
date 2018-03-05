@@ -63,21 +63,6 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     @Inject
     public LoginFragment(){    }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        presenter.takeView(this);
-//
-//        if(progressDialog!=null)
-//            progressDialog.dismiss();
-//    }
-
-//    @Override
-//    public void onPause() {
-//        presenter.dropView();
-//        super.onPause();
-//    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

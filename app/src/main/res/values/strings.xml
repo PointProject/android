@@ -68,7 +68,7 @@
     <string name="user_name">Name: %s</string>
     <string name="user_last_name">Last name: %s</string>
     <string name="user_age">Age: %d</string>
-    <string name="user_phone_number">Phone number: %d</string>
+    <string name="user_phone_number">Phone number: %s</string>
     <string name="bad_internet_connection">Check your internet connection</string>
     <string name="authentication_progress">Authenticating...</string>
     <string name="crystals">Crystals</string>

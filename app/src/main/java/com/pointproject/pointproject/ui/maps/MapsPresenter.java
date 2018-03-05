@@ -112,8 +112,10 @@ public class MapsPresenter implements MapsContract.Presenter,
             isMock = !Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
         }
 
+//        TODO: remove when done testing and do not forget to remove mock location from settings
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         isMock = prefs.getBoolean("mock", true);
+//
 
         return !isMock;
     }
