@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -85,6 +86,9 @@ public class AuthFragment extends AbstractFragment implements
     @BindView(R.id.auth_msg_text)
     TextView authMsg;
 
+    @BindView(R.id.auth_resend_button)
+    Button resendBtn;
+
     private User user;
 
     private AuthReason authReason;
@@ -108,6 +112,13 @@ public class AuthFragment extends AbstractFragment implements
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setRetainInstance(true);
+//        presenter.takeView(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -127,12 +138,15 @@ public class AuthFragment extends AbstractFragment implements
             authReason = (AuthReason) bundle.getSerializable(EXTRA_AUTH_REASON);
         }
 
+        presenter.takeView(this, authReason, user);
+
         if(authReason == AuthReason.LOGIN) {
             RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), user.getLogin());
             serverApiClient.secureLogin(requestBody, new UserCallback() {
                 @Override
                 public void onSuccess(User serverUser) {
                     user = serverUser;
+                    authSms();
                 }
 
                 @Override
@@ -152,29 +166,30 @@ public class AuthFragment extends AbstractFragment implements
             authReason = (AuthReason) savedInstanceState.getSerializable(KEY_AUTH_REASON);
         }
 
+        phoneText.setOnFocusChangeListener((v, hasFocus) -> {if(hasFocus) requestHint();});
 
         return view;
     }
 
     @Override
     public void onPause() {
-        presenter.dropView();
         super.onPause();
+//        presenter.dropView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.takeView(this, authReason);
+//        presenter.takeView(this, authReason, user);
+
+        if(!mVerificationInProgress && authReason == AuthReason.REGISTRATION){
+            authSms();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        if(!mVerificationInProgress){
-            authSms();
-        }
     }
 
     @Override
@@ -189,12 +204,13 @@ public class AuthFragment extends AbstractFragment implements
 //    TODO replace int phone with string phone
     private void authSms(){
         if(user != null){
-            int phone = user.getPhone();
-            if(phone != 0){
-                presenter.authSms(getContext(), String.valueOf(phone));
+            String phone = user.getPhone();
+            if(phone!=null && !phone.isEmpty()){
+                presenter.authSms(getContext(), phone);
                 mVerificationInProgress = true;
             } else{
-                requestHint();
+                showEmptyPhoneFieldError();
+                showPhoneField();
             }
         }
     }
@@ -203,16 +219,6 @@ public class AuthFragment extends AbstractFragment implements
     public void enterCode(View view){
         String code = codeText.getText().toString();
         presenter.checkCode(code);
-    }
-
-    @OnClick(R.id.auth_phone_text)
-    public void authPhoneText(View view){
-        requestHint();
-    }
-
-    @Override
-    public User getRegisteredUser() {
-        return user;
     }
 
     @Override
@@ -304,9 +310,20 @@ public class AuthFragment extends AbstractFragment implements
     }
 
     @Override
+    public void showResendButton(){
+        resendBtn.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.auth_resend_button)
+    public void resend(View view){
+        presenter.resendVerificationCode(context);
+        view.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        presenter.takeView(this, authReason);
+        presenter.takeView(this, authReason, user);
         if (requestCode == RESOLVE_HINT) {
             if (resultCode == RESULT_OK) {
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);

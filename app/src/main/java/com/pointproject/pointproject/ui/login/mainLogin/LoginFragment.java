@@ -63,20 +63,20 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
     @Inject
     public LoginFragment(){    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.takeView(this);
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        presenter.takeView(this);
+//
+//        if(progressDialog!=null)
+//            progressDialog.dismiss();
+//    }
 
-        if(progressDialog!=null)
-            progressDialog.dismiss();
-    }
-
-    @Override
-    public void onPause() {
-        presenter.dropView();
-        super.onPause();
-    }
+//    @Override
+//    public void onPause() {
+//        presenter.dropView();
+//        super.onPause();
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -92,11 +92,19 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
         ButterKnife.bind(this,view);
+
+        presenter.takeView(this);
 
         return view;
     }
@@ -117,6 +125,12 @@ public class LoginFragment extends AbstractFragment implements LoginContract.Vie
             getCredentials();
             presenter.checkAccount(login, password, getContext());
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        presenter.dropView();
     }
 
     @Override

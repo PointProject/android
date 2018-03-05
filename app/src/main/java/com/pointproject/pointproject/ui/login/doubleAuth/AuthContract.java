@@ -11,23 +11,25 @@ import com.pointproject.pointproject.ui.login.AuthReason;
 public interface AuthContract {
     interface Presenter extends BasePresenter<View> {
 
-        void takeView(View view, AuthReason reason);
+        void takeView(View view, AuthReason reason, User user);
 
         void authSms(Context context, String phone);
 
         void checkCode(String userCode);
+
+        void resendVerificationCode(Context context);
     }
 
     interface View extends BaseView<Presenter> {
-        void showCodeField();
-
         void showMessage(int stringResId);
 
         void showMapsActivity();
 
         void showPhoneField();
 
-        User getRegisteredUser();
+        void showCodeField();
+
+        void showResendButton();
 
         void showEmptyPhoneFieldError();
 

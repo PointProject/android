@@ -41,6 +41,11 @@ public class AuthPresenter implements AuthContract.Presenter{
     private String mVerificationId;
     private AuthReason authReason;
 
+    private String phoneNumber;
+    private PhoneAuthProvider.ForceResendingToken token;
+
+    private User user;
+
     @Inject
     AuthPresenter(){}
 
@@ -50,9 +55,10 @@ public class AuthPresenter implements AuthContract.Presenter{
     }
 
     @Override
-    public void takeView(AuthContract.View view, AuthReason reason) {
+    public void takeView(AuthContract.View view, AuthReason reason, User user) {
         authView = view;
         authReason = reason;
+        this.user = user;
     }
 
     @Override
@@ -63,9 +69,15 @@ public class AuthPresenter implements AuthContract.Presenter{
     @Override
     public void authSms(Context context, String phone) {
         if(phone.isEmpty()){
+            authView.showPhoneField();
             authView.showEmptyPhoneFieldError();
             return;
         }
+
+        phoneNumber = phone;
+
+        authView.showCodeField();
+        authView.showMessage(R.string.wait_for_sms);
 
         initializePhoneAuthCallback();
 
@@ -107,7 +119,6 @@ public class AuthPresenter implements AuthContract.Presenter{
                 // This callback is invoked in an invalid request for verification is made,
                 // for instance if the the phone number format is not valid.
                 Log.w(TAG, "onVerificationFailed", e);
-                authView.showMessage(R.string.msg_sms_verification_failed);
 
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
@@ -118,16 +129,29 @@ public class AuthPresenter implements AuthContract.Presenter{
                     // The SMS quota for the project has been exceeded
                     Log.d(TAG, "Quota exceeded");
                     authView.showMessage(R.string.sms_quota_exceeded);
+                } else {
+                    authView.showMessage(R.string.msg_sms_verification_failed);
+                    authView.showResendButton();
                 }
             }
 
             @Override
             public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 mVerificationId = verificationId;
-                authView.showCodeField();
-                authView.showMessage(R.string.wait_for_sms);
+                token = forceResendingToken;
             }
         };
+    }
+
+    @Override
+    public void resendVerificationCode(Context context) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber,        // Phone number to verify
+                60L,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                (Activity) context,               // Activity (for callback binding)
+                mCallbacks,         // OnVerificationStateChangedCallbacks
+                token);             // ForceResendingToken from callbacks
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -136,7 +160,9 @@ public class AuthPresenter implements AuthContract.Presenter{
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-                        codeIsRight();
+                        if(user.getPhone()!= phoneNumber)
+                            user.setPhone(phoneNumber);
+                        codeIsRight(authReason);
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -154,18 +180,19 @@ public class AuthPresenter implements AuthContract.Presenter{
         signInWithPhoneAuthCredential(credential);
     }
 
-    private void codeIsRight(){
-        switch (authReason){
+    private void codeIsRight(AuthReason reason){
+        switch (reason){
             case LOGIN:
                 authView.showMapsActivity();
                 break;
             case REGISTRATION:
-                apiClient.register(authView.getRegisteredUser(), new UserCallback() {
+                apiClient.register(user, new UserCallback() {
                     @Override
                     public void onSuccess(User user) {
-//                        TODO: remove
+//                        TODO: remove when server implements token return on registration
                         login(user, authView.getContext());
-                        authView.showMapsActivity();
+//                        TODO: uncomment when server implements token return on registration
+//                        authView.showMapsActivity();
                     }
 
                     @Override
@@ -187,10 +214,12 @@ public class AuthPresenter implements AuthContract.Presenter{
                 SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
                         Context.MODE_PRIVATE);
                 prefs.edit().putString(KEY_TOKEN, token.getToken()).apply();
+                authView.showMapsActivity();
             }
 
             @Override
             public void onError(NetworkError error) {
+                login(userN, context);
             }
         });
     }

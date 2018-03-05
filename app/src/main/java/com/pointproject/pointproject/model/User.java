@@ -1,7 +1,5 @@
 package com.pointproject.pointproject.model;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.Set;
 
@@ -19,7 +17,7 @@ public class User implements Serializable{
 
     private int money;
 
-    private int phone;
+    private String phone;
 
     private int age;
 
@@ -86,11 +84,11 @@ public class User implements Serializable{
         this.money = money;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

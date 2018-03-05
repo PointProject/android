@@ -105,5 +105,6 @@
     <string name="msg_wrong_code">Wrong code\n Please tre again</string>
     <string name="msg_invalid_phone_number">Entered phone number is not valid\n Please enter phone number, which you are using at the moment</string>
     <string name="msg_sms_verification_failed">Sorry, you sms verification failed for some reasons\n Please try again</string>
+    <string name="resend_message">Resend message</string>
 
 </resources>

@@ -38,13 +38,7 @@ public class RegistrationPresenter implements RegistrationContract.Presenter{
         User userN = new User();
         userN.setLogin(login);
         userN.setPassword(password);
-//        TODO remove plus symbol check on server implemented string phone ашудв
-        if(phone.startsWith("+"))
-            phone = phone.replace("+", "");
-
-        userN.setPhone(Integer.parseInt(phone));
-
-
+        userN.setPhone(phone);
 
         regView.startAuth(userN);
     }

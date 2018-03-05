@@ -10,29 +10,32 @@ public class CredentialUtils {
     public static boolean checkCredentials(String login, String password, LoginBaseView view) {
         view.resetErrors();
 
+        boolean isGood = true;
+
         if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
             view.showPasswordError(R.string.error_invalid_password);
-            return false;
-        }else if (TextUtils.isEmpty(login)) {
+            isGood =  false;
+        }
+        if (TextUtils.isEmpty(login)) {
             view.showEmptyLoginError();
-            return false;
-        } else if (!isLoginValid(login)) {
+            isGood = false;
+        }
+        if (!isLoginValid(login)) {
             view.showLoginError(R.string.error_invalid_login);
-            return false;
+            isGood = false;
         }
 
-        return true;
+        return isGood;
     }
 
     public static boolean checkCredentials(String login, String password, String phone, LoginBaseView view){
-        if(checkCredentials(login, password, view)){
-            if(TextUtils.isEmpty(phone) || !isPhoneValid(phone)){
-                view.showPhoneError(R.string.msg_invalid_phone);
-                return false;
-            }
-            return true;
+        boolean isGood = checkCredentials(login, password, view);
+
+        if(TextUtils.isEmpty(phone) || !isPhoneValid(phone)){
+            view.showPhoneError(R.string.msg_invalid_phone);
+            isGood = false;
         }
-        return false;
+        return isGood;
     }
 
     private static boolean isPhoneValid(String phone) {
