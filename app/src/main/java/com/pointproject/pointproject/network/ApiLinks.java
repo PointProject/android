@@ -22,7 +22,7 @@ public interface ApiLinks {
 
     @Headers("Cache-Control: no-cache")
     @POST("/user/register")
-    Observable<User> register(@Body User user);
+    Observable<Token> register(@Body User user);
 
     @Headers("Cache-Control: no-cache")
     @POST("/secure/user/update")

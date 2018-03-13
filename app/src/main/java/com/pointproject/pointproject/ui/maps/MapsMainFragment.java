@@ -91,7 +91,7 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     private Map<Polygon, String> polygons;
 
     /** Prevents permission dialog from duplication on screen rotation*/
-    private boolean alreadyAskedForLocationPermission = false;
+    private boolean alreadyAskedForGpsPermission = false;
 
     @Inject
     public MapsMainFragment() {
@@ -121,7 +121,7 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
                 .findFragmentById(R.id.map);
 
         if(savedInstanceState!=null){
-            alreadyAskedForLocationPermission = savedInstanceState.getBoolean(
+            alreadyAskedForGpsPermission = savedInstanceState.getBoolean(
                     KEY_LOCATION_DIALOG_PERMISSION, false);
         }
 
@@ -134,7 +134,7 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_LOCATION_DIALOG_PERMISSION, alreadyAskedForLocationPermission);
+        outState.putBoolean(KEY_LOCATION_DIALOG_PERMISSION, alreadyAskedForGpsPermission);
     }
 
     @Override
@@ -153,7 +153,10 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
 
         mGoogleApiClient.connect();
 
-        requestTurnOnGPS();
+        if(!alreadyAskedForGpsPermission){
+            alreadyAskedForGpsPermission = true;
+            requestTurnOnGPS();
+        }
     }
 
     @Override
@@ -204,14 +207,11 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if(alreadyAskedForLocationPermission)
-            return;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            alreadyAskedForLocationPermission = true;
             requestPermissions(
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_FINE_LOCATION);
@@ -232,16 +232,17 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
             case PERMISSION_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(context, getString(R.string.permission_granted), Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "location permission was granted");
 
                     try {
-                        alreadyAskedForLocationPermission = false;
+//                        alreadyAskedForGpsPermission = false;
                         presenter.startLocationUpdates();
                     } catch (SecurityException e) {
-                        Toast.makeText(context, getString(R.string.security_exception) + e.toString(), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "Security Exception while accessing to location permission: "
+                                + e.toString());
                     }
                 } else {
-                    Toast.makeText(context, getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "Location permission denied");
                     showNoGeoPermissionSnackbar();
                 }
             }
@@ -285,7 +286,7 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
 
     @Override
     public void showBadInternetConnection() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
         dialog.setMessage(R.string.bad_internet_connection)
                 .setPositiveButton(getString(R.string.ok), (dialog1, which) -> {})
                 .show();
@@ -293,7 +294,7 @@ public class MapsMainFragment extends AbstractFragment  implements OnMapReadyCal
 
     @Override
     public void showMockedLocationProhibited(){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
         dialog.setMessage(R.string.mocked_location_detected)
             .setPositiveButton(getString(R.string.ok), (dialog1, which) ->{})
             .show();

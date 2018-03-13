@@ -120,7 +120,6 @@ public class AuthPresenter implements AuthContract.Presenter{
                 // for instance if the the phone number format is not valid.
                 Log.w(TAG, "onVerificationFailed", e);
 
-
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     authView.showInvalidPhoneError();
@@ -186,13 +185,10 @@ public class AuthPresenter implements AuthContract.Presenter{
                 authView.showMapsActivity();
                 break;
             case REGISTRATION:
-                apiClient.register(user, new UserCallback() {
+                apiClient.register(user, new UserTokenCallback() {
                     @Override
-                    public void onSuccess(User user) {
-//                        TODO: remove when server implements token return on registration
-                        login(user, authView.getContext());
-//                        TODO: uncomment when server implements token return on registration
-//                        authView.showMapsActivity();
+                    public void onSuccess(Token token) {
+                        authView.saveTokenAndShowMapsActivity(token);
                     }
 
                     @Override
@@ -203,24 +199,5 @@ public class AuthPresenter implements AuthContract.Presenter{
                     }
                 });
         }
-    }
-
-//    TODO: remove this unholy thing when server implements token return on registration
-    private void login(User userN, Context context) {
-
-        apiClient.login(userN, new UserTokenCallback() {
-            @Override
-            public void onSuccess(Token token) {
-                SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
-                        Context.MODE_PRIVATE);
-                prefs.edit().putString(KEY_TOKEN, token.getToken()).apply();
-                authView.showMapsActivity();
-            }
-
-            @Override
-            public void onError(NetworkError error) {
-                login(userN, context);
-            }
-        });
     }
 }

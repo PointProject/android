@@ -43,7 +43,6 @@ public class NetworkModule {
             SharedPreferences prefs = application.getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
             String token = prefs.getString(KEY_TOKEN, "");
 
-
             Request.Builder requestBuilder = original.newBuilder()
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")

@@ -3,16 +3,15 @@ package com.pointproject.pointproject.network;
 import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.model.Zone;
+import com.pointproject.pointproject.network.callback.GetZoneCallback;
 import com.pointproject.pointproject.network.callback.UserCallback;
 import com.pointproject.pointproject.network.callback.UserTokenCallback;
-import com.pointproject.pointproject.network.callback.GetZoneCallback;
 import com.pointproject.pointproject.network.response.NetworkError;
 
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -60,19 +59,19 @@ public class ApiClient {
                 });
     }
 
-    public void register(final User user, final UserCallback callback){
+    public void register(final User user, final UserTokenCallback callback){
         requestsLinks.register(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<User>() {
+                .subscribe(new Observer<Token>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(User userResponse) {
-                        callback.onSuccess(userResponse);
+                    public void onNext(Token token) {
+                        callback.onSuccess(token);
                     }
 
                     @Override

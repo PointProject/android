@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.pointproject.pointproject.BasePresenter;
 import com.pointproject.pointproject.BaseView;
+import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.ui.login.AuthReason;
 
@@ -25,6 +26,8 @@ public interface AuthContract {
 
         void showMapsActivity();
 
+        void saveTokenAndShowMapsActivity(Token token);
+
         void showPhoneField();
 
         void showCodeField();
@@ -38,8 +41,5 @@ public interface AuthContract {
         void showWrongCodeError();
 
         void showInvalidPhoneError();
-
-//        TODO remove
-        Context getContext();
     }
 }

@@ -26,6 +26,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.pointproject.pointproject.AbstractFragment;
 import com.pointproject.pointproject.R;
+import com.pointproject.pointproject.model.Token;
 import com.pointproject.pointproject.model.User;
 import com.pointproject.pointproject.network.ApiClient;
 import com.pointproject.pointproject.network.callback.UserCallback;
@@ -41,6 +42,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 import static android.app.Activity.RESULT_OK;
+import static com.pointproject.pointproject.data.Constants.KEY_TOKEN;
 import static com.pointproject.pointproject.data.Constants.KEY_USER;
 import static com.pointproject.pointproject.data.Constants.NAME_SHARED_PREFERENCES;
 
@@ -110,12 +112,6 @@ public class AuthFragment extends AbstractFragment implements
             throw new ClassCastException(context.toString() +
                     " must implement OnSuccessfulAuth interface");
         }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Nullable
@@ -188,7 +184,6 @@ public class AuthFragment extends AbstractFragment implements
         outState.putSerializable(KEY_AUTH_REASON, authReason);
     }
 
-//    TODO replace int phone with string phone
     private void authSms(){
         if(user != null){
             String phone = user.getPhone();
@@ -275,13 +270,21 @@ public class AuthFragment extends AbstractFragment implements
 
     @Override
     public void showMapsActivity() {
-
         SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
         prefs.edit().putString(KEY_USER, user.getLogin()).apply();
 
         mVerificationInProgress = false;
         mCallback.startMainMap();
+    }
+
+    @Override
+    public void saveTokenAndShowMapsActivity(Token token) {
+        SharedPreferences prefs = context.getSharedPreferences(NAME_SHARED_PREFERENCES,
+                Context.MODE_PRIVATE);
+        prefs.edit().putString(KEY_TOKEN, token.getToken()).apply();
+
+        showMapsActivity();
     }
 
     @Override

@@ -99,7 +99,7 @@
     <string name="wrong_code">Wrong code</string>
     <string name="invalid_phone">This phone number is not valid</string>
     <string name="wait_for_sms">Sit back and Relax while we verify your mobile number\n (Enter the code overhead if we fail to detect the SMS automatically)</string>
-    <string name="no_internet_msg">No Internet Connection\n  Make sure your device connected to the internet</string>
+    <string name="no_internet_msg">No Internet Connection\nMake sure your device connected to the internet</string>
     <string name="msg_empty_number">Please enter you phone number</string>
     <string name="msg_empty_code">Please enter code</string>
     <string name="msg_wrong_code">Wrong code\n Please tre again</string>

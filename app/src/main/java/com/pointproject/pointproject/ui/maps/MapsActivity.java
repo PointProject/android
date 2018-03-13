@@ -63,7 +63,6 @@ public class MapsActivity extends AbstractActivity  {
 
                 @Override
                 public void onError(NetworkError error) {
-//                Toast.makeText(MapsActivity.this, R.string.user_load_error, Toast.LENGTH_SHORT).show();
                 }
             });
         }
